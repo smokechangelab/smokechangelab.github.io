@@ -30,7 +30,6 @@
   #home>.card:nth-of-type(2){padding:12px 14px!important;margin-bottom:0!important}
   #home>.card:nth-of-type(2)>.grid{margin-top:9px!important}
   #todaySmoked,#todayResisted,#todayCraving{font-size:20px!important;line-height:1!important}
-  #home>.card:nth-of-type(2) span.text-\\[10px\\]{font-size:9px!important}
   #momentBtn{padding:11px 14px!important;margin-bottom:0!important;border-radius:18px!important;min-height:68px!important}
   #momentBtn .font-semibold{font-size:14px!important;margin-top:2px!important}
   #momentBtn .text-xs{font-size:10px!important;margin-top:2px!important;line-height:1.35!important}
@@ -57,29 +56,96 @@
   #breakerTimer{margin-top:20px!important}
   #breakerText{font-size:14px!important;line-height:1.45!important;margin-top:12px!important}
   .app>div:last-child{font-size:8px!important;line-height:1.3!important;margin-top:10px!important}
-  @media(max-height:720px){
-    .app{padding-top:6px!important}
-    header{margin-bottom:6px!important}
-    #home{gap:6px!important}
-    #home>.card:first-child{padding:11px 12px!important}
-    #journeyText{margin-top:4px!important;-webkit-line-clamp:1}
-    #journeyText+.h-1\\.5{margin-top:7px!important}
-    #home>.card:nth-of-type(2){padding:10px 12px!important}
-    #momentBtn{min-height:60px!important;padding:9px 12px!important}
-    #patternsBtn,#progressBtn{min-height:64px!important;padding:9px!important}
-    .app>div:last-child{margin-top:6px!important}
-  }
-  @media(min-width:700px){
-    .app{max-width:900px!important;padding-left:24px!important;padding-right:24px!important}
-    #home.active{grid-template-columns:1.25fr .75fr!important;grid-template-areas:'hero today' 'hero moment' 'experiment quick'!important;align-items:stretch!important}
-    #home>.card:first-child{grid-area:hero!important}
-    #home>.card:nth-of-type(2){grid-area:today!important}
-    #momentBtn{grid-area:moment!important}
-    #experimentCard{grid-area:experiment!important}
-    #home>.grid.grid-cols-2{grid-area:quick!important}
-  }
+  @media(max-height:720px){.app{padding-top:6px!important}header{margin-bottom:6px!important}#home{gap:6px!important}#home>.card:first-child{padding:11px 12px!important}#journeyText{margin-top:4px!important;-webkit-line-clamp:1}#journeyText+.h-1\\.5{margin-top:7px!important}#home>.card:nth-of-type(2){padding:10px 12px!important}#momentBtn{min-height:60px!important;padding:9px 12px!important}#patternsBtn,#progressBtn{min-height:64px!important;padding:9px!important}.app>div:last-child{margin-top:6px!important}}
+  @media(min-width:700px){.app{max-width:900px!important;padding-left:24px!important;padding-right:24px!important}#home.active{grid-template-columns:1.25fr .75fr!important;grid-template-areas:'hero today' 'hero moment' 'experiment quick'!important;align-items:stretch!important}#home>.card:first-child{grid-area:hero!important}#home>.card:nth-of-type(2){grid-area:today!important}#momentBtn{grid-area:moment!important}#experimentCard{grid-area:experiment!important}#home>.grid.grid-cols-2{grid-area:quick!important}}
+
+  /* Baseline dashboard */
+  #settings .baseline-head{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:10px}
+  #settings .baseline-status{display:inline-flex;align-items:center;gap:6px;padding:5px 8px;border-radius:999px;background:#e7f1ec;color:#3d6255;font-size:10px;font-weight:700;white-space:nowrap}
+  #settings .baseline-dot{width:7px;height:7px;border-radius:50%;background:#6b9e8b;box-shadow:0 0 0 4px rgba(107,158,139,.12)}
+  #settings .baseline-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+  #settings .baseline-item{position:relative;background:#fff;border:1px solid var(--line);border-radius:16px;padding:12px;min-height:92px;text-align:left}
+  #settings .baseline-icon{width:30px;height:30px;display:grid;place-items:center;border-radius:10px;background:#e7f1ec;color:#3d6255;font-size:14px;margin-bottom:8px}
+  #settings .baseline-label{font-size:9px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+  #settings .baseline-value{display:block;font-size:14px;font-weight:700;line-height:1.25;margin-top:3px;padding-right:20px}
+  #settings .baseline-edit{position:absolute;right:9px;top:9px;width:27px;height:27px;border-radius:9px;background:#f3f8f5;border:1px solid #dce7e1;color:#507f6e;font-size:12px}
+  #settings .baseline-missing{color:#507f6e;font-size:11px;font-weight:700;margin-top:4px;display:inline-block}
+  #settings .benchmark{background:#20362f;color:#fff;border-radius:18px;padding:14px;margin-top:8px}
+  #settings .benchmark-row{display:flex;align-items:flex-end;justify-content:space-between;gap:12px}
+  #settings .benchmark-number{font-size:22px;font-weight:750;letter-spacing:-.03em}
+  #settings .benchmark-sub{font-size:10px;color:rgba(255,255,255,.68)}
+  #settings .benchmark-track{height:7px;background:rgba(255,255,255,.14);border-radius:999px;overflow:hidden;margin-top:10px}
+  #settings .benchmark-fill{height:100%;background:#b9d5c7;border-radius:999px}
+  #settings .insights-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px}
+  #settings .insight{background:#fff;border:1px solid var(--line);border-radius:16px;padding:12px}
+  #settings .insight strong{display:block;font-size:19px;letter-spacing:-.03em;margin-top:3px}
+  #settings .insight small{display:block;font-size:10px;line-height:1.35;color:var(--muted);margin-top:3px}
+  #settings .baseline-primary{width:100%;border:0;border-radius:14px;background:#3d6255;color:#fff;padding:12px 14px;font-size:13px;font-weight:750;margin-top:8px}
+  #settings details{margin-top:8px;background:#fff;border:1px solid var(--line);border-radius:14px;overflow:hidden}
+  #settings summary{cursor:pointer;list-style:none;padding:11px 13px;font-size:11px;font-weight:700;color:var(--muted);display:flex;justify-content:space-between;align-items:center}
+  #settings summary::-webkit-details-marker{display:none}
+  #settings .secondary-actions{display:grid;grid-template-columns:1fr 1fr;gap:8px;padding:0 10px 10px}
+  #settings .secondary-actions button{padding:9px;border-radius:10px;border:1px solid var(--line);background:#f8fbf9;font-size:10px;font-weight:700;color:#50635b}
+  #settings .secondary-actions .danger{color:#8a5757}
+  .baseline-modal-backdrop{position:fixed;inset:0;background:rgba(20,35,29,.35);display:none;align-items:flex-end;justify-content:center;z-index:50;padding:14px}
+  .baseline-modal-backdrop.open{display:flex}
+  .baseline-modal{width:min(100%,520px);background:#fff;border-radius:22px;padding:16px;box-shadow:0 20px 70px rgba(20,40,32,.2)}
+  .baseline-modal label{display:block;font-size:10px;font-weight:800;color:#6d7d76;margin:12px 0 6px}
+  .baseline-modal input,.baseline-modal select{width:100%;padding:11px 12px;border:1px solid #dce7e1;border-radius:12px;background:#fff;font:inherit;color:#20362f;outline:none}
+  .baseline-modal-actions{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:14px}
+  .baseline-modal-actions button{padding:11px;border-radius:12px;font-size:12px;font-weight:750;border:1px solid #dce7e1;background:#fff}
+  .baseline-modal-actions .save{background:#3d6255;color:#fff;border-color:#3d6255}
   </style>`;
-  html=html.replace('</head>',compact+'</head>');
+
+  const enhancement=`<script id="baseline-v33-enhancement">
+  (function(){
+    function initBaseline(){
+      if(!S.profile.baselineStartedAt){S.profile.baselineStartedAt=Date.now();persist()}
+      if(S.profile.packPrice==null){S.profile.packPrice=7;persist()}
+      if(S.profile.minutesPerCig==null){S.profile.minutesPerCig=5;persist()}
+      if(S.profile.targetCigs==null){
+        const c=Number(S.profile.cigs)||0;
+        S.profile.targetCigs=S.profile.goal==='quit'?0:S.profile.goal==='reduce'?Math.max(1,Math.round(c*.8)):c;
+        persist();
+      }
+    }
+    function daysActive(){initBaseline();return Math.max(1,Math.floor((Date.now()-S.profile.baselineStartedAt)/86400000)+1)}
+    function firstLabel(v){return {'5':'≤ 5 Min.','30':'6–30 Min.','60':'31–60 Min.','61':'> 60 Min.'}[String(v)]||null}
+    function money(v){return new Intl.NumberFormat('de-AT',{style:'currency',currency:'EUR',maximumFractionDigits:0}).format(v)}
+    function renderBaseline(){
+      initBaseline();
+      const start=Number(S.profile.cigs)||0,target=Math.max(0,Number(S.profile.targetCigs)||0),price=Number(S.profile.packPrice)||7,min=Number(S.profile.minutesPerCig)||5;
+      const monthly=start/20*price*30, hours=start*min*30/60, reduction=start?Math.max(0,Math.min(100,Math.round((1-target/start)*100))):0;
+      const today=S.logs.filter(l=>l.day===dateKey()),todaySmoked=today.filter(l=>l.smoked).length;
+      const settings=document.getElementById('settings');
+      settings.innerHTML=`<button data-home class="text-sm font-semibold muted py-1 mb-3">← Heute</button>
+      <div class="baseline-head"><div><div class="eyebrow">DEINE BASIS</div><h1 class="text-[23px] font-semibold tracking-tight mt-1">Deine Ausgangslage</h1><p class="text-[11px] muted mt-1">Passe deine Werte jederzeit an. Sie bestimmen, welche Vergleiche Smoke Lab dir zeigt.</p></div><div class="baseline-status"><span class="baseline-dot"></span>${daysActive()} ${daysActive()===1?'Tag':'Tage'} aktiv</div></div>
+      <div class="baseline-grid">
+        ${item('◎','Ziel',goalLabel(S.profile.goal),'goal')}
+        ${item('▥','Zigaretten / Tag',start?start+' / Tag':null,'cigs')}
+        ${item('◷','Erste Zigarette',firstLabel(S.profile.first),'first')}
+        ${item('↘','Zielwert',target+' / Tag','targetCigs')}
+      </div>
+      <div class="benchmark"><div class="eyebrow" style="color:#b9d5c7">START → ZIEL</div><div class="benchmark-row"><div><div class="benchmark-number">${start||'–'} <span style="font-size:12px;font-weight:600;color:rgba(255,255,255,.65)">/ Tag</span></div><div class="benchmark-sub">dein Startwert</div></div><div style="text-align:right"><div class="benchmark-number">${target} <span style="font-size:12px;font-weight:600;color:rgba(255,255,255,.65)">/ Tag</span></div><div class="benchmark-sub">dein Zielwert</div></div></div><div class="benchmark-track"><div class="benchmark-fill" style="width:${reduction}%"></div></div><div class="benchmark-sub" style="margin-top:6px">${reduction?reduction+'% weniger als dein Startwert':'Lege einen niedrigeren Zielwert fest, wenn du reduzieren möchtest.'}</div></div>
+      <div class="insights-grid"><div class="insight"><div class="eyebrow">KOSTEN · HOCHRECHNUNG</div><strong>${money(monthly)}</strong><small>pro Monat bei ${price.toFixed(2).replace('.',',')} € je 20 Stück. Schätzwert.</small><button data-edit="packPrice" class="text-[10px] font-bold text-smoke-600 mt-2">Annahme ändern</button></div><div class="insight"><div class="eyebrow">ZEIT · HOCHRECHNUNG</div><strong>${Math.round(hours)} Std.</strong><small>pro Monat bei ca. ${min} Minuten pro Zigarette. Schätzwert.</small><button data-edit="minutesPerCig" class="text-[10px] font-bold text-smoke-600 mt-2">Annahme ändern</button></div></div>
+      <div class="card p-3 mt-2 flex items-center justify-between gap-3"><div><div class="eyebrow">HEUTE ERFASST</div><div class="text-sm font-semibold mt-1">${todaySmoked} Rauch${todaySmoked===1?'moment':'momente'} mit Zigarette</div><div class="text-[10px] muted mt-1">Nur protokollierte Momente – kein vollständiger Tageskonsum.</div></div><div class="w-9 h-9 rounded-xl bg-smoke-100 grid place-items-center text-smoke-700">↗</div></div>
+      <button id="baselinePrimary" class="baseline-primary">Tagesprotokoll starten</button>
+      <details><summary><span>Weitere Aktionen</span><span>•••</span></summary><div class="secondary-actions"><button id="baselineExport">Daten exportieren</button><button id="baselineReset" class="danger">Neu starten</button></div></details>`;
+    }
+    function item(icon,label,value,key){return `<button class="baseline-item tap" data-edit="${key}"><span class="baseline-icon">${icon}</span><span class="baseline-label">${label}</span>${value?`<span class="baseline-value">${value}</span>`:`<span class="baseline-missing">Jetzt festlegen →</span>`}<span class="baseline-edit">✎</span></button>`}
+    function modal(){let m=document.getElementById('baselineModalBackdrop');if(m)return m;m=document.createElement('div');m.id='baselineModalBackdrop';m.className='baseline-modal-backdrop';m.innerHTML='<div class="baseline-modal"><div class="eyebrow">AUSGANGSLAGE ANPASSEN</div><h2 id="baselineModalTitle" style="font-size:18px;font-weight:700;margin-top:4px"></h2><div id="baselineModalField"></div><div class="baseline-modal-actions"><button id="baselineCancel">Abbrechen</button><button id="baselineSave" class="save">Speichern</button></div></div>';document.body.appendChild(m);m.addEventListener('click',e=>{if(e.target===m||e.target.id==='baselineCancel')m.classList.remove('open')});return m}
+    function editField(key){const m=modal(),title=document.getElementById('baselineModalTitle'),field=document.getElementById('baselineModalField');let html='';
+      if(key==='goal'){title.textContent='Was ist dein Ziel?';html=`<label>Ziel</label><select id="baselineInput"><option value="quit" ${S.profile.goal==='quit'?'selected':''}>Aufhören</option><option value="reduce" ${S.profile.goal==='reduce'?'selected':''}>Weniger rauchen</option><option value="understand" ${S.profile.goal==='understand'?'selected':''}>Rauchen verstehen</option><option value="unsure" ${S.profile.goal==='unsure'?'selected':''}>Orientierung</option></select>`}
+      else if(key==='first'){title.textContent='Erste Zigarette';html=`<label>Nach dem Aufwachen</label><select id="baselineInput"><option value="">Noch nicht festgelegt</option><option value="5" ${String(S.profile.first)==='5'?'selected':''}>innerhalb von 5 Minuten</option><option value="30" ${String(S.profile.first)==='30'?'selected':''}>6–30 Minuten</option><option value="60" ${String(S.profile.first)==='60'?'selected':''}>31–60 Minuten</option><option value="61" ${String(S.profile.first)==='61'?'selected':''}>mehr als 60 Minuten</option></select>`}
+      else {const cfg={cigs:['Zigaretten pro Tag','Anzahl pro Tag',S.profile.cigs??'',0,100],targetCigs:['Dein Zielwert','Zigaretten pro Tag als Ziel',S.profile.targetCigs??'',0,100],packPrice:['Preis-Annahme','Preis für 20 Zigaretten in €',S.profile.packPrice??7,0,30],minutesPerCig:['Zeit-Annahme','Minuten pro Zigarette',S.profile.minutesPerCig??5,1,30]}[key];title.textContent=cfg[0];html=`<label>${cfg[1]}</label><input id="baselineInput" type="number" inputmode="decimal" min="${cfg[3]}" max="${cfg[4]}" step="${key==='packPrice'?'0.1':'1'}" value="${cfg[2]}">`}
+      field.innerHTML=html;m.classList.add('open');document.getElementById('baselineSave').onclick=()=>{const v=document.getElementById('baselineInput').value;if(key==='goal'||key==='first')S.profile[key]=v||null;else S.profile[key]=v===''?null:Number(v);persist();m.classList.remove('open');renderBaseline()};setTimeout(()=>document.getElementById('baselineInput')?.focus(),50)
+    }
+    window.renderProfile=renderBaseline;
+    document.addEventListener('click',e=>{const ed=e.target.closest('[data-edit]');if(ed){editField(ed.dataset.edit);return}if(e.target.closest('#baselinePrimary')){startMoment();return}if(e.target.closest('#baselineExport')){const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([JSON.stringify(S,null,2)],{type:'application/json'}));a.download='smoke-lab-daten.json';a.click();return}if(e.target.closest('#baselineReset')){if(confirm('Alle lokalen Daten löschen und neu starten?')){localStorage.removeItem(KEY);location.reload()}}});
+    if(document.getElementById('settings').classList.contains('active'))renderBaseline();
+  })();
+  <\/script>`;
+  html=html.replace('</head>',compact+'</head>').replace('</body>',enhancement+'</body>');
   document.open();document.write(html);document.close();
 })().catch(err=>{
   document.body.innerHTML='<main style="font-family:-apple-system,BlinkMacSystemFont,sans-serif;padding:24px"><h1>Smoke Lab</h1><p>Die App konnte nicht geladen werden. Bitte Seite neu laden.</p></main>';
