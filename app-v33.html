@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#dcece4">
+<title>Smoke Lab</title>
+</head>
+<body>
+<script>
+(async()=>{
+  const res=await fetch('app-v32.html?v=33',{cache:'no-store'});
+  let html=await res.text();
+  const compact=`<style id="compact-v33">
+  html,body{min-height:100dvh!important}
+  .app{max-width:560px!important;min-height:100dvh!important;padding:8px 14px calc(16px + env(safe-area-inset-bottom))!important}
+  header{height:34px!important;margin-bottom:8px!important}
+  header>div>div{width:28px!important;height:28px!important;border-radius:9px!important}
+  #settingsBtn{width:32px!important;height:32px!important}
+  .card{border-radius:18px!important;box-shadow:0 5px 18px rgba(37,70,58,.05)!important}
+  .eyebrow{font-size:9px!important;letter-spacing:.11em!important}
+  #home{display:none}
+  #home.active{display:grid!important;gap:8px!important}
+  #home>#progressCard{display:none!important}
+  #home>.card:first-child{padding:14px!important;margin-bottom:0!important}
+  #journeyTitle{font-size:18px!important;line-height:1.15!important;margin-top:4px!important}
+  #journeyText{font-size:12px!important;line-height:1.45!important;margin-top:6px!important;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+  #momentCount{font-size:9px!important;padding:4px 8px!important}
+  #journeyText+.h-1\\.5{margin-top:10px!important}
+  #home>.card:nth-of-type(2){padding:12px 14px!important;margin-bottom:0!important}
+  #home>.card:nth-of-type(2)>.grid{margin-top:9px!important}
+  #todaySmoked,#todayResisted,#todayCraving{font-size:20px!important;line-height:1!important}
+  #home>.card:nth-of-type(2) span.text-\\[10px\\]{font-size:9px!important}
+  #momentBtn{padding:11px 14px!important;margin-bottom:0!important;border-radius:18px!important;min-height:68px!important}
+  #momentBtn .font-semibold{font-size:14px!important;margin-top:2px!important}
+  #momentBtn .text-xs{font-size:10px!important;margin-top:2px!important;line-height:1.35!important}
+  #momentBtn>span{width:34px!important;height:34px!important;border-radius:10px!important}
+  #home>.grid.grid-cols-2{gap:8px!important}
+  #patternsBtn,#progressBtn{padding:11px!important;min-height:72px!important;border-radius:18px!important}
+  #patternsBtn b,#progressBtn b{font-size:13px!important;line-height:1.2!important;margin-top:3px!important}
+  #patternsBtn span,#progressBtn span{font-size:10px!important;line-height:1.3!important;margin-top:3px!important;display:-webkit-box!important;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+  #experimentCard{padding:12px 14px!important;margin-bottom:0!important;border-radius:18px!important}
+  #experimentCard .text-lg{font-size:15px!important;line-height:1.2!important}
+  #experimentCard p{font-size:11px!important;line-height:1.35!important;margin-top:4px!important}
+  #experimentTry{margin-top:8px!important;padding:7px 10px!important;font-size:11px!important}
+  #onboarding>div:first-child{padding-top:0!important;padding-bottom:12px!important}
+  #onboarding h1{font-size:23px!important}
+  #onboarding p{font-size:13px!important;line-height:1.45!important}
+  #onboarding>.card{padding:16px!important}
+  #moment [data-home],#patterns [data-home],#progress [data-home],#settings [data-home]{margin-bottom:10px!important}
+  #moment h1,#patterns h1,#progress h1,#settings h1,#feedback h1,#outcome h1{font-size:23px!important}
+  #breaker{padding-top:0!important}
+  #breaker>div{padding-top:16px!important}
+  #breaker h1{font-size:24px!important}
+  #breaker .w-32{width:112px!important;height:112px!important;margin-top:28px!important}
+  #breaker .w-20{width:64px!important;height:64px!important}
+  #breakerTimer{margin-top:20px!important}
+  #breakerText{font-size:14px!important;line-height:1.45!important;margin-top:12px!important}
+  .app>div:last-child{font-size:8px!important;line-height:1.3!important;margin-top:10px!important}
+  @media(max-height:720px){
+    .app{padding-top:6px!important}
+    header{margin-bottom:6px!important}
+    #home{gap:6px!important}
+    #home>.card:first-child{padding:11px 12px!important}
+    #journeyText{margin-top:4px!important;-webkit-line-clamp:1}
+    #journeyText+.h-1\\.5{margin-top:7px!important}
+    #home>.card:nth-of-type(2){padding:10px 12px!important}
+    #momentBtn{min-height:60px!important;padding:9px 12px!important}
+    #patternsBtn,#progressBtn{min-height:64px!important;padding:9px!important}
+    .app>div:last-child{margin-top:6px!important}
+  }
+  @media(min-width:700px){
+    .app{max-width:900px!important;padding-left:24px!important;padding-right:24px!important}
+    #home.active{grid-template-columns:1.25fr .75fr!important;grid-template-areas:'hero today' 'hero moment' 'experiment quick'!important;align-items:stretch!important}
+    #home>.card:first-child{grid-area:hero!important}
+    #home>.card:nth-of-type(2){grid-area:today!important}
+    #momentBtn{grid-area:moment!important}
+    #experimentCard{grid-area:experiment!important}
+    #home>.grid.grid-cols-2{grid-area:quick!important}
+  }
+  </style>`;
+  html=html.replace('</head>',compact+'</head>');
+  document.open();document.write(html);document.close();
+})().catch(err=>{
+  document.body.innerHTML='<main style="font-family:-apple-system,BlinkMacSystemFont,sans-serif;padding:24px"><h1>Smoke Lab</h1><p>Die App konnte nicht geladen werden. Bitte Seite neu laden.</p></main>';
+  console.error(err);
+});
+</script>
+</body>
+</html>
