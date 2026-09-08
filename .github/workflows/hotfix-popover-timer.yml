@@ -1,0 +1,80 @@
+name: Smoke Lab UI hotfix
+
+on:
+  push:
+    paths:
+      - '.github/workflows/hotfix-popover-timer.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Apply UI hotfix
+        shell: python
+        run: |
+          from pathlib import Path
+          p = Path('app-v44.html')
+          s = p.read_text()
+
+          replacements = [
+              ('.time-drawer{position:absolute;right:0;top:38px;z-index:12;width:220px', '.time-drawer{position:absolute;right:0;top:100%;z-index:100;width:220px;margin-top:6px'),
+              ('.ring-progress{fill:none;stroke:var(--primary);stroke-width:7;stroke-linecap:round;stroke-dasharray:339.292;stroke-dashoffset:0}', '.ring-progress{fill:none;stroke:var(--primary);stroke-width:7;stroke-linecap:round;stroke-dasharray:339.292;stroke-dashoffset:0;transition:stroke-dashoffset 1s linear}'),
+              ('transition:transform 1s cubic-bezier(.4,0,.2,1),background .35s ease,opacity .35s ease', 'transition:transform 4s ease-in-out,background .35s ease,opacity .35s ease'),
+              ('.breath-orb.inhale{transform:scale(1.25);background:#E8F2EC}', '.breath-orb.inhale{transform:scale(1.15);background:#E8F2EC}'),
+              ('.breath-orb.hold{transform:scale(1.25);background:#E8F2EC;animation:holdPulse 1.4s ease-in-out infinite}', '.breath-orb.hold{transform:scale(1.15);background:#E8F2EC;animation:holdPulse 1.4s ease-in-out infinite}'),
+              ('\n.icon-btn{width:36px;height:36px;border:1px solid var(--line);border-radius:12px;background:#fff;display:none;place-items:center;color:var(--primary);font-size:16px}\n', '\n'),
+              ('<div class="header-actions"><button id="sosBtn" class="sos-chip" type="button"><span class="sos-dot"></span>SOS</button><button id="gearBtn" class="icon-btn" type="button" aria-label="Einstellungen">⚙︎</button></div>', '<div class="header-actions"><button id="sosBtn" class="sos-chip" type="button"><span class="sos-dot"></span>SOS</button></div>'),
+              ("sosBtn.style.display=inApp?'flex':'none';gearBtn.style.display=inApp?'grid':'none';", "sosBtn.style.display=inApp?'flex':'none';"),
+              ("function renderOnboarding(){sosBtn.style.display=gearBtn.style.display='none';", "function renderOnboarding(){sosBtn.style.display='none';"),
+              (";gearBtn.onclick=()=>showScreen('settings');sosBtn.onclick=openSOS;", ";sosBtn.onclick=openSOS;"),
+              ("if(jDraft.timeMode==='custom')return`⏱️ ${jDraft.customTime||'Freie Zeit'}`", "if(jDraft.timeMode==='custom')return`⏱️ ${jDraft.customTime||'Eigene Uhrzeit'}`"),
+              ("['custom','Freie Zeit']", "['custom','Eigene Uhrzeit']"),
+              ("orb.className='breath-orb '+cls;orb.style.transitionDuration=cls==='hold'?'0.35s':dur+'s';phase.textContent", "orb.className='breath-orb '+cls;phase.textContent"),
+              ("tick();cTimer=setInterval(tick,100);if(f==='stress')", "tick();cTimer=setInterval(tick,f==='reward'?100:1000);if(f==='stress')"),
+              ("tick();sosTimer=setInterval(tick,100)}", "tick();sosTimer=setInterval(tick,1000)}"),
+          ]
+
+          for old, new in replacements:
+              if old in s:
+                  s = s.replace(old, new)
+
+          outside = "document.addEventListener('click',e=>{if(jTimeOpen&&!e.target.closest('.journal-time-wrap')){jTimeOpen=false;renderTimeControl()}});"
+          input_line = "document.addEventListener('input',e=>{if(e.target.id==='customTime'){jDraft.customTime=e.target.value;journalTimePill.textContent=timePillLabel()}});"
+          if outside not in s and input_line in s:
+              s = s.replace(input_line, outside + '\n' + input_line)
+
+          change_line = "document.addEventListener('change',e=>{if(e.target.id==='customTime'){jDraft.customTime=e.target.value;jTimeOpen=false;renderTimeControl()}});"
+          if change_line not in s and input_line in s:
+              s = s.replace(input_line, input_line + '\n' + change_line)
+
+          p.write_text(s)
+
+          sw = Path('service-worker.js')
+          w = sw.read_text()
+          import re
+          w = re.sub(r"const CACHE='[^']+';", "const CACHE='smoke-lab-v1-20260908-1252-popover-timer';", w, count=1)
+          sw.write_text(w)
+
+          assert 'gearBtn' not in s
+          assert 'Customer Time' not in s
+          assert 'Freie Zeit' not in s
+          assert 'top:100%;z-index:100' in s
+          assert 'transition:stroke-dashoffset 1s linear' in s
+          assert 'scale(1.15)' in s
+          assert 'Eigene Uhrzeit' in s
+          assert "setInterval(tick,f==='reward'?100:1000)" in s
+          assert 'setInterval(tick,1000)' in s
+      - name: Commit hotfix
+        run: |
+          git config user.name "Smoke Lab Bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add app-v44.html service-worker.js
+          git diff --cached --quiet || git commit -m "Fix time popover timer animation and header"
+          git push
