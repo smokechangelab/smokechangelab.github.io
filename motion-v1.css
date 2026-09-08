@@ -1,0 +1,30 @@
+:root{
+  --duration-instant:100ms;
+  --duration-fast:200ms;
+  --duration-normal:300ms;
+  --duration-slow:500ms;
+  --ease-standard:cubic-bezier(.2,.8,.2,1);
+  --ease-enter:cubic-bezier(.16,1,.3,1);
+  --ease-exit:cubic-bezier(.4,0,1,1);
+  --z-base:0;
+  --z-sticky:50;
+  --z-nav:60;
+  --z-popover:100;
+  --z-modal:200;
+  --z-toast:300;
+}
+html,body{overscroll-behavior-y:contain}
+button,.choice,.risk-chip,.select-chip,.time-chip,.range-tab,.tab,.manual-win{
+  transition:transform var(--duration-instant) var(--ease-standard),background-color var(--duration-fast) var(--ease-standard),border-color var(--duration-fast) var(--ease-standard),box-shadow var(--duration-fast) var(--ease-standard),opacity var(--duration-fast) var(--ease-standard)
+}
+button:active,.choice:active,.risk-chip:active,.select-chip:active,.time-chip:active,.range-tab:active,.tab:active,.manual-win:active{transform:scale(.975)}
+.header{z-index:var(--z-sticky)}.bottom-nav{z-index:var(--z-nav)}.time-drawer{z-index:var(--z-popover)}.overlay{z-index:var(--z-modal)}.toast{z-index:var(--z-toast)}
+.overlay{opacity:0;transition:opacity var(--duration-fast) var(--ease-exit)}.overlay.open{opacity:1}.overlay .modal{transform:translateY(12px) scale(.985);opacity:0;transition:transform var(--duration-normal) var(--ease-enter),opacity var(--duration-fast) var(--ease-enter)}.overlay.open .modal{transform:translateY(0) scale(1);opacity:1}
+.main-screen.active,.screen.active{animation:pageEnter var(--duration-normal) var(--ease-enter) both}@keyframes pageEnter{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:none}}
+.ring-progress{transition:none;will-change:stroke-dashoffset}.breath-orb{transform:scale(1);transition:transform 4s ease-in-out,background-color var(--duration-normal) var(--ease-standard),opacity var(--duration-normal) var(--ease-standard);will-change:transform,opacity}.breath-orb.inhale{transform:scale(1.25);background:#E8F2EC}.breath-orb.hold{transform:scale(1.25);background:#E8F2EC;animation:holdPulse 1.4s ease-in-out infinite}.breath-orb.exhale{transform:scale(1);background:#EDF4F1}.wave-dot{transition:none;will-change:left,bottom}
+.time-drawer{top:100%;right:0;margin-top:6px}
+@media (hover:hover){button:hover:not(:disabled){box-shadow:0 5px 16px rgba(27,79,76,.08)}}
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:.001ms!important;animation-iteration-count:1!important;transition-duration:.001ms!important;scroll-behavior:auto!important}
+  .breath-orb.inhale,.breath-orb.hold{transform:scale(1.06)}.breath-orb.exhale{transform:scale(1)}
+}
