@@ -1,0 +1,3 @@
+export const debounce=(fn,ms=180)=>{let t;return(...a)=>{clearTimeout(t);t=setTimeout(()=>fn(...a),ms)}};
+export const throttle=(fn,ms=250)=>{let last=0,queued=null;return(...a)=>{const now=Date.now(),wait=ms-(now-last);if(wait<=0){last=now;fn(...a)}else if(!queued){queued=setTimeout(()=>{queued=null;last=Date.now();fn(...a)},wait)}}};
+export function guardButton(el,fn,ms=450){let lock=false;el.addEventListener('click',async e=>{if(lock)return;lock=true;el.disabled=true;try{await fn(e)}finally{setTimeout(()=>{lock=false;el.disabled=false},ms)}})}
