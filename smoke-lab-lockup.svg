@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 214 44" role="img" aria-labelledby="title desc">
+  <title id="title">Smoke Lab</title>
+  <desc id="desc">Smoke Lab Logo mit Laborkolben und Schriftzug</desc>
+  <g transform="translate(1 1)">
+    <path d="M13 4h18M16 4v9L7.8 31.5c-1.2 2.7.7 5.5 3.7 5.5h21c3 0 4.9-2.8 3.7-5.5L28 13V4" fill="none" stroke="#1B4F4C" stroke-width="2.7" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M21.8 31.8c-4.4-.9-6.2-4.3-4.5-7.8 3.5.8 6.2-.4 8.8-3.7.9 5.1-.8 9.5-4.3 11.5Z" fill="#E8873A"/>
+  </g>
+  <text x="53" y="28.2" fill="#1B4F4C" font-family="-apple-system,BlinkMacSystemFont,'SF Pro Text','Segoe UI',Roboto,Arial,sans-serif" font-size="15" font-weight="900" letter-spacing="4.1">SMOKE LAB</text>
+</svg>
