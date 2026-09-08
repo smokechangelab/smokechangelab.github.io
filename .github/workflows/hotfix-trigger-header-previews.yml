@@ -1,0 +1,73 @@
+name: Hotfix Trigger State Header and Previews
+on:
+  push:
+    paths:
+      - '.github/workflows/hotfix-trigger-header-previews.yml'
+permissions:
+  contents: write
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Patch Smoke Lab safely
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+
+          js = Path('dashboard-v2.js')
+          s = js.read_text()
+
+          marker = "const oldRenderAll=renderAll;"
+          hotfix = r'''
+// HOTFIX: the trigger chip is the source of truth for the quick-entry state.
+// This listener deliberately runs in addition to the existing sheet handler so
+// selectedTrigger cannot fall back to "Gewohnheit" after a visible selection.
+document.addEventListener('click',e=>{
+  const triggerButton=e.target.closest('[data-qs-trigger-value]');
+  if(!triggerButton)return;
+  const value=triggerButton.getAttribute('data-qs-trigger-value');
+  selectedTrigger=normalizeTrigger(value);
+  renderQuick();
+},true);
+
+function removeHeaderGear(){
+  const header=document.querySelector('header')||document.querySelector('.header')||document.querySelector('.topbar');
+  if(!header)return;
+  [...header.querySelectorAll('button,a')].forEach(el=>{
+    const text=(el.textContent||'').trim();
+    const aria=(el.getAttribute('aria-label')||'').toLowerCase();
+    const title=(el.getAttribute('title')||'').toLowerCase();
+    if(text.includes('⚙')||aria.includes('einstellung')||title.includes('einstellung')) el.remove();
+  });
+}
+removeHeaderGear();
+'''
+          if 'HOTFIX: the trigger chip is the source of truth' not in s:
+              s=s.replace(marker, hotfix+'\n'+marker)
+          js.write_text(s)
+
+          css = Path('dashboard-v2.css')
+          c = css.read_text()
+          extra = r'''
+.knowledge-card,.experiment-why{margin-top:2px;padding:12px 13px;border:1px solid #DDE6E2;border-radius:15px;background:#F7FAF8;color:var(--muted)}
+.knowledge-title,.experiment-why b{display:block;color:var(--primary);font-size:10px;font-weight:900;margin-bottom:5px}
+.knowledge-card p,.experiment-why p{margin:0;font-size:9.5px;line-height:1.5}
+'''
+          if '.knowledge-card,.experiment-why' not in c:
+              c += '\n'+extra
+          css.write_text(c)
+
+          sw = Path('service-worker.js')
+          w = sw.read_text()
+          import re
+          w = re.sub(r"const CACHE='[^']+';", "const CACHE='smoke-lab-v1-20260908-trigger-header-hotfix';", w, count=1)
+          sw.write_text(w)
+          PY
+      - name: Commit hotfix
+        run: |
+          git config user.name "dfluch-hub"
+          git config user.email "d.fluch@gmx.at"
+          git add dashboard-v2.js dashboard-v2.css service-worker.js
+          git diff --cached --quiet || git commit -m "Fix trigger selection and finalize header previews"
+          git push
