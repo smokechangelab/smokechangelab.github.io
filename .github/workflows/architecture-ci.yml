@@ -1,0 +1,27 @@
+name: Smoke Lab Architecture CI
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'js/**'
+      - 'app-v1-modular.html'
+      - 'css/system.css'
+      - '.github/workflows/architecture-ci.yml'
+  workflow_dispatch:
+jobs:
+  syntax:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Check JavaScript modules
+        run: |
+          node --check js/fsm.js
+          node --check js/persistence.js
+          node --check js/interaction.js
+          node --check js/timers.js
+          node --check js/overlays.js
+          node --check js/session.js
+          node --check js/main.js
