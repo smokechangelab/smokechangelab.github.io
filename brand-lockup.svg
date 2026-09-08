@@ -1,8 +1,8 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 190 34" role="img" aria-label="Smoke Lab">
-  <g transform="translate(0 1)">
+  <g transform="translate(0 1.7)">
     <path d="M10.5 4.5v5.2L3.8 24.2c-.8 1.7.3 3.7 2.2 3.7h17.8c1.9 0 3-2 2.2-3.7L19.5 9.7V4.5" fill="none" stroke="#1B4F4C" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
     <path d="M9 4.5h12" fill="none" stroke="#1B4F4C" stroke-width="2.4" stroke-linecap="round"/>
     <path d="M15.1 23.7c-3.6-.7-5-3.5-3.6-6.3 2.9.7 5-.3 7.2-2.8.7 4.2-.8 7.8-3.6 9.1Z" fill="#E8873A"/>
   </g>
-  <text x="39" y="22.4" fill="#1B4F4C" font-family="-apple-system,BlinkMacSystemFont,'SF Pro Text','Segoe UI',Roboto,Arial,sans-serif" font-size="12.8" font-weight="900" letter-spacing="3.25">SMOKE LAB</text>
+  <text x="39" y="17" dominant-baseline="middle" fill="#1B4F4C" font-family="-apple-system,BlinkMacSystemFont,'SF Pro Text','Segoe UI',Roboto,Arial,sans-serif" font-size="12.8" font-weight="900" letter-spacing="3.25">SMOKE LAB</text>
 </svg>
