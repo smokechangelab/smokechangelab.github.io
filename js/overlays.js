@@ -1,0 +1,7 @@
+const FOCUSABLE='button,[href],input,select,textarea,[tabindex]:not([tabindex="-1"])';
+export class DialogManager{
+  constructor(){this.openDialog=null;this.returnFocus=null;document.addEventListener('keydown',e=>{if(e.key==='Escape'&&this.openDialog){if(this.openDialog.dataset.locked==='true')return;e.preventDefault();this.close(this.openDialog)}})}
+  open(dialog,trigger,{locked=false}={}){this.returnFocus=trigger||document.activeElement;dialog.dataset.locked=String(locked);dialog.showModal();this.openDialog=dialog;queueMicrotask(()=>dialog.querySelector(FOCUSABLE)?.focus())}
+  close(dialog=this.openDialog){if(!dialog)return;dialog.close();this.openDialog=null;this.returnFocus?.focus?.();this.returnFocus=null}
+  install(dialog){dialog.addEventListener('cancel',e=>{if(dialog.dataset.locked==='true')e.preventDefault()});dialog.addEventListener('click',e=>{if(e.target===dialog&&dialog.dataset.locked!=='true')this.close(dialog)});dialog.addEventListener('keydown',e=>{if(e.key!=='Tab')return;const list=[...dialog.querySelectorAll(FOCUSABLE)].filter(x=>!x.disabled);if(!list.length)return;const first=list[0],last=list.at(-1);if(e.shiftKey&&document.activeElement===first){e.preventDefault();last.focus()}else if(!e.shiftKey&&document.activeElement===last){e.preventDefault();first.focus()}})}
+}
