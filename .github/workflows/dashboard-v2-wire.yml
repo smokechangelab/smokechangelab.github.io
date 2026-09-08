@@ -1,0 +1,42 @@
+name: Wire Dashboard v2
+on:
+  push:
+    paths:
+      - 'dashboard-v2.css'
+      - 'dashboard-v2.js'
+      - '.github/workflows/dashboard-v2-wire.yml'
+permissions:
+  contents: write
+jobs:
+  wire:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Inject dashboard assets safely
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          p=Path('app-v44.html')
+          s=p.read_text()
+          if 'dashboard-v2.css' not in s:
+              s=s.replace('</head>','<link rel="stylesheet" href="./dashboard-v2.css?v=20260908-1346">\n</head>')
+          if 'dashboard-v2.js' not in s:
+              s=s.replace('</body>','<script src="./dashboard-v2.js?v=20260908-1346"></script>\n</body>')
+          p.write_text(s)
+          sw=Path('service-worker.js')
+          x=sw.read_text()
+          x=x.replace("const CACHE='smoke-lab-v1-20260908-premium-interactions';","const CACHE='smoke-lab-v1-20260908-dashboard-v2';")
+          if "'./dashboard-v2.css'" not in x:
+              x=x.replace("'./app-v44.html',","'./app-v44.html','./dashboard-v2.css','./dashboard-v2.js',")
+          sw.write_text(x)
+          idx=Path('index.html')
+          y=idx.read_text().replace('restore-premium','dashboard-v2')
+          idx.write_text(y)
+          PY
+      - name: Commit wiring
+        run: |
+          git config user.name "dfluch-hub"
+          git config user.email "d.fluch@gmx.at"
+          git add app-v44.html service-worker.js index.html
+          git diff --cached --quiet || git commit -m "Activate dashboard v2 UX layer"
+          git push
