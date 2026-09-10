@@ -1,4 +1,4 @@
-const CACHE='smoke-lab-v1-20260910-design-standard-v8';
+const CACHE='smoke-lab-v1-20260910-reference-locked-v9';
 const ASSETS=['./','./index.html','./app-v44.html','./dashboard-v2.css','./dashboard-v2.js','./home-hotfix-v4.js','./brand-lockup.svg','./manifest.json','./icon-192.png','./icon-512.png','./apple-touch-icon.png'];
 self.addEventListener('install',event=>{event.waitUntil(caches.open(CACHE).then(cache=>cache.addAll(ASSETS)).then(()=>self.skipWaiting()))});
 self.addEventListener('activate',event=>{event.waitUntil(caches.keys().then(keys=>Promise.all(keys.filter(key=>key!==CACHE).map(key=>caches.delete(key)))).then(()=>self.clients.claim()))});
@@ -8,7 +8,7 @@ self.addEventListener('fetch',event=>{
  if(url.pathname.endsWith('/dashboard-v2.js')){
   event.respondWith(fetch(event.request,{cache:'no-store'}).then(async response=>{
    const text=await response.text();
-   const patched=text+"\nimport('./home-hotfix-v4.js?v=20260910-design-standard-v8').catch(console.error);";
+   const patched=text+"\nimport('./home-hotfix-v4.js?v=20260910-reference-locked-v9').catch(console.error);";
    return new Response(patched,{status:response.status,statusText:response.statusText,headers:{'Content-Type':'application/javascript; charset=utf-8','Cache-Control':'no-store'}})
   }).catch(()=>caches.match(event.request)));
   return;
