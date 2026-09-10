@@ -1,9 +1,57 @@
+// Smoke Lab v47.3 interaction + polish fixes
+if(!window.__smokeLabDirectNav){
+  window.__smokeLabDirectNav=true;
+  document.addEventListener('click',e=>{
+    const tab=e.target.closest&&e.target.closest('.tab[data-tab]');
+    if(!tab)return;
+    const next=tab.dataset.tab;
+    if(!['today','lab','patterns','progress','me'].includes(next))return;
+    e.preventDefault();
+    e.stopPropagation();
+    try{if(typeof S!=='undefined'){S.activeTab=next;if(typeof save==='function')save();}}
+    catch{}
+    document.querySelectorAll('.page').forEach(p=>p.classList.toggle('active',p.id===next));
+    document.querySelectorAll('.tab[data-tab]').forEach(t=>t.classList.toggle('active',t.dataset.tab===next));
+    try{
+      if(next==='today'&&typeof renderToday==='function')renderToday();
+      if(next==='lab'&&typeof renderLab==='function')renderLab();
+      if(next==='patterns'&&typeof renderPatterns==='function')renderPatterns();
+      if(next==='progress'&&typeof renderProgress==='function')renderProgress();
+      if(next==='me'&&typeof renderMe==='function')renderMe();
+    }catch{}
+  },true);
+}
+
 greeting=function(){const h=new Date().getHours();return h>=5&&h<11?'Guten Morgen':h>=11&&h<18?'Guten Tag':h>=18&&h<23?'Guten Abend':'Hallo'};
-renderLab=function(){const d=day(),exp=currentExperiment(),pi=phaseIndex();lab.innerHTML=`<div><div class="eyebrow">LABOR · 30-TAGE-PROGRAMM</div><div class="title">Trainiere Kontrolle.</div><div class="subtitle">Fünf Phasen. Kleine Experimente. Keine Strafe für Rückschritte.</div></div><div class="phase-grid">${phases.map((p,i)=>`<div class="card compact phase ${i===pi?'active':i>pi?'future':''}"><div class="phase-num">${p[0]}</div><div><b>${p[1]}</b><small>${p[2]}</small></div><span class="pill">${i<pi?'✓':i===pi?'Aktiv':'Später'}</span></div>`).join('')}</div><div class="card"><div class="eyebrow">AKTUELLE MISSION</div><div class="section-head"><h2 style="margin:4px 0 0">${exp.title}</h2><span class="pill">Tag ${d}</span></div><div class="copy">${exp.text}</div><div class="progress"><span style="width:${((d-1)%6+1)/6*100}%"></span></div></div>`};
+
+const __baseRenderToday=renderToday;
+renderToday=function(){
+  __baseRenderToday();
+  const root=document.getElementById('today');
+  if(!root)return;
+  const first=root.firstElementChild;
+  if(!first)return;
+  const eyebrow=first.querySelector('.eyebrow');
+  const title=first.querySelector('.title');
+  const subtitle=first.querySelector('.subtitle');
+  if(eyebrow&&title){
+    const tag=(eyebrow.textContent.match(/TAG\s+\d+/i)||['TAG '+(typeof day==='function'?day():1)])[0].toUpperCase();
+    first.classList.add('today-intro');
+    eyebrow.textContent=tag;
+    title.textContent=greeting();
+    if(subtitle)subtitle.textContent='Mach den nächsten automatischen Moment sichtbar.';
+  }
+};
+
+renderLab=function(){const d=day(),exp=experiment(),pi=phaseIndex();lab.innerHTML=`<div><div class="eyebrow">LABOR · 30-TAGE-PROGRAMM</div><div class="title">Trainiere Kontrolle.</div><div class="subtitle">Fünf Phasen. Kleine Experimente. Keine Strafe für Rückschritte.</div></div><div class="phase-grid">${phases.map((p,i)=>`<div class="card compact phase ${i===pi?'active':i>pi?'future':''}"><div class="phase-num">${p[0]}</div><div><b>${p[1]}</b><small>${p[2]}</small></div><span class="pill">${i<pi?'✓':i===pi?'Aktiv':'Später'}</span></div>`).join('')}</div><div class="card"><div class="eyebrow">AKTUELLE MISSION</div><div class="section-head"><h2 style="margin:4px 0 0">${exp.title}</h2><span class="pill">Tag ${d}</span></div><div class="copy">${exp.text}</div><div class="progress"><span style="width:${((d-1)%6+1)/6*100}%"></span></div></div>`};
+
 renderPatterns=function(){const top=topTrigger(),all=S.events.length;patterns.innerHTML=`<div><div class="eyebrow">MUSTER</div><div class="title">Dein Rauchmuster.</div><div class="subtitle">Auslöser, Zeit, Stärke, Kontext und passende Gegenstrategien.</div></div>`;if(all<8){patterns.innerHTML+=`<div class="card"><div class="eyebrow">KALIBRIERUNG</div><div class="copy">${all}/8 Situationen erfasst. Smoke Lab zeigt Muster erst, wenn genügend Daten vorhanden sind.</div><div class="progress"><span style="width:${Math.min(100,all/8*100)}%"></span></div><div class="preview-grid"><div class="preview-card"><b>Häufigste Auslöser</b><small>Welche Situationen besonders oft auftreten.</small></div><div class="preview-card"><b>Risikozeiten</b><small>Wann der Drang häufiger kommt.</small></div><div class="preview-card"><b>Drangstärke</b><small>Wie intensiv typische Situationen sind.</small></div><div class="preview-card"><b>Wirksame Strategien</b><small>Was den Autopiloten bei dir am besten unterbricht.</small></div></div></div>`;return}const counts={};S.events.forEach(e=>{counts[e.trigger]=(counts[e.trigger]||0)+1});const sorted=Object.entries(counts).sort((a,b)=>b[1]-a[1]).slice(0,4);patterns.innerHTML+=`<div class="dna"><div class="card"><div class="eyebrow">HÄUFIGSTER AUSLÖSER</div><b>${top?top[0]:'–'}</b><small>${top?top[1]+' dokumentierte Situationen':'–'}</small></div><div class="card"><div class="eyebrow">AUTOMATIK</div><b>${Math.round(smokes().length/Math.max(1,S.events.length)*100)}%</b><small>Anteil gerauchter Situationen</small></div><div class="card"><div class="eyebrow">BESTE REAKTION</div><b>${resists().length?'Unterbrechen':'Noch offen'}</b><small>${resists().length} erfolgreiche Unterbrechungen</small></div><div class="card"><div class="eyebrow">RISIKOZEIT</div><b>${riskHour()}</b><small>häufigstes Zeitfenster</small></div></div><div class="card"><div class="eyebrow">AUSLÖSERVERTEILUNG</div><div class="mini-list">${sorted.map(([k,v])=>`<div class="row"><span>${k}</span><b>${v}</b></div>`).join('')}</div></div>`};
+
 renderProgress=function(){const sc=controlScore(),sm=smokes().length,re=resists().length,t=todayEvents(),ti=t.length?Math.round(t.reduce((a,e)=>a+(e.intensity||3),0)/t.length*10)/10:'–',sample=S.events.length,provisional=sample<8;const days=[6,5,4,3,2,1,0].map(n=>{const d=new Date();d.setDate(d.getDate()-n);const ev=S.events.filter(e=>new Date(e.ts).toDateString()===d.toDateString());return{label:n?`${n}T`:'Heute',has:ev.length>0,v:ev.filter(e=>e.type==='resist').length-ev.filter(e=>e.type==='smoke').length}});const max=Math.max(1,...days.filter(x=>x.has).map(x=>Math.abs(x.v)));progress.innerHTML=`<div><div class="eyebrow">FORTSCHRITT</div><div class="title">Kontrolle statt Erfolgsserien.</div><div class="subtitle">Fortschritt heißt mehr Wahlmöglichkeit, nicht perfekte Tage.</div></div><div class="card hero"><div class="eyebrow">KONTROLLWERT</div><div style="font-size:46px;font-weight:900;line-height:1;margin-top:6px">${sc}${provisional?'<span class="provisional">vorläufig</span>':''}</div><div class="subtitle">${provisional?'Wird mit weiteren Situationen aussagekräftiger.':'von 100 · aus deinen letzten Situationen'}</div></div><div class="dna"><div class="card"><div class="eyebrow">UNTERBRECHUNGEN</div><b>${re}</b><small>erfolgreich</small></div><div class="card"><div class="eyebrow">ERFASST</div><b>${sm}</b><small>Zigaretten</small></div><div class="card"><div class="eyebrow">INTENSITÄT</div><b>${ti}</b><small>Ø heute</small></div><div class="card"><div class="eyebrow">AUSGANGSWERT</div><b>${S.baseline||'–'}</b><small>Zigaretten / Tag</small></div></div><div class="card"><div class="eyebrow">7-TAGE-TREND</div><div class="chart">${days.map(x=>x.has?`<div class="bar ${x.v>=0?'good':'smoke'}" style="height:${22+Math.abs(x.v)/max*58}px"><span>${x.label}</span></div>`:`<div class="bar empty"><span>${x.label}</span></div>`).join('')}</div></div>`};
+
 renderMe=function(){me.innerHTML=`<div><div class="eyebrow">ICH</div><div class="title">Dein Smoke Lab.</div><div class="subtitle">Profil, Datenschutz und deine Daten.</div></div><div class="card settings"><div class="setting"><div><b>Ziel</b><small>${S.goal==='quit'?'Aufhören':'Reduzieren'}</small></div><button class="linkbtn" data-setting="goal">Ändern</button></div><div class="setting"><div><b>Ausgangswert</b><small>${S.baseline||'–'} Zigaretten / Tag</small></div><button class="linkbtn" data-setting="baseline">Ändern</button></div><div class="setting"><div><b>Raucherfahrung</b><small>${S.smokingYears?`Seit ${S.smokingYears} Jahren`:'Nicht angegeben'}</small></div><button class="linkbtn" data-setting="years">Ändern</button></div><div class="setting"><div><b>Sprache</b><small>Deutsch</small></div><span class="pill">DE</span></div><div class="setting"><div><b>Labor-Bericht</b><small>Anonymisierte Zusammenfassung kopieren</small></div><button class="linkbtn" data-setting="report">Kopieren</button></div><div class="setting"><div><b>Datenschutz & Info</b><small>Lokal gespeichert · kein Konto</small></div><button class="linkbtn" data-setting="about">Info</button></div><div class="setting"><div><b>Hinweis</b><small>Kein Ersatz für medizinische Behandlung</small></div><button class="linkbtn" data-setting="disclaimer">Info</button></div><div class="setting"><div><b>Alle Daten zurücksetzen</b><small>Unwiderruflich auf diesem Gerät</small></div><button class="linkbtn danger" data-setting="reset">Zurücksetzen</button></div></div>`};
+
 const _renderCraving=renderCraving;renderCraving=function(){_renderCraving();if(c.step===0){cravingTitle.textContent='Was löst den Drang gerade aus?';cravingBody.querySelector('.grid2')?.classList.add('trigger-grid')}};
 startIntervention=function(){clearInterval(timer);const x=config(),start=Date.now();const draw=()=>{const rem=Math.max(0,x.s-Math.floor((Date.now()-start)/1000));const parts=x.txt.split('. '),first=parts.shift()+(parts.length?'.':''),rest=parts.join('. ');interventionBody.innerHTML=`<div class="intervention"><div class="eyebrow">AKUTHILFE · KONTEXTABHÄNGIG</div><h2>${x.title}</h2><div class="intervention-action">${first}</div><div class="timer">${rem}</div><div class="intervention-detail">${rest}</div></div><div class="sheet-actions"><button class="btn" data-reassess>Drang jetzt prüfen</button><button class="btn primary" data-smoked-anyway>Ich habe geraucht</button></div>`;if(rem<=0){clearInterval(timer);showOutcome()}};draw();timer=setInterval(draw,1000)};
-if(!window.__smokeLabNavGuard){window.__smokeLabNavGuard=true;document.addEventListener('click',e=>{const tab=e.target.closest&&e.target.closest('.tab[data-tab]');if(!tab)return;const next=tab.dataset.tab;if(!['today','lab','patterns','progress','me'].includes(next))return;e.preventDefault();e.stopPropagation();S.activeTab=next;save();render()},{capture:true})}
+
 render();
