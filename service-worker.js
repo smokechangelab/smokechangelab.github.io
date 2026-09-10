@@ -1,6 +1,6 @@
-const SW_VERSION='20260911-release-router-v2';
+const SW_VERSION='20260911-release-router-v3';
 const CACHE=`smoke-lab-${SW_VERSION}`;
-const DEFAULT_RELEASE={version:'20260911-v47.2',entry:'app-v47.html'};
+const DEFAULT_RELEASE={version:'20260911-v47.5',entry:'app-v47.html'};
 const CORE=['/','/index.html','/release.json','/manifest.webmanifest','/update-client.js','/app-v47.html','/app-v46.html','/v47-polish.css','/v47-polish.js','/brand-lockup.svg','/icon-192.png','/icon-512.png','/apple-touch-icon.png'];
 async function getRelease(){try{const r=await fetch(`/release.json?sw=${Date.now()}`,{cache:'no-store',headers:{'Cache-Control':'no-cache'}});if(r.ok){const rel=await r.clone().json();const cache=await caches.open(CACHE);await cache.put('/release.json',r);return rel}}catch{}try{const c=await caches.match('/release.json');if(c)return await c.json()}catch{}return DEFAULT_RELEASE}
 self.addEventListener('install',event=>event.waitUntil((async()=>{const cache=await caches.open(CACHE);for(const url of CORE){try{const r=await fetch(`${url}${url.includes('?')?'&':'?'}sw=${SW_VERSION}`,{cache:'reload'});if(r.ok)await cache.put(url,r.clone())}catch{}}await self.skipWaiting()})()));
