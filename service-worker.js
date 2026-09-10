@@ -1,16 +1,16 @@
-const VERSION='20260910-cachefix-v14';
-const CACHE=`smoke-lab-${VERSION}`;
-const STATIC_ASSETS=['./brand-lockup.svg','./manifest.json','./icon-192.png','./icon-512.png','./apple-touch-icon.png'];
+const VERSION='20260910-safari-cachefix-v15';
+const CACHE=`smoke-lab-static-${VERSION}`;
+const STATIC_ASSETS=['./brand-lockup.svg','./icon-192.png','./icon-512.png','./apple-touch-icon.png'];
 
 self.addEventListener('install',event=>{
   event.waitUntil((async()=>{
     const cache=await caches.open(CACHE);
-    await Promise.all(STATIC_ASSETS.map(async url=>{
+    for(const url of STATIC_ASSETS){
       try{
         const response=await fetch(`${url}?v=${VERSION}`,{cache:'reload'});
         if(response.ok) await cache.put(url,response.clone());
       }catch{}
-    }));
+    }
     await self.skipWaiting();
   })());
 });
@@ -27,20 +27,17 @@ self.addEventListener('activate',event=>{
 
 self.addEventListener('message',event=>{
   if(event.data?.type==='SKIP_WAITING') self.skipWaiting();
+  if(event.data?.type==='PURGE_CACHES'){
+    event.waitUntil((async()=>{
+      const keys=await caches.keys();
+      await Promise.all(keys.map(key=>caches.delete(key)));
+      event.source?.postMessage?.({type:'PURGE_COMPLETE',version:VERSION});
+    })());
+  }
 });
 
-async function networkFirst(request){
-  try{
-    return await fetch(request,{cache:'no-store'});
-  }catch{
-    const cached=await caches.match(request,{ignoreSearch:true});
-    if(cached) return cached;
-    if(request.mode==='navigate'){
-      const fallback=await caches.match('./index.html',{ignoreSearch:true});
-      if(fallback) return fallback;
-    }
-    throw new Error('offline');
-  }
+async function networkOnly(request){
+  return fetch(request,{cache:'no-store'});
 }
 
 self.addEventListener('fetch',event=>{
@@ -48,8 +45,8 @@ self.addEventListener('fetch',event=>{
   const url=new URL(event.request.url);
   if(url.origin!==self.location.origin) return;
 
-  // HTML, JS and CSS are always network-first and never served stale while online.
-  if(event.request.mode==='navigate' || /\.(?:html|js|css)$/.test(url.pathname)){
+  // Never cache app shell/code. This avoids stale Safari/PWA builds.
+  if(event.request.mode==='navigate' || /\.(?:html|js|css|json)$/.test(url.pathname)){
     if(url.pathname.endsWith('/dashboard-v2.js')){
       event.respondWith((async()=>{
         try{
@@ -59,19 +56,19 @@ self.addEventListener('fetch',event=>{
           return new Response(patched,{
             status:response.status,
             statusText:response.statusText,
-            headers:{'Content-Type':'application/javascript; charset=utf-8','Cache-Control':'no-store, max-age=0'}
+            headers:{'Content-Type':'application/javascript; charset=utf-8','Cache-Control':'no-store, no-cache, must-revalidate, max-age=0'}
           });
         }catch{
-          return networkFirst(event.request);
+          return new Response('Offline',{status:503,headers:{'Content-Type':'text/plain; charset=utf-8'}});
         }
       })());
       return;
     }
-    event.respondWith(networkFirst(event.request));
+    event.respondWith(networkOnly(event.request).catch(()=>new Response('Offline',{status:503,headers:{'Content-Type':'text/plain; charset=utf-8'}})));
     return;
   }
 
-  // Only stable static assets may use cache-first.
+  // Only immutable image assets are cached.
   event.respondWith((async()=>{
     const cached=await caches.match(event.request,{ignoreSearch:true});
     if(cached) return cached;
