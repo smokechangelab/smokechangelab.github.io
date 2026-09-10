@@ -1,6 +1,6 @@
-const VERSION='20260910-core-v45';
+const VERSION='20260911-ui-v46';
 const CACHE=`smoke-lab-static-${VERSION}`;
-const STATIC_ASSETS=['./app-v45.html','./brand-lockup.svg','./icon-192.png','./icon-512.png','./apple-touch-icon.png'];
+const STATIC_ASSETS=['./app-v46.html','./brand-lockup.svg','./icon-192.png','./icon-512.png','./apple-touch-icon.png'];
 self.addEventListener('install',event=>{event.waitUntil((async()=>{const cache=await caches.open(CACHE);for(const url of STATIC_ASSETS){try{const response=await fetch(`${url}?v=${VERSION}`,{cache:'reload'});if(response.ok)await cache.put(url,response.clone())}catch{}}await self.skipWaiting()})())});
 self.addEventListener('activate',event=>{event.waitUntil((async()=>{const keys=await caches.keys();await Promise.all(keys.filter(key=>key!==CACHE).map(key=>caches.delete(key)));await self.clients.claim()})())});
 self.addEventListener('message',event=>{if(event.data?.type==='SKIP_WAITING')self.skipWaiting();if(event.data?.type==='PURGE_CACHES'){event.waitUntil((async()=>{const keys=await caches.keys();await Promise.all(keys.map(key=>caches.delete(key)))})())}});
