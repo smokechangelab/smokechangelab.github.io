@@ -1,0 +1,76 @@
+/* Smoke Lab v47.11 — screen balance pass
+   Goal: Today lower content more readable, Lab much denser, Patterns more legible,
+   and Me compact enough to feel like a settings screen rather than a long form. */
+
+/* TODAY — keep the hero compact, make the lower half easier to read. */
+#today .card:not(.hero){padding:19px!important}
+#today .section-head h2{font-size:16px!important;line-height:1.2!important;margin-top:3px!important}
+#today .card:not(.hero) .eyebrow{font-size:9.5px!important;letter-spacing:.14em!important}
+#today .card:not(.hero) .copy{font-size:12.4px!important;line-height:1.46!important;margin-top:6px!important}
+#today .insight-stack{gap:16px!important;padding:19px!important}
+#today .insight-stack>div+div{padding-left:14px!important}
+#today .insight-stack .copy{font-size:11.8px!important;line-height:1.45!important}
+#today .personal-context{font-size:11.5px!important;line-height:1.45!important;margin-top:12px!important;padding-top:12px!important}
+#today .personal-context-label{font-size:9px!important}
+
+/* LAB — same information, clearly denser. */
+#lab .page-head{margin-bottom:2px!important}
+#lab .phase-grid{gap:8px!important}
+#lab .phase,#lab .phase.future,#lab .phase.active{
+  min-height:82px!important;height:82px!important;
+  grid-template-columns:46px minmax(0,1fr) 66px!important;
+  gap:11px!important;padding:13px 14px!important;border-radius:18px!important
+}
+#lab .phase-num,#lab .phase.future .phase-num,#lab .phase.active .phase-num{
+  width:42px!important;height:42px!important;border-radius:13px!important;font-size:17px!important
+}
+#lab .phase b,#lab .phase.future b,#lab .phase.active b{font-size:13.5px!important;line-height:1.12!important}
+#lab .phase small,#lab .phase.future small,#lab .phase.active small{font-size:9.8px!important;line-height:1.25!important;margin-top:3px!important}
+#lab .phase .pill,#lab .phase.future .pill,#lab .phase.active .pill{
+  width:66px!important;min-width:66px!important;height:30px!important;padding:0 6px!important;font-size:10px!important
+}
+#lab .phase-grid + .card{padding:17px 18px!important}
+#lab .phase-grid + .card .section-head h2{font-size:14px!important;line-height:1.2!important}
+#lab .phase-grid + .card .copy{font-size:10.8px!important;line-height:1.4!important}
+#lab .profile-strip{margin-top:10px!important;padding-top:10px!important}
+#lab .profile-strip-meta{font-size:8.5px!important}
+#lab .profile-strip-text{font-size:9.8px!important;line-height:1.35!important}
+
+/* PATTERNS — the empty state should feel informative, not tiny. */
+#patterns>.card{padding:21px!important}
+#patterns>.card>.copy{font-size:13px!important;line-height:1.45!important;margin-top:7px!important}
+#patterns .progress{height:6px!important;margin-top:12px!important}
+#patterns .preview-grid{gap:10px!important;margin-top:14px!important}
+#patterns .preview-card{min-height:88px!important;padding:13px!important;border-radius:16px!important}
+#patterns .preview-card b{font-size:12px!important;line-height:1.2!important}
+#patterns .preview-card small{font-size:10.4px!important;line-height:1.36!important;margin-top:6px!important}
+#patterns .dna .card{padding:16px!important}
+#patterns .dna b{font-size:14px!important}
+#patterns .dna small{font-size:10px!important;line-height:1.35!important}
+#patterns .mini-list .row{font-size:10.5px!important}
+
+/* ME — tighter, cleaner settings rhythm. */
+#me .settings.card{padding:4px 18px!important}
+#me .setting{padding:10px 0!important;min-height:56px!important}
+#me .setting b{font-size:12px!important;line-height:1.2!important}
+#me .setting small{font-size:9.8px!important;line-height:1.35!important;margin-top:3px!important}
+#me .linkbtn{font-size:10.5px!important;padding:6px 0 6px 10px!important}
+#me .pill{font-size:9px!important;padding:6px 9px!important}
+
+@media(max-width:390px){
+  #today .card:not(.hero){padding:17px!important}
+  #today .card:not(.hero) .copy{font-size:11.8px!important}
+  #today .insight-stack .copy{font-size:11.2px!important}
+  #lab .phase,#lab .phase.future,#lab .phase.active{
+    min-height:78px!important;height:78px!important;
+    grid-template-columns:42px minmax(0,1fr) 62px!important;
+    gap:9px!important;padding:12px 13px!important
+  }
+  #lab .phase-num,#lab .phase.future .phase-num,#lab .phase.active .phase-num{width:38px!important;height:38px!important;font-size:16px!important}
+  #lab .phase b,#lab .phase.future b,#lab .phase.active b{font-size:12.5px!important}
+  #lab .phase small,#lab .phase.future small,#lab .phase.active small{font-size:9.2px!important}
+  #lab .phase .pill,#lab .phase.future .pill,#lab .phase.active .pill{width:62px!important;min-width:62px!important;height:28px!important;font-size:9.5px!important}
+  #patterns .preview-card{min-height:82px!important;padding:12px!important}
+  #patterns .preview-card b{font-size:11.4px!important}
+  #patterns .preview-card small{font-size:9.8px!important}
+}
