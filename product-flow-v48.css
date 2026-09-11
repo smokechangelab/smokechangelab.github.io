@@ -1,9 +1,26 @@
-/* Smoke Lab v48.1 — visual distinction for SOS vs. neutral logging */
+/* Smoke Lab v48.3 — self-paced SOS + neutral logging separation */
 #today [data-action="craving"]{background:#E88945!important;border-color:#E88945!important;color:#fff!important}
 #today [data-action="smoke"]{background:#FFFFFF!important;border:1px solid #D8E1DE!important;color:#1B4F4C!important}
-.sos-outcome .sos-close,.sos-still .sos-close{margin-top:8px!important}
-.sos-success{text-align:center;padding:10px 0 2px}
+.sos-sheet{position:relative!important;padding-top:22px!important}
+.sos-x{position:absolute;top:12px;right:12px;width:36px;height:36px;border:0;border-radius:999px;background:#EEF3F1;color:#1B4F4C;font-size:24px;line-height:1;display:grid;place-items:center;font-weight:500;z-index:2}
+.sos-trigger-grid{display:grid;gap:10px;margin-top:16px}
+.sos-trigger{width:100%;min-height:56px;border:1px solid #DCE5E2;border-radius:18px;background:#F8FAF9;color:#1B4F4C;padding:0 16px;display:flex;align-items:center;justify-content:space-between;font-size:14px;font-weight:800;text-align:left;box-shadow:0 2px 10px rgba(0,0,0,.02)}
+.sos-trigger i{font-style:normal;font-size:22px;color:#8BA19C;font-weight:500}
+.sos-exercise{padding-top:2px}
+.sos-exercise h2,.sos-outcome h2,.sos-success h2{color:#1B4F4C!important;margin:7px 0 8px!important}
+.sos-lead,.sos-outcome>p,.sos-success>p{font-size:12px!important;line-height:1.5!important;color:#64748B!important}
+.sos-steps{display:grid;gap:10px;margin:16px 0}
+.sos-step{display:grid;grid-template-columns:30px 1fr;gap:10px;align-items:start;padding:12px 13px;border-radius:16px;background:#F2F5F4}
+.sos-step>span{width:30px;height:30px;border-radius:10px;background:#E2ECE8;color:#1B4F4C;display:grid;place-items:center;font-size:12px;font-weight:900}
+.sos-step p{margin:3px 0 0!important;font-size:12px!important;line-height:1.4!important;color:#334E49!important}
+.sos-done{margin-top:4px!important;min-height:50px!important}
+.sos-cancel{margin-top:8px!important;min-height:46px!important}
+.sos-outcome{padding-top:4px}
+.sos-outcome-actions{display:grid;gap:8px;margin-top:16px}
+.sos-used{margin-top:12px;text-align:center;font-size:9px;color:#8A9894}
+.sos-success{text-align:center;padding:8px 0 2px}
 .sos-success-dot{width:54px;height:54px;margin:0 auto 14px;border-radius:50%;display:grid;place-items:center;background:#E4F3EA;color:#287A4B;font-size:26px;font-weight:900;border:1px solid #C7E5D3;box-shadow:0 4px 16px rgba(40,122,75,.08)}
 .sos-success .eyebrow{color:#287A4B!important}
-.sos-success h2{color:#1B4F4C!important;margin:5px 0 6px!important}
-.sos-success p{max-width:320px;margin:0 auto 16px!important;color:#64748B!important}
+.sos-success p{max-width:320px;margin:0 auto 16px!important}
+/* Safety net: legacy locked countdown must never be visible in the active SOS route. */
+.v48-intervention .timer,.v48-intervention .v48-progress{display:none!important}
