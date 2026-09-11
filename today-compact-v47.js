@@ -1,6 +1,6 @@
-// Smoke Lab v47.10 — compact TODAY header and one-screen composition
+// Smoke Lab v48.1 — clean separate TODAY welcome header
 (()=>{
-  const safe=fn=>{try{fn()}catch(e){console.error('Smoke Lab TODAY compact:',e)}};
+  const safe=fn=>{try{fn()}catch(e){console.error('Smoke Lab TODAY header:',e)}};
   if(typeof S==='undefined'||typeof renderToday!=='function')return;
   const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
   const greeting=()=>{
@@ -16,10 +16,9 @@
     const first=root?.firstElementChild;
     if(!first)return;
     const name=typeof S.name==='string'?S.name.trim():'';
-    const hello=name?`${greeting()}, ${esc(name)}`:greeting();
     const meta=S.language==='en'?`TODAY · DAY ${day()}`:`HEUTE · TAG ${day()}`;
-    first.className='today-welcome today-welcome-compact';
-    first.innerHTML=`<div class="today-greeting-line">${hello}</div><div class="today-welcome-meta">${meta}</div>`;
+    first.className='today-welcome today-welcome-final';
+    first.innerHTML=`<div class="today-welcome-time">${greeting()}</div><div class="today-welcome-name">${name?esc(name):(S.language==='en'?'Welcome':'Willkommen')}</div><div class="today-welcome-meta">${meta}</div>`;
   };
   safe(()=>{if(document.getElementById('today')?.classList.contains('active'))renderToday()});
 })();
