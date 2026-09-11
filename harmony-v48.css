@@ -1,6 +1,62 @@
-/* Smoke Lab v48.6 harmony */
-.app{max-width:430px!important;padding:12px 16px calc(78px + env(safe-area-inset-bottom))!important}.header{height:32px!important;margin-bottom:7px!important}.page,#today,#lab,#patterns,#progress,#me{gap:8px!important}.card,.settings.card,#patterns>.card,#lab .card,#progress .card{background:#fff!important;border:1px solid #E2E8F0!important;border-radius:18px!important;padding:14px!important;box-shadow:0 4px 20px rgba(0,0,0,.04)!important}.title{font-size:20px!important}.subtitle{font-size:10.5px!important}
-#today .home-greeting span{font-size:11px!important}#today .home-greeting h1{font-size:19px!important}#today .home-status-card{min-height:70px!important;padding:10px 12px!important;border-radius:16px!important}#today .home-status-copy strong{font-size:15px!important}#today .home-status-badge{height:28px!important;padding:0 9px!important;font-size:8.5px!important}#today .home-actions{gap:6px!important}#today .home-action{height:42px!important;min-height:42px!important;border-radius:13px!important;font-size:11.5px!important}#today .home-radar-card{padding:10px 12px!important;border-radius:16px!important}#today .home-radar-card h2{font-size:13px!important}#today .home-radar-metrics{margin-top:6px!important;gap:6px!important}#today .home-radar-metrics>div{padding:6px 8px!important;min-height:44px!important}#today .home-radar-row{padding-top:5px!important;margin-top:5px!important}#today .home-radar-row b{font-size:9.5px!important}
-.overlay{z-index:500!important;padding:8px 8px calc(8px + env(safe-area-inset-bottom))!important}.sheet{width:min(100%,430px)!important;max-height:calc(100dvh - 36px)!important;overflow-y:auto!important;border-radius:22px!important;padding:14px!important}.sheet h2{font-size:19px!important}.sheet p{font-size:10.5px!important}#smoke .chips,#craving .chips,#smoke .grid2,#craving .grid2{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:7px!important}#smoke .chip,#craving .chip,#smoke .select,#craving .select{width:100%!important;min-width:0!important;height:44px!important;min-height:44px!important;border-radius:13px!important;padding:0 8px!important;text-align:center!important;font-size:9.5px!important;white-space:normal!important}#smoke .scale,#craving .scale{display:grid!important;grid-template-columns:repeat(5,minmax(0,1fr))!important;gap:6px!important}#smoke .scale .select,#craving .scale .select{height:48px!important;min-height:48px!important;font-size:13px!important;white-space:nowrap!important}
-#patterns>.card{padding:12px!important}#patterns .progress{height:4px!important;margin-top:7px!important}#patterns .preview-grid{gap:6px!important;margin-top:7px!important}#patterns .preview-card{min-height:58px!important;padding:8px!important;border-radius:12px!important}#patterns .preview-card b{font-size:9.5px!important}#patterns .preview-card small{font-size:8px!important;line-height:1.2!important}
-.nav{max-width:430px!important;min-height:60px!important;padding:5px 0 env(safe-area-inset-bottom)!important}.nav .tab{min-height:48px!important}.nav .tab span{font-size:6.8px!important}.nav .tab i{font-size:16px!important}
+/* Smoke Lab v48.7 — strict end-to-end design system */
+:root{--sl-bg:#F2F5F4;--sl-card:#FFFFFF;--sl-ink:#1B4F4C;--sl-text:#334155;--sl-muted:#64748B;--sl-line:#E2E8F0;--sl-shadow:0 4px 20px rgba(0,0,0,.03)}
+html,body{background:var(--sl-bg)!important}
+*{box-sizing:border-box}
+.app{width:100%!important;max-width:440px!important;margin:0 auto!important;min-height:100vh!important;min-height:100dvh!important;padding:24px 16px calc(100px + env(safe-area-inset-bottom))!important;background:var(--sl-bg)!important;display:flex!important;flex-direction:column!important;gap:16px!important}
+.header{position:relative!important;top:auto!important;height:auto!important;min-height:42px!important;margin:0!important;padding:0!important;background:transparent!important}
+.page,#today,#lab,#patterns,#progress,#me{gap:16px!important}
+.page.active{display:flex!important;flex-direction:column!important}
+
+/* Master card system */
+.card,.settings.card,.sheet,.phase,.preview-card,.home-status-card,.home-radar-card,.home-radar-metrics>div,.v48-step,.sos-step-card,.v48-result,.v48-outcome{background:var(--sl-card)!important;border:1px solid var(--sl-line)!important;border-radius:20px!important;padding:20px!important;box-shadow:var(--sl-shadow)!important;color:var(--sl-text)!important}
+.card.hero{background:var(--sl-card)!important;color:var(--sl-text)!important}
+
+/* Fixed typography hierarchy */
+.title,.page-head .title,.sheet h2,.home-greeting h1,.home-radar-card h2,.section-head h2,.v48-result h2,.v48-outcome h2{font-size:20px!important;line-height:1.2!important;font-weight:800!important;color:var(--sl-ink)!important;letter-spacing:-.5px!important;margin-top:0!important}
+.eyebrow,.onboarding-kicker,.onboarding-step,.home-radar-kicker,.home-radar-row>span,.home-status-copy>span,.personal-context-label,.profile-strip-meta,.baseline-reference b,.setting b{font-size:11px!important;line-height:1.25!important;text-transform:uppercase!important;font-weight:600!important;color:var(--sl-muted)!important;letter-spacing:.5px!important}
+.subtitle,.copy,.sheet p,.preview-card small,.v48-step p,.personal-context,.profile-strip-text,.baseline-reference span,.setting small{font-size:14px!important;line-height:1.5!important;font-weight:400!important;color:var(--sl-text)!important}
+
+/* Welcome header */
+.home-greeting,.today-welcome,.today-welcome-final,.today-welcome-compact{display:flex!important;flex-direction:column!important;gap:2px!important;margin:0!important;padding:0!important;background:transparent!important;border:0!important;box-shadow:none!important}
+.home-greeting span,.today-welcome-time{font-size:13px!important;line-height:1.35!important;font-weight:500!important;color:var(--sl-muted)!important}
+.home-greeting h1,.today-welcome-name{font-size:20px!important;line-height:1.2!important;font-weight:800!important;color:var(--sl-ink)!important;letter-spacing:-.5px!important;margin:0!important}
+.today-welcome-meta{font-size:11px!important;color:var(--sl-muted)!important;margin-top:4px!important}
+
+/* Buttons and interactive controls */
+.btn,.home-action,.onboarding-primary,.onboarding-secondary,.linkbtn,.select,[data-sos-trigger]{border-radius:16px!important;padding:16px!important;font-size:15px!important;line-height:1.2!important;font-weight:700!important;text-align:center!important;white-space:nowrap!important;word-break:normal!important;overflow-wrap:normal!important;hyphens:none!important;display:inline-flex!important;align-items:center!important;justify-content:center!important;max-width:100%!important}
+.btn.full,.home-action,.onboarding-primary{width:100%!important}
+.home-actions{display:flex!important;flex-direction:column!important;gap:16px!important}
+.home-log{background:#FFFFFF!important;color:var(--sl-ink)!important;border:1px solid var(--sl-line)!important;box-shadow:var(--sl-shadow)!important}
+.home-sos,.btn.primary{background:#E8873A!important;color:#FFFFFF!important;border:1px solid #E8873A!important}
+
+/* Home uses same card system */
+.home-status-card{display:flex!important;align-items:center!important;justify-content:space-between!important;gap:16px!important;color:var(--sl-text)!important}
+.home-status-copy>span{display:block!important}
+.home-status-copy strong{display:block!important;font-size:20px!important;line-height:1.2!important;font-weight:800!important;color:var(--sl-ink)!important;margin-top:4px!important}
+.home-status-badge{background:#F2F5F4!important;color:var(--sl-ink)!important;border:1px solid var(--sl-line)!important;border-radius:999px!important;padding:8px 12px!important;font-size:11px!important;font-weight:700!important;white-space:nowrap!important;flex:0 0 auto!important}
+.home-radar-card h2{margin:4px 0 0!important}
+.home-radar-metrics{display:grid!important;grid-template-columns:1fr 1fr!important;gap:16px!important;margin-top:16px!important}
+.home-radar-metrics>div{padding:20px!important}
+.home-radar-metrics strong{display:block!important;font-size:20px!important;color:var(--sl-ink)!important}
+.home-radar-metrics span{display:block!important;font-size:14px!important;line-height:1.5!important;color:var(--sl-text)!important;margin-top:2px!important}
+.home-radar-row{display:grid!important;gap:6px!important;padding-top:16px!important;margin-top:16px!important;border-top:1px solid var(--sl-line)!important}
+.home-radar-row b{font-size:14px!important;line-height:1.5!important;color:var(--sl-ink)!important}
+.home-next{border-left:0!important;padding-left:0!important}
+
+/* Sheets stay above the navigation and follow the card system */
+.overlay{z-index:500!important;align-items:flex-end!important;padding:16px 16px calc(16px + env(safe-area-inset-bottom))!important;overflow:hidden!important}
+.sheet{width:min(100%,440px)!important;max-height:calc(100dvh - 48px)!important;overflow-y:auto!important;overscroll-behavior:contain!important;-webkit-overflow-scrolling:touch!important;margin:0 auto!important}
+.sheet-actions{display:grid!important;grid-template-columns:1fr 1fr!important;gap:16px!important;margin-top:16px!important}
+
+/* Fixed bottom navigation */
+.nav{position:fixed!important;bottom:0!important;left:0!important;right:0!important;width:100%!important;max-width:440px!important;margin:0 auto!important;background:#FFFFFF!important;border-top:1px solid var(--sl-line)!important;z-index:100!important;display:flex!important;justify-content:space-around!important;align-items:center!important;padding:10px 0 env(safe-area-inset-bottom)!important;min-height:72px!important;height:auto!important}
+.nav .tab{flex:1 1 20%!important;min-width:0!important;max-width:20%!important;width:auto!important;display:flex!important;flex-direction:column!important;justify-content:center!important;align-items:center!important;gap:4px!important;padding:6px 2px!important;margin:0!important;border-radius:16px!important}
+.nav .tab span{font-size:11px!important;line-height:1.1!important;font-weight:600!important;white-space:nowrap!important;text-align:center!important;width:100%!important}
+.nav .tab i{font-size:20px!important;line-height:1!important}
+
+@media(max-width:370px){
+  .app{padding-left:16px!important;padding-right:16px!important}
+  .home-status-card{align-items:flex-start!important;flex-direction:column!important}
+  .home-status-badge{align-self:flex-start!important}
+  .btn,.home-action,.select,[data-sos-trigger]{font-size:14px!important;padding:15px 12px!important}
+}
