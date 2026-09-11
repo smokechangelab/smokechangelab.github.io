@@ -1,1 +1,31 @@
-[data-sos-trigger]{height:46px!important;min-height:46px!important;border-radius:13px!important;padding:0 10px!important;font-size:10.5px!important}.sos-trigger-grid,.v48-trigger-grid{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:7px!important}.v48-step{min-height:56px!important;border-radius:13px!important;padding:9px!important;gap:9px!important}.v48-step span{width:30px!important;height:30px!important;flex:0 0 30px!important}.v48-step p{font-size:10.5px!important;line-height:1.3!important;margin:0!important}#lab .phase-grid{gap:7px!important}#lab .phase,#lab .phase.future,#lab .phase.active{height:72px!important;min-height:72px!important;border-radius:16px!important;padding:10px 12px!important;grid-template-columns:38px minmax(0,1fr) 58px!important;gap:8px!important}#lab .phase-num,#lab .phase.future .phase-num,#lab .phase.active .phase-num{width:34px!important;height:34px!important;border-radius:10px!important;font-size:14px!important}#lab .phase b,#lab .phase.future b,#lab .phase.active b{font-size:11.5px!important}#lab .phase small,#lab .phase.future small,#lab .phase.active small{font-size:8.4px!important;margin-top:2px!important}#lab .phase .pill,#lab .phase.future .pill,#lab .phase.active .pill{width:58px!important;min-width:58px!important;height:26px!important;font-size:8.5px!important}
+/* Smoke Lab v48.7 — component alignment under the master design system */
+.sos-trigger-grid,.v48-trigger-grid,#smoke .chips,#craving .chips,#smoke .grid2,#craving .grid2{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:16px!important}
+[data-sos-trigger],#smoke .chip,#craving .chip,#smoke .select,#craving .select{width:100%!important;min-width:0!important;min-height:52px!important;border-radius:16px!important;padding:16px!important;font-size:15px!important;font-weight:700!important;text-align:center!important;white-space:nowrap!important;overflow:hidden!important;text-overflow:ellipsis!important;background:#FFFFFF!important;border:1px solid #E2E8F0!important;color:#1B4F4C!important}
+#smoke .scale,#craving .scale{display:grid!important;grid-template-columns:repeat(5,minmax(0,1fr))!important;gap:12px!important}
+#smoke .scale .select,#craving .scale .select{min-height:56px!important;padding:0!important;font-size:15px!important;white-space:nowrap!important}
+#smoke .select.selected,#craving .select.selected,[data-sos-trigger].selected{background:#1B4F4C!important;border-color:#1B4F4C!important;color:#FFFFFF!important}
+
+.v48-step{display:flex!important;align-items:center!important;gap:16px!important;min-height:0!important}
+.v48-step span{width:40px!important;height:40px!important;flex:0 0 40px!important;border-radius:12px!important;display:grid!important;place-items:center!important;background:#F2F5F4!important;color:#1B4F4C!important;font-size:15px!important;font-weight:800!important}
+.v48-step p{margin:0!important;font-size:14px!important;line-height:1.5!important;color:#334155!important}
+
+#lab .phase-grid{display:grid!important;gap:16px!important}
+#lab .phase,#lab .phase.future,#lab .phase.active{width:100%!important;min-height:0!important;height:auto!important;display:grid!important;grid-template-columns:48px minmax(0,1fr) auto!important;align-items:center!important;gap:16px!important;background:#FFFFFF!important;border:1px solid #E2E8F0!important;border-radius:20px!important;padding:20px!important;box-shadow:0 4px 20px rgba(0,0,0,.03)!important}
+#lab .phase.active{border:2px solid #1B4F4C!important;box-shadow:0 4px 20px rgba(0,0,0,.03)!important}
+#lab .phase-num,#lab .phase.future .phase-num,#lab .phase.active .phase-num{width:48px!important;height:48px!important;border-radius:14px!important;display:grid!important;place-items:center!important;background:#F2F5F4!important;color:#1B4F4C!important;font-size:15px!important;font-weight:800!important}
+#lab .phase b,#lab .phase.future b,#lab .phase.active b{display:block!important;font-size:14px!important;line-height:1.3!important;font-weight:800!important;color:#1B4F4C!important}
+#lab .phase small,#lab .phase.future small,#lab .phase.active small{display:block!important;font-size:14px!important;line-height:1.5!important;color:#334155!important;margin-top:4px!important}
+#lab .phase .pill,#lab .phase.future .pill,#lab .phase.active .pill{min-width:76px!important;height:auto!important;padding:8px 12px!important;border-radius:999px!important;font-size:11px!important;font-weight:700!important;background:#F2F5F4!important;color:#1B4F4C!important;border:1px solid #E2E8F0!important;white-space:nowrap!important}
+
+#patterns .preview-grid{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:16px!important;margin-top:16px!important}
+#patterns .preview-card{min-height:0!important;background:#FFFFFF!important;border:1px solid #E2E8F0!important;border-radius:20px!important;padding:20px!important;box-shadow:0 4px 20px rgba(0,0,0,.03)!important}
+#patterns .preview-card b{display:block!important;font-size:14px!important;line-height:1.3!important;font-weight:800!important;color:#1B4F4C!important}
+#patterns .preview-card small{display:block!important;font-size:14px!important;line-height:1.5!important;color:#334155!important;margin-top:6px!important}
+
+@media(max-width:390px){
+  .sos-trigger-grid,.v48-trigger-grid,#smoke .chips,#craving .chips,#smoke .grid2,#craving .grid2{grid-template-columns:1fr!important}
+  #smoke .scale,#craving .scale{gap:8px!important}
+  #lab .phase,#lab .phase.future,#lab .phase.active{grid-template-columns:44px minmax(0,1fr)!important}
+  #lab .phase .pill,#lab .phase.future .pill,#lab .phase.active .pill{grid-column:2!important;justify-self:start!important}
+  #patterns .preview-grid{grid-template-columns:1fr!important}
+}
