@@ -1,0 +1,9 @@
+/* Smoke Lab v48.3 — calm global surface polish */
+:root{--sl-surface:#F2F5F4;--sl-line:#E2E8F0;--sl-shadow:0 4px 20px rgba(0,0,0,.04)}
+.page{gap:16px!important}
+.card{background:#F2F5F4!important;border:0!important;border-radius:20px!important;padding:20px!important;box-shadow:0 4px 20px rgba(0,0,0,.04)!important}
+.card.hero{background:#F2F5F4!important}
+.sheet{background:#FFFFFF!important;border-radius:20px!important;padding:20px!important;box-shadow:0 20px 60px rgba(0,0,0,.14)!important}
+#today,#lab,#patterns,#progress,#me{gap:16px!important}
+#me .settings.card,#patterns .card,#lab .card,#progress .card{border-radius:20px!important}
+@media(max-width:370px){.card{padding:18px!important}}
