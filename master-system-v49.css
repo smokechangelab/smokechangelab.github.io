@@ -1,0 +1,194 @@
+/* Smoke Lab v49.2 — strict end-to-end design system */
+:root{
+  --sl-bg:#F2F5F4;
+  --sl-card:#FFFFFF;
+  --sl-ink:#1B4F4C;
+  --sl-text:#334155;
+  --sl-muted:#64748B;
+  --sl-line:#E2E8F0;
+  --sl-shadow:0 4px 20px rgba(0,0,0,.03);
+}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--sl-bg)!important;color:var(--sl-text)!important}
+body{font-family:-apple-system,BlinkMacSystemFont,"SF Pro Text","Segoe UI",Roboto,sans-serif!important;-webkit-font-smoothing:antialiased}
+
+/* One wrapper system for every screen */
+.app{
+  width:100%!important;
+  max-width:440px!important;
+  margin:0 auto!important;
+  min-height:100vh!important;
+  height:auto!important;
+  padding:24px 16px 100px 16px!important;
+  background:var(--sl-bg)!important;
+  display:flex!important;
+  flex-direction:column!important;
+  gap:16px!important;
+  overflow:visible!important;
+}
+.header{flex:0 0 auto!important;margin:0!important;height:auto!important;min-height:0!important;background:transparent!important}
+.page,#today,#lab,#patterns,#progress,#me{
+  width:100%!important;
+  min-height:0!important;
+  height:auto!important;
+  gap:16px!important;
+  padding:0!important;
+  overflow:visible!important;
+}
+.page.active{display:flex!important;flex-direction:column!important}
+
+/* Master cards */
+.card,
+.home-radar-card,
+.home-status-card,
+.settings.card,
+#patterns>.card,
+#patterns .preview-card,
+#patterns .dna .card,
+#progress .card,
+#lab .card,
+#lab .phase,
+#lab .phase.future,
+#lab .phase.active,
+.sos-step,
+.sos-micro-body,
+.intervention,
+.sheet{
+  background:var(--sl-card)!important;
+  border:1px solid var(--sl-line)!important;
+  border-radius:20px!important;
+  padding:20px!important;
+  box-shadow:var(--sl-shadow)!important;
+}
+
+/* Typography hierarchy */
+.title,
+.page-head .title,
+.section-head h2,
+.home-radar-card h2,
+.sheet h2,
+.sos-exercise h2,
+.sos-outcome h2,
+.sos-success h2{
+  font-size:20px!important;
+  font-weight:800!important;
+  color:var(--sl-ink)!important;
+  letter-spacing:-.5px!important;
+  line-height:1.2!important;
+}
+.eyebrow,
+.home-radar-kicker,
+.home-radar-row span,
+.personal-context-label,
+.profile-strip-meta,
+.phase small,
+.metric span{
+  font-size:11px!important;
+  text-transform:uppercase!important;
+  font-weight:600!important;
+  color:var(--sl-muted)!important;
+  letter-spacing:.5px!important;
+  line-height:1.25!important;
+}
+.copy,
+.subtitle,
+.sheet p,
+.sos-lead,
+.sos-step p,
+.sos-micro-body p,
+.setting small,
+.profile-strip-text,
+.preview-card small,
+.dna small{
+  font-size:14px!important;
+  font-weight:400!important;
+  color:var(--sl-text)!important;
+  line-height:1.5!important;
+}
+
+/* Buttons and interactive controls */
+.btn,
+.home-action,
+.sos-trigger,
+.sos-micro-trigger,
+.select,
+.chip,
+.linkbtn{
+  border-radius:16px!important;
+  padding:16px!important;
+  font-size:15px!important;
+  font-weight:700!important;
+  text-align:center!important;
+  white-space:nowrap!important;
+  word-break:normal!important;
+  overflow:hidden!important;
+  text-overflow:ellipsis!important;
+  max-width:100%!important;
+}
+.btn,.home-action{width:100%!important;min-height:0!important;height:auto!important}
+
+/* Keep dense selectors structured but visually standardized */
+.grid2,#smoke .grid2,#craving .grid2,.sos-trigger-grid,.v48-trigger-grid{
+  display:grid!important;
+  grid-template-columns:repeat(2,minmax(0,1fr))!important;
+  gap:12px!important;
+}
+.scale,#smoke .scale,#craving .scale{
+  display:grid!important;
+  grid-template-columns:repeat(5,minmax(0,1fr))!important;
+  gap:8px!important;
+}
+.scale .select,#smoke .scale .select,#craving .scale .select{padding:14px 0!important}
+
+/* Home components conform to master spacing */
+.home-compact-head,.home-greeting{margin:0!important;padding:0!important;min-height:0!important;height:auto!important}
+.home-actions,.home-actions-split{gap:12px!important}
+.home-radar-metrics{gap:12px!important;margin-top:12px!important}
+.home-radar-metrics>div{background:#fff!important;border:1px solid var(--sl-line)!important;border-radius:20px!important;padding:20px!important;box-shadow:var(--sl-shadow)!important}
+.home-radar-row{padding-top:12px!important;margin-top:12px!important;border-top:1px solid var(--sl-line)!important}
+
+/* Sheets use the same visual language */
+.overlay{z-index:500!important;padding:16px!important}
+.sheet{width:min(100%,440px)!important;max-height:calc(100dvh - 32px)!important;overflow-y:auto!important}
+.sheet-actions{position:sticky!important;bottom:-20px!important;background:#fff!important;padding:12px 0 20px!important;margin-top:16px!important;z-index:3!important}
+
+/* Fixed clean bottom navigation */
+.nav{
+  position:fixed!important;
+  left:0!important;
+  right:0!important;
+  bottom:0!important;
+  transform:none!important;
+  width:100%!important;
+  max-width:440px!important;
+  margin:0 auto!important;
+  min-height:64px!important;
+  height:auto!important;
+  display:flex!important;
+  justify-content:space-around!important;
+  align-items:center!important;
+  gap:0!important;
+  padding:8px 0 env(safe-area-inset-bottom)!important;
+  background:#fff!important;
+  border-top:1px solid var(--sl-line)!important;
+  z-index:100!important;
+}
+.nav .tab{
+  flex:1 1 20%!important;
+  max-width:20%!important;
+  min-width:0!important;
+  display:flex!important;
+  flex-direction:column!important;
+  align-items:center!important;
+  justify-content:center!important;
+  gap:4px!important;
+  padding:6px 2px!important;
+}
+.nav .tab span{font-size:11px!important;line-height:1!important;white-space:nowrap!important;color:inherit!important}
+.nav .tab i{font-size:18px!important;line-height:1!important}
+
+@media(max-width:370px){
+  .app{padding-left:16px!important;padding-right:16px!important}
+  .btn,.home-action,.sos-trigger,.sos-micro-trigger,.select,.chip{font-size:14px!important;padding:14px!important}
+  .nav .tab span{font-size:11px!important}
+}
