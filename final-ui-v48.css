@@ -1,0 +1,32 @@
+/* Smoke Lab v48.1 — final clean header + UI polish */
+:root{--sl-ink:#1B4F4C;--sl-muted:#64748B;--sl-line:#E2E8F0;--sl-card:#FFFFFF;--sl-shadow:0 4px 20px rgba(0,0,0,.04)}
+
+/* Rigid centered app container: max-w-md mx-auto w-full px-4 py-6 */
+.app{width:100%!important;max-width:448px!important;margin-left:auto!important;margin-right:auto!important;padding:24px 16px calc(96px + env(safe-area-inset-bottom))!important}
+.page{gap:16px!important}
+
+/* Home: clean, separate welcome header */
+#today{gap:16px!important}
+#today .today-welcome-final{display:block!important;margin:0!important;padding:0!important;background:transparent!important;box-shadow:none!important;border:0!important}
+#today .today-welcome-time{font-size:12px!important;line-height:1.25!important;font-weight:600!important;color:#64748B!important;letter-spacing:.01em!important;margin:0 0 3px!important}
+#today .today-welcome-name{font-size:20px!important;line-height:1.12!important;font-weight:850!important;color:#1B4F4C!important;letter-spacing:-.02em!important;margin:0!important}
+#today .today-welcome-meta{font-size:9px!important;line-height:1.2!important;font-weight:800!important;color:#87938F!important;letter-spacing:.09em!important;text-transform:uppercase!important;margin-top:6px!important}
+#today .today-greeting-line,#today .today-welcome-lead{display:none!important}
+
+/* Exact tactile card standard on Home */
+#today .card{background:#FFFFFF!important;border-radius:20px!important;padding:20px!important;box-shadow:0 4px 20px rgba(0,0,0,.04)!important;border:0!important}
+#today .card.hero{background:#FFFFFF!important}
+
+/* Stable 5-tab bottom nav */
+.nav{position:fixed!important;bottom:0!important;left:0!important;right:0!important;transform:none!important;width:100%!important;max-width:none!important;min-height:calc(72px + env(safe-area-inset-bottom))!important;height:auto!important;padding:7px max(12px,calc((100vw - 448px)/2 + 16px)) env(safe-area-inset-bottom)!important;display:flex!important;justify-content:space-around!important;align-items:center!important;gap:0!important;background:#FFFFFF!important;border-top:1px solid #E2E8F0!important;z-index:50!important;backdrop-filter:none!important;-webkit-backdrop-filter:none!important}
+.nav .tab{flex:1 1 20%!important;min-width:0!important;max-width:20%!important;width:auto!important;display:flex!important;flex-direction:column!important;justify-content:center!important;align-items:center!important;gap:3px!important;overflow:hidden!important;white-space:nowrap!important;padding:5px 2px!important;margin:0!important;border-radius:14px!important;text-align:center!important}
+.nav .tab span{display:block!important;width:100%!important;max-width:100%!important;overflow:hidden!important;text-overflow:clip!important;white-space:nowrap!important;text-align:center!important}
+.nav .tab i{display:block!important;line-height:1!important;margin:0 auto!important}
+
+@media(max-width:370px){
+  .app{padding-left:16px!important;padding-right:16px!important}
+  #today .today-welcome-name{font-size:20px!important}
+  #today .card{padding:20px!important}
+  .nav{padding-left:8px!important;padding-right:8px!important}
+  .nav .tab{font-size:6.8px!important}
+}
