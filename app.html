@@ -1,35 +1,501 @@
 <!DOCTYPE html>
-<html lang="de" class="dark">
+<html lang="de">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover" />
-  <meta name="theme-color" content="#050505" />
-  <meta name="apple-mobile-web-app-capable" content="yes" />
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-  <title>Smoke Lab — Pattern & Habit Tracker</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
-  <script>
-    tailwind.config = {darkMode:'class',theme:{extend:{colors:{ink:'#050505',panel:'#0D0F10',panel2:'#131619',line:'#24282C',amberx:'#D9A441',mintx:'#7FE0C2'},boxShadow:{soft:'0 18px 60px rgba(0,0,0,.28)',glow:'0 12px 36px rgba(217,164,65,.16)'}}}}
-  </script>
-  <style>[x-cloak]{display:none!important}html,body{background:#050505;overscroll-behavior:none}body{min-height:100dvh}*{-webkit-tap-highlight-color:transparent}::-webkit-scrollbar{width:0;height:0}.safe-top{padding-top:max(14px,env(safe-area-inset-top))}.safe-bottom{padding-bottom:max(18px,env(safe-area-inset-bottom))}.sheet-enter{animation:sheetIn .28s cubic-bezier(.16,1,.3,1)}@keyframes sheetIn{from{transform:translateY(24px);opacity:0}to{transform:none;opacity:1}}.orb{animation:breathe 8s ease-in-out infinite}@keyframes breathe{0%,100%{transform:scale(.82);box-shadow:0 0 0 0 rgba(127,224,194,.02)}50%{transform:scale(1);box-shadow:0 0 0 24px rgba(127,224,194,.035)}}</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="theme-color" content="#000000">
+    <title>Smoke Lab — KVT Labor</title>
+    <style>
+        :root {
+            --bg: #000000;
+            --surface: #121212;
+            --surface-card: #18181B;
+            --border: rgba(255, 255, 255, 0.08);
+            --primary: #FFFFFF;
+            --muted: #8E8E93;
+            --accent: #E5A93B;
+            --accent-glow: rgba(229, 169, 59, 0.15);
+            --radius-card: 22px;
+            --radius-btn: 14px;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", Roboto, sans-serif;
+            -webkit-font-smoothing: antialiased;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            background-color: var(--bg);
+            color: var(--primary);
+            display: flex;
+            justify-content: center;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        .app-frame {
+            width: 100%;
+            max-width: 414px;
+            min-height: 100vh;
+            background-color: var(--bg);
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
+
+        .view {
+            display: none;
+            flex-direction: column;
+            padding: 20px 16px 110px 16px;
+            gap: 14px;
+            animation: fadeIn 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+        .view.active { display: flex; }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(8px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .bento-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+
+        .bento-card {
+            background-color: var(--surface-card);
+            border-radius: var(--radius-card);
+            padding: 16px;
+            border: 1px solid var(--border);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            min-height: 105px;
+        }
+
+        .bento-card.full {
+            grid-column: span 2;
+        }
+
+        .label-sm { font-size: 10px; text-transform: uppercase; color: var(--muted); font-weight: 750; letter-spacing: 0.8px; }
+        .bento-value { font-size: 26px; font-weight: 850; color: var(--primary); margin-top: 4px; letter-spacing: -0.5px; }
+        .title-hero { font-size: 24px; font-weight: 850; color: var(--primary); letter-spacing: -0.7px; line-height: 1.15; }
+
+        .btn-gold {
+            background: var(--accent);
+            color: #000000;
+            border: none;
+            border-radius: var(--radius-btn);
+            height: 52px;
+            font-size: 15px;
+            font-weight: 800;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 8px 25px var(--accent-glow);
+            transition: transform 0.1s ease;
+        }
+        .btn-gold:active { transform: scale(0.98); }
+
+        .btn-surface {
+            background-color: var(--surface-card);
+            color: var(--primary);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-btn);
+            height: 52px;
+            font-size: 15px;
+            font-weight: 750;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: transform 0.1s ease;
+        }
+        .btn-surface:active { transform: scale(0.98); }
+
+        .lab-input {
+            width: 100%;
+            height: 48px;
+            padding: 0 14px;
+            border-radius: 12px;
+            border: 1px solid var(--border);
+            background: var(--surface);
+            font-size: 14px;
+            color: var(--primary);
+            outline: none;
+        }
+        .lab-input:focus { border-color: var(--accent); }
+
+        .bottom-nav {
+            position: fixed;
+            bottom: 0; left: 50%;
+            transform: translateX(-50%);
+            width: 100%;
+            max-width: 414px;
+            height: 76px;
+            background: rgba(18, 18, 18, 0.88);
+            backdrop-filter: blur(25px);
+            -webkit-backdrop-filter: blur(25px);
+            border-top: 1px solid var(--border);
+            display: none;
+            justify-content: space-around;
+            align-items: center;
+            padding-bottom: 10px;
+            z-index: 100;
+        }
+        .bottom-nav.active { display: flex; }
+        .nav-item {
+            background: none; border: none;
+            color: var(--muted);
+            font-size: 9px; text-align: center;
+            flex: 1; font-weight: 750; cursor: pointer;
+            display: flex; flex-direction: column; align-items: center; gap: 3px;
+        }
+        .nav-item svg { width: 20px; height: 20px; fill: currentColor; }
+        .nav-item.active { color: var(--accent); }
+
+        .sheet-overlay {
+            position: fixed; inset: 0; background: rgba(0,0,0,0.8); backdrop-filter: blur(10px);
+            z-index: 200; display: none; align-items: flex-end; justify-content: center;
+        }
+        .sheet-overlay.open { display: flex; }
+        .sheet-content {
+            width: 100%; max-width: 414px; background: var(--surface-card);
+            border: 1px solid var(--border);
+            border-top-left-radius: 32px; border-top-right-radius: 32px;
+            padding: 28px 20px 44px 20px;
+            display: flex; flex-direction: column; gap: 16px;
+            animation: slideUp 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+        @keyframes slideUp {
+            from { transform: translateY(100%); }
+            to { transform: translateY(0); }
+        }
+
+        .trigger-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+        }
+        .trigger-chip {
+            padding: 12px;
+            border-radius: 12px;
+            border: 1px solid var(--border);
+            background: var(--surface);
+            color: var(--primary);
+            font-size: 13px;
+            font-weight: 700;
+            cursor: pointer;
+            text-align: center;
+            transition: all 0.15s ease;
+        }
+        .trigger-chip.active {
+            background: var(--accent);
+            color: #000000;
+            border-color: var(--accent);
+        }
+    </style>
 </head>
-<body class="bg-ink text-zinc-100 antialiased selection:bg-amberx selection:text-black" x-data="smokeLab()" x-init="init()">
-<div class="mx-auto min-h-[100dvh] w-full max-w-[430px] bg-ink">
-<header class="safe-top sticky top-0 z-30 border-b border-white/[0.06] bg-ink/85 px-4 pb-3 backdrop-blur-2xl"><div class="flex items-center justify-between gap-3"><div class="min-w-0"><div class="flex items-center gap-2"><span class="h-2 w-2 rounded-full bg-amberx shadow-[0_0_16px_rgba(217,164,65,.45)]"></span><span class="font-mono text-[10px] uppercase tracking-[.22em] text-zinc-500">Smoke Lab</span></div><div class="mt-1 truncate text-[13px] font-semibold tracking-[-.01em] text-zinc-200" x-text="modeLabel"></div></div><div class="flex items-center gap-2"><button @click="toggleMode()" class="rounded-full border border-white/[0.07] bg-panel px-3 py-1.5 text-[11px] font-medium text-zinc-300 transition active:scale-95" x-text="profile.mode==='reduce'?t('reduce'):t('quit')"></button><button @click="toggleLang()" class="rounded-full border border-white/[0.07] bg-panel px-2.5 py-1.5 font-mono text-[11px] text-zinc-400 transition active:scale-95" x-text="lang.toUpperCase()"></button></div></div></header>
-<main class="space-y-3 px-4 pb-28 pt-4">
-<section class="grid grid-cols-12 gap-2.5"><div class="col-span-8 rounded-[24px] border border-white/[0.07] bg-[radial-gradient(circle_at_top_right,rgba(217,164,65,.16),transparent_38%),linear-gradient(145deg,#121516,#090B0C)] p-4 shadow-soft"><div class="flex items-start justify-between gap-3"><div><div class="font-mono text-[10px] uppercase tracking-[.18em] text-zinc-500" x-text="t('controlIndex')"></div><div class="mt-1 text-[38px] font-semibold leading-none tracking-[-.055em]" x-text="controlIndex"></div></div><div class="rounded-full border border-amberx/20 bg-amberx/10 px-2.5 py-1 font-mono text-[10px] text-amber-300" x-text="t('phaseObserve')"></div></div><div class="mt-5 h-1.5 overflow-hidden rounded-full bg-white/[0.06]"><div class="h-full rounded-full bg-gradient-to-r from-amberx to-emerald-300 transition-all duration-500" :style="`width:${controlIndex}%`"></div></div><div class="mt-3 text-[12px] leading-5 text-zinc-500" x-text="t('heroCopy')"></div></div><div class="col-span-4 flex flex-col justify-between rounded-[24px] border border-white/[0.07] bg-panel p-4"><div class="font-mono text-[9px] uppercase tracking-[.16em] text-zinc-600" x-text="t('smokeFree')"></div><div><div class="text-[24px] font-semibold tracking-[-.04em] text-mintx" x-text="smokeFreeHours"></div><div class="mt-1 text-[10px] text-zinc-600" x-text="t('hours')"></div></div></div><div class="col-span-4 rounded-[20px] border border-white/[0.06] bg-panel p-3.5"><div class="font-mono text-[9px] uppercase tracking-[.14em] text-zinc-600" x-text="t('todaySmoked')"></div><div class="mt-2 text-[25px] font-semibold tracking-[-.04em] text-zinc-100" x-text="todaySmoked"></div></div><div class="col-span-4 rounded-[20px] border border-white/[0.06] bg-panel p-3.5"><div class="font-mono text-[9px] uppercase tracking-[.14em] text-zinc-600" x-text="t('interrupted')"></div><div class="mt-2 text-[25px] font-semibold tracking-[-.04em] text-mintx" x-text="todayResisted"></div></div><div class="col-span-4 rounded-[20px] border border-white/[0.06] bg-panel p-3.5"><div class="font-mono text-[9px] uppercase tracking-[.14em] text-zinc-600" x-text="t('saved')"></div><div class="mt-2 truncate text-[22px] font-semibold tracking-[-.04em] text-amber-300" x-text="moneySaved"></div></div></section>
-<section class="grid grid-cols-2 gap-2.5"><button @click="openCapture('resisted')" class="group rounded-[22px] border border-emerald-300/15 bg-[linear-gradient(145deg,rgba(127,224,194,.09),rgba(255,255,255,.02))] p-4 text-left transition active:scale-[.985]"><div class="flex items-center justify-between"><span class="font-mono text-[9px] uppercase tracking-[.15em] text-emerald-300" x-text="t('quickAction')"></span><span class="h-7 w-7 rounded-full border border-emerald-300/20 bg-emerald-300/10 text-center text-sm leading-7 text-emerald-200">↗</span></div><div class="mt-7 text-[15px] font-semibold" x-text="t('resistedAction')"></div><div class="mt-1 text-[11px] text-zinc-500" x-text="t('resistedSub')"></div></button><button @click="openCapture('smoked')" class="group rounded-[22px] border border-white/[0.07] bg-panel p-4 text-left transition active:scale-[.985]"><div class="flex items-center justify-between"><span class="font-mono text-[9px] uppercase tracking-[.15em] text-zinc-500" x-text="t('log')"></span><span class="h-7 w-7 rounded-full border border-white/[0.07] bg-white/[0.03] text-center text-sm leading-7 text-zinc-500">＋</span></div><div class="mt-7 text-[15px] font-semibold" x-text="t('smokedAction')"></div><div class="mt-1 text-[11px] text-zinc-500" x-text="t('smokedSub')"></div></button></section>
-<button @click="openSOS()" class="flex w-full items-center justify-between rounded-[22px] border border-amberx/20 bg-amberx/[0.08] px-4 py-3.5 text-left shadow-glow transition active:scale-[.99]"><div><div class="font-mono text-[9px] uppercase tracking-[.16em] text-amber-300" x-text="t('acute')"></div><div class="mt-1 text-[14px] font-semibold" x-text="t('sosTitle')"></div></div><div class="rounded-full border border-amberx/20 bg-amberx/10 px-3 py-1.5 text-[11px] font-medium text-amber-200">SOS</div></button>
-<section class="rounded-[22px] border border-white/[0.06] bg-panel px-4 py-3.5"><div class="flex items-center justify-between"><div class="font-mono text-[9px] uppercase tracking-[.16em] text-zinc-600" x-text="t('patternSignal')"></div><button @click="activeSheet='history'" class="text-[10px] text-zinc-500" x-text="t('history')"></button></div><div class="mt-3 flex items-center gap-2 overflow-x-auto"><template x-for="item in triggerSummary" :key="item.name"><div class="shrink-0 rounded-full border border-white/[0.07] bg-white/[0.025] px-3 py-1.5 text-[11px] text-zinc-400"><span x-text="item.name"></span><span class="ml-1 text-zinc-600" x-text="item.count"></span></div></template><div x-show="triggerSummary.length===0" class="text-[11px] text-zinc-600" x-text="t('noPattern')"></div></div></section>
-</main>
-<nav class="safe-bottom fixed bottom-0 left-1/2 z-20 flex w-full max-w-[430px] -translate-x-1/2 items-center justify-around border-t border-white/[0.06] bg-ink/85 px-4 pt-2 backdrop-blur-2xl"><button @click="activeSheet=null" class="flex flex-1 flex-col items-center gap-1 text-amber-300"><span class="text-lg">⌂</span><span class="font-mono text-[8px] uppercase tracking-[.12em]" x-text="t('today')"></span></button><button @click="activeSheet='history'" class="flex flex-1 flex-col items-center gap-1 text-zinc-600"><span class="text-lg">⌁</span><span class="font-mono text-[8px] uppercase tracking-[.12em]" x-text="t('patterns')"></span></button><button @click="activeSheet='data'" class="flex flex-1 flex-col items-center gap-1 text-zinc-600"><span class="text-lg">↥</span><span class="font-mono text-[8px] uppercase tracking-[.12em]" x-text="t('data')"></span></button></nav>
-<div x-show="!ready" x-cloak class="fixed inset-0 z-50 flex items-end justify-center bg-black/80 p-0 backdrop-blur-xl sm:items-center sm:p-4"><div class="sheet-enter safe-bottom w-full max-w-[430px] rounded-t-[30px] border border-white/[0.07] bg-[#0D0F10] p-5 shadow-soft sm:rounded-[30px]"><div class="font-mono text-[10px] uppercase tracking-[.18em] text-amber-300">Smoke Lab</div><h1 class="mt-2 text-[29px] font-semibold leading-[1.05] tracking-[-.045em]" x-text="t('setupTitle')"></h1><p class="mt-2 text-[13px] leading-5 text-zinc-500" x-text="t('setupCopy')"></p><div class="mt-5 grid grid-cols-2 gap-2"><input x-model="profile.name" class="col-span-2 rounded-xl border border-white/[0.07] bg-black/30 px-3 py-3 text-sm outline-none focus:border-amberx/50" :placeholder="t('name')"><input x-model.number="profile.baseline" type="number" min="1" max="80" class="rounded-xl border border-white/[0.07] bg-black/30 px-3 py-3 text-sm outline-none focus:border-amberx/50" :placeholder="t('baseline')"><input x-model.number="profile.packPrice" type="number" min="0" step="0.1" class="rounded-xl border border-white/[0.07] bg-black/30 px-3 py-3 text-sm outline-none focus:border-amberx/50" :placeholder="t('packPrice')"></div><div class="mt-2 grid grid-cols-2 gap-2"><button @click="profile.mode='reduce'" :class="profile.mode==='reduce'?'border-amberx/40 bg-amberx/10 text-amber-200':'border-white/[0.07] text-zinc-500'" class="rounded-xl border px-3 py-3 text-[12px] font-medium" x-text="t('reduce')"></button><button @click="profile.mode='quit'" :class="profile.mode==='quit'?'border-emerald-300/30 bg-emerald-300/10 text-emerald-200':'border-white/[0.07] text-zinc-500'" class="rounded-xl border px-3 py-3 text-[12px] font-medium" x-text="t('quit')"></button></div><button @click="finishSetup()" class="mt-4 w-full rounded-xl bg-amberx py-3 text-[13px] font-semibold text-black active:scale-[.99]" x-text="t('start')"></button></div></div>
-<div x-show="activeSheet" x-cloak class="fixed inset-0 z-40 flex items-end justify-center bg-black/80 backdrop-blur-xl" @click.self="closeSheet()"><div class="sheet-enter safe-bottom max-h-[88dvh] w-full max-w-[430px] overflow-y-auto rounded-t-[30px] border border-white/[0.07] bg-[#0D0F10] p-5 shadow-soft"><div class="mx-auto mb-4 h-1 w-10 rounded-full bg-zinc-700"></div><template x-if="activeSheet==='capture'"><div><div class="flex items-start justify-between gap-3"><div><div class="font-mono text-[9px] uppercase tracking-[.17em] text-zinc-600" x-text="capture.type==='resisted'?t('interruption'):t('moment')"></div><h2 class="mt-1 text-[23px] font-semibold tracking-[-.035em]" x-text="t('captureTitle')"></h2></div><button @click="closeSheet()" class="h-8 w-8 rounded-full border border-white/[0.07] bg-white/[0.03] text-zinc-500">×</button></div><div class="mt-5"><div class="font-mono text-[9px] uppercase tracking-[.15em] text-zinc-600" x-text="t('trigger')"></div><div class="mt-2 grid grid-cols-3 gap-2"><template x-for="tr in triggers" :key="tr"><button @click="capture.trigger=tr" :class="capture.trigger===tr?'border-amberx/35 bg-amberx/10 text-amber-200':'border-white/[0.07] bg-white/[0.025] text-zinc-500'" class="rounded-xl border px-2 py-3 text-[11px] font-medium" x-text="triggerLabel(tr)"></button></template></div></div><div class="mt-5"><div class="flex items-center justify-between"><div class="font-mono text-[9px] uppercase tracking-[.15em] text-zinc-600" x-text="t('urgeIntensity')"></div><div class="font-mono text-[11px] text-zinc-400" x-text="capture.intensity+'/5'"></div></div><input x-model.number="capture.intensity" type="range" min="1" max="5" class="mt-3 w-full accent-amber-500"></div><button @click="saveCapture()" class="mt-5 w-full rounded-xl py-3 text-[13px] font-semibold text-black active:scale-[.99]" :class="capture.type==='resisted'?'bg-mintx':'bg-amberx'" x-text="t('saveMoment')"></button></div></template><template x-if="activeSheet==='sos'"><div><div class="flex items-start justify-between"><div><div class="font-mono text-[9px] uppercase tracking-[.17em] text-amber-300" x-text="t('sosProtocol')"></div><h2 class="mt-1 text-[23px] font-semibold tracking-[-.035em]" x-text="t('sosHeading')"></h2></div><button @click="closeSheet()" class="h-8 w-8 rounded-full border border-white/[0.07] bg-white/[0.03] text-zinc-500">×</button></div><div x-show="sosStep===1" class="mt-5"><div class="text-[12px] text-zinc-500" x-text="t('sosPickTrigger')"></div><div class="mt-3 grid grid-cols-2 gap-2"><template x-for="tr in triggers" :key="tr"><button @click="sosTrigger=tr;sosStep=2" class="rounded-xl border border-white/[0.07] bg-white/[0.025] px-3 py-3 text-left text-[12px] text-zinc-300 transition active:scale-[.98]" x-text="triggerLabel(tr)"></button></template></div></div><div x-show="sosStep===2" class="mt-5"><div class="grid grid-cols-2 gap-2"><button @click="sosMode='breath';startBreath()" class="rounded-xl border border-emerald-300/20 bg-emerald-300/[0.07] p-3 text-left"><div class="text-[12px] font-medium text-emerald-200" x-text="t('breathReset')"></div><div class="mt-1 text-[10px] text-zinc-600">90s</div></button><button @click="sosMode='micro'" class="rounded-xl border border-white/[0.07] bg-white/[0.025] p-3 text-left"><div class="text-[12px] font-medium" x-text="t('microAction')"></div><div class="mt-1 text-[10px] text-zinc-600" x-text="microTitle"></div></button></div><div x-show="sosMode==='breath'" class="mt-6 text-center"><div class="orb mx-auto grid h-32 w-32 place-items-center rounded-full border border-emerald-200/15 bg-[radial-gradient(circle,rgba(127,224,194,.16),rgba(127,224,194,.03)_52%,transparent_70%)]"><div><div class="text-[30px] font-semibold tracking-[-.05em] text-mintx" x-text="breathRemaining"></div><div class="mt-1 font-mono text-[9px] uppercase tracking-[.13em] text-zinc-600" x-text="breathPhase"></div></div></div></div><div x-show="sosMode==='micro'" class="mt-4 rounded-2xl border border-white/[0.07] bg-white/[0.025] p-4"><div class="text-[13px] font-medium text-zinc-200" x-text="microTitle"></div><div class="mt-2 text-[12px] leading-5 text-zinc-500" x-text="microCopy"></div></div><button @click="finishSOS()" class="mt-5 w-full rounded-xl bg-mintx py-3 text-[13px] font-semibold text-black active:scale-[.99]" x-text="t('urgeDown')"></button></div></div></template><template x-if="activeSheet==='history'"><div><div class="flex items-center justify-between"><h2 class="text-[22px] font-semibold tracking-[-.035em]" x-text="t('history')"></h2><button @click="closeSheet()" class="h-8 w-8 rounded-full border border-white/[0.07] bg-white/[0.03] text-zinc-500">×</button></div><div class="mt-4 space-y-2"><template x-for="e in events.slice().reverse().slice(0,40)" :key="e.id"><div class="flex items-center justify-between rounded-xl border border-white/[0.06] bg-white/[0.02] px-3 py-2.5"><div><div class="text-[12px] font-medium" x-text="eventLabel(e)"></div><div class="mt-1 text-[10px] text-zinc-600" x-text="triggerLabel(e.trigger||'habit')"></div></div><div class="font-mono text-[10px] text-zinc-600" x-text="formatTime(e.ts)"></div></div></template><div x-show="events.length===0" class="py-10 text-center text-[11px] text-zinc-600" x-text="t('noEntries')"></div></div></div></template><template x-if="activeSheet==='data'"><div><div class="flex items-center justify-between"><h2 class="text-[22px] font-semibold tracking-[-.035em]" x-text="t('data')"></h2><button @click="closeSheet()" class="h-8 w-8 rounded-full border border-white/[0.07] bg-white/[0.03] text-zinc-500">×</button></div><p class="mt-2 text-[12px] leading-5 text-zinc-500" x-text="t('dataCopy')"></p><div class="mt-5 grid grid-cols-2 gap-2"><button @click="exportData()" class="rounded-xl border border-white/[0.07] bg-white/[0.025] px-3 py-3 text-[12px] font-medium" x-text="t('export')"></button><label class="cursor-pointer rounded-xl border border-white/[0.07] bg-white/[0.025] px-3 py-3 text-center text-[12px] font-medium"><span x-text="t('import')"></span><input type="file" accept="application/json" class="hidden" @change="importData($event)"></label></div><button @click="resetAll()" class="mt-3 w-full rounded-xl border border-rose-400/15 bg-rose-400/[0.05] px-3 py-3 text-[12px] text-rose-300" x-text="t('reset')"></button></div></template></div></div>
-<div x-show="toast" x-transition x-cloak class="fixed bottom-24 left-1/2 z-50 -translate-x-1/2 rounded-full border border-white/[0.08] bg-zinc-900/95 px-4 py-2 text-[11px] font-medium text-zinc-200 shadow-soft backdrop-blur-xl" x-text="toast"></div>
-</div>
-<script>
-function smokeLab(){return{key:'smoke_lab_premium_v1',lang:'de',ready:false,activeSheet:null,toast:'',breathTimer:null,profile:{name:'',mode:'reduce',baseline:10,packPrice:6.5,packSize:20,startedAt:Date.now()},events:[],capture:{type:'resisted',trigger:'stress',intensity:3},sosStep:1,sosTrigger:'stress',sosMode:null,breathRemaining:90,breathPhase:'',triggers:['stress','coffee','habit','break','afterMeal','social'],i18n:{de:{reduce:'Reduzieren',quit:'Rauchfrei',controlIndex:'Kontrollwert',phaseObserve:'Phase 1 · Beobachten',heroCopy:'Beobachten statt bewerten. Jede bewusste Entscheidung liefert ein klareres Muster.',smokeFree:'Rauchfreies Fenster',hours:'Stunden',todaySmoked:'Heute geraucht',interrupted:'Unterbrochen',saved:'Gespart',quickAction:'Quick Action',resistedAction:'Autopilot unterbrochen',resistedSub:'Bewusste Entscheidung erfassen',log:'Log',smokedAction:'Moment dokumentieren',smokedSub:'Ohne Wertung erfassen',acute:'Akut-Hilfe',sosTitle:'Drang stoppen / SOS',patternSignal:'Trigger-Signal',history:'Verlauf',noPattern:'Noch nicht belastbar',today:'Heute',patterns:'Muster',data:'Daten',setupTitle:'Verstehen vor Verändern.',setupCopy:'Lege deinen Ausgangswert fest. Keine Streaks, keine Schuld — nur bessere Daten und mehr Wahlfreiheit.',name:'Vorname',baseline:'Zigaretten/Tag',packPrice:'Packung €',start:'Labor starten',interruption:'Unterbrechung',moment:'Moment',captureTitle:'Was war der Auslöser?',trigger:'Trigger',urgeIntensity:'Drangstärke',saveMoment:'Moment speichern',sosProtocol:'SOS Urge Protocol',sosHeading:'Unterbrich den Autopiloten.',sosPickTrigger:'Welcher Trigger drückt gerade?',breathReset:'90-Sek.-Reset',microAction:'Mikro-Impuls',urgeDown:'Drang ist gesunken ✨',noEntries:'Noch keine Einträge.',dataCopy:'Alle Daten liegen lokal auf diesem Gerät. Exportiere sie als JSON oder importiere ein Backup.',export:'Exportieren',import:'Importieren',reset:'Alle Daten löschen',savedToast:'Gespeichert',imported:'Import erfolgreich',invalidFile:'Datei nicht lesbar',resetConfirm:'Wirklich alle Smoke-Lab-Daten löschen?',eventResisted:'Autopilot unterbrochen',eventSmoked:'Moment dokumentiert',eventSos:'SOS erfolgreich abgeschlossen'},en:{reduce:'Reduce',quit:'Quit',controlIndex:'Control score',phaseObserve:'Phase 1 · Observe',heroCopy:'Observe, don’t judge. Every deliberate choice makes your patterns clearer.',smokeFree:'Smoke-free window',hours:'hours',todaySmoked:'Smoked today',interrupted:'Interrupted',saved:'Saved',quickAction:'Quick Action',resistedAction:'Interrupted autopilot',resistedSub:'Log a deliberate choice',log:'Log',smokedAction:'Document moment',smokedSub:'Capture without judgement',acute:'Acute help',sosTitle:'Stop urge / SOS',patternSignal:'Trigger signal',history:'History',noPattern:'Not enough data yet',today:'Today',patterns:'Patterns',data:'Data',setupTitle:'Understand before changing.',setupCopy:'Set your baseline. No streak pressure, no guilt — just better data and more choice.',name:'First name',baseline:'Cigarettes/day',packPrice:'Pack price €',start:'Start lab',interruption:'Interruption',moment:'Moment',captureTitle:'What triggered it?',trigger:'Trigger',urgeIntensity:'Urge intensity',saveMoment:'Save moment',sosProtocol:'SOS Urge Protocol',sosHeading:'Interrupt autopilot.',sosPickTrigger:'What is driving the urge?',breathReset:'90-sec reset',microAction:'Micro action',urgeDown:'Urge has dropped ✨',noEntries:'No entries yet.',dataCopy:'All data stays locally on this device. Export JSON or import a backup.',export:'Export',import:'Import',reset:'Delete all data',savedToast:'Saved',imported:'Import successful',invalidFile:'Could not read file',resetConfirm:'Delete all Smoke Lab data?',eventResisted:'Autopilot interrupted',eventSmoked:'Moment documented',eventSos:'SOS completed'}},triggerNames:{de:{stress:'Stress',coffee:'Kaffee',habit:'Gewohnheit',break:'Pause',afterMeal:'Nach dem Essen',social:'Gesellschaft'},en:{stress:'Stress',coffee:'Coffee',habit:'Habit',break:'Break',afterMeal:'After meal',social:'Social'}},micro:{stress:{de:['Druck unterbrechen','Wechsle für 60 Sekunden den Ort. Schultern lösen, Hände beschäftigen, dann neu entscheiden.'],en:['Break the pressure','Change location for 60 seconds. Relax shoulders, occupy your hands, then decide again.']},coffee:{de:['Ritual entkoppeln','Trink den Kaffee an einem anderen Platz oder beginne mit drei Schlucken Wasser.'],en:['Unlink the ritual','Have coffee in a different spot or start with three sips of water.']},habit:{de:['Autopilot stören','Ändere nur eine Sache: Hand, Ort oder Reihenfolge. Die Unterbrechung ist das Ziel.'],en:['Disrupt autopilot','Change one thing: hand, place or order. The interruption is the goal.']},break:{de:['Pause behalten','Mach die Pause trotzdem — aber ohne die gewohnte erste Handlung.'],en:['Keep the break','Take the break anyway — just without the usual first action.']},afterMeal:{de:['Übergang verschieben','Steh direkt auf und wechsle für zwei Minuten den Kontext.'],en:['Shift the transition','Stand up immediately and change context for two minutes.']},social:{de:['Sozialen Sog lösen','Bleib kurz zurück und entscheide erst nach 60 Sekunden bewusst.'],en:['Break the social pull','Pause for 60 seconds before choosing deliberately.']}},init(){try{const s=JSON.parse(localStorage.getItem(this.key)||'null');if(s){this.lang=s.lang||'de';this.profile={...this.profile,...s.profile};this.events=Array.isArray(s.events)?s.events:[];this.ready=!!s.ready}}catch(e){}},t(k){return this.i18n[this.lang][k]||k},triggerLabel(k){return this.triggerNames[this.lang][k]||k},get modeLabel(){return this.profile.mode==='reduce'?this.t('reduce'):this.t('quit')},get todayEvents(){const d=new Date();return this.events.filter(e=>{const x=new Date(e.ts);return x.getFullYear()===d.getFullYear()&&x.getMonth()===d.getMonth()&&x.getDate()===d.getDate()})},get todaySmoked(){return this.todayEvents.filter(e=>e.type==='smoked').length},get todayResisted(){return this.todayEvents.filter(e=>e.type==='resisted'||e.type==='sos').length},get controlIndex(){const r=this.events.slice(-20);if(!r.length)return 50;const wins=r.filter(e=>e.type==='resisted'||e.type==='sos').length;const observe=Math.min(r.length,8);return Math.max(25,Math.min(95,Math.round(42+(wins/Math.max(1,r.length))*45+observe)))},get lastSmokedTs(){const e=[...this.events].reverse().find(x=>x.type==='smoked');return e?e.ts:this.profile.startedAt},get smokeFreeHours(){return Math.max(0,Math.floor((Date.now()-new Date(this.lastSmokedTs).getTime())/36e5))},get moneySaved(){const elapsed=Math.max(0,(Date.now()-this.profile.startedAt)/864e5);const expected=this.profile.baseline*elapsed;const smoked=this.events.filter(e=>e.type==='smoked').length;const saved=Math.max(0,expected-smoked)*(this.profile.packPrice/this.profile.packSize);return '€'+saved.toFixed(2)},get triggerSummary(){const m={};this.events.forEach(e=>{if(e.trigger)m[e.trigger]=(m[e.trigger]||0)+1});return Object.entries(m).sort((a,b)=>b[1]-a[1]).slice(0,4).map(([k,v])=>({name:this.triggerLabel(k),count:v}))},get microTitle(){return this.micro[this.sosTrigger]?.[this.lang]?.[0]||''},get microCopy(){return this.micro[this.sosTrigger]?.[this.lang]?.[1]||''},finishSetup(){if(!this.profile.name.trim())this.profile.name=this.lang==='de'?'Du':'You';this.profile.startedAt=Date.now();this.ready=true;this.save()},toggleLang(){this.lang=this.lang==='de'?'en':'de';this.save()},toggleMode(){this.profile.mode=this.profile.mode==='reduce'?'quit':'reduce';this.save()},openCapture(type){this.capture={type,trigger:'stress',intensity:3};this.activeSheet='capture'},saveCapture(){this.events.push({id:crypto.randomUUID?crypto.randomUUID():String(Date.now()),type:this.capture.type,trigger:this.capture.trigger,intensity:this.capture.intensity,ts:new Date().toISOString()});this.save();this.closeSheet();this.showToast(this.t('savedToast'))},openSOS(){this.sosStep=1;this.sosMode=null;this.sosTrigger='stress';this.activeSheet='sos'},startBreath(){clearInterval(this.breathTimer);this.breathRemaining=90;this.breathPhase=this.lang==='de'?'Einatmen':'Inhale';let phase=0;const de=['Einatmen','Halten','Ausatmen','Pause'],en=['Inhale','Hold','Exhale','Pause'];this.breathTimer=setInterval(()=>{this.breathRemaining=Math.max(0,this.breathRemaining-1);if(this.breathRemaining%4===0){phase=(phase+1)%4;this.breathPhase=(this.lang==='de'?de:en)[phase]}if(this.breathRemaining===0)clearInterval(this.breathTimer)},1000)},finishSOS(){this.events.push({id:crypto.randomUUID?crypto.randomUUID():String(Date.now()),type:'sos',trigger:this.sosTrigger,intensity:3,ts:new Date().toISOString()});this.save();this.closeSheet();this.showToast(this.t('savedToast'))},closeSheet(){clearInterval(this.breathTimer);this.activeSheet=null;this.sosMode=null},eventLabel(e){return e.type==='smoked'?this.t('eventSmoked'):e.type==='sos'?this.t('eventSos'):this.t('eventResisted')},formatTime(ts){return new Intl.DateTimeFormat(this.lang==='de'?'de-AT':'en-US',{hour:'2-digit',minute:'2-digit',day:'2-digit',month:'2-digit'}).format(new Date(ts))},showToast(msg){this.toast=msg;setTimeout(()=>this.toast='',1500)},save(){localStorage.setItem(this.key,JSON.stringify({ready:this.ready,lang:this.lang,profile:this.profile,events:this.events}))},exportData(){const blob=new Blob([JSON.stringify({version:1,lang:this.lang,profile:this.profile,events:this.events},null,2)],{type:'application/json'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='smoke-lab-backup.json';a.click();URL.revokeObjectURL(a.href)},importData(ev){const f=ev.target.files?.[0];if(!f)return;const r=new FileReader();r.onload=()=>{try{const d=JSON.parse(r.result);if(!d.profile||!Array.isArray(d.events))throw 0;this.profile={...this.profile,...d.profile};this.events=d.events;this.lang=d.lang||this.lang;this.ready=true;this.save();this.showToast(this.t('imported'))}catch(e){this.showToast(this.t('invalidFile'))}};r.readAsText(f);ev.target.value=''},resetAll(){if(confirm(this.t('resetConfirm'))){localStorage.removeItem(this.key);location.reload()}}}}
-</script>
+<body>
+
+    <div class="app-frame">
+        
+        <div id="view-onboarding" class="view active">
+            <div style="display: flex; justify-content: space-between; align-items: center; padding-top: 4px;">
+                <span class="label-sm" style="color: var(--accent);">SMOKE LAB</span>
+                <span class="label-sm">DE</span>
+            </div>
+
+            <div style="display: flex; flex-direction: column; gap: 6px;">
+                <h1 class="title-hero">Verstehen vor Verändern.</h1>
+                <p style="font-size: 13px; color: var(--muted); line-height: 1.4;">Lege deine Basis fest. Keine Streaks, keine Schuld — nur bessere Daten und mehr Wahlfreiheit.</p>
+            </div>
+
+            <div style="display: flex; flex-direction: column; gap: 12px;">
+                <div>
+                    <span class="label-sm" style="display:block; margin-bottom:4px;">Dein Vorname</span>
+                    <input type="text" id="setupName" class="lab-input" placeholder="z. B. Daniel">
+                </div>
+
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                    <div>
+                        <span class="label-sm" style="display:block; margin-bottom:4px;">Zigaretten / Tag</span>
+                        <input type="number" id="setupBaseline" class="lab-input" value="10" title="Durchschnitt pro Tag">
+                    </div>
+                    <div>
+                        <span class="label-sm" style="display:block; margin-bottom:4px;">Ø Abstand (Stunden)</span>
+                        <input type="number" id="setupInterval" class="lab-input" value="6.5" step="0.5" title="Durchschnittlicher zeitlicher Abstand">
+                    </div>
+                </div>
+
+                <div>
+                    <span class="label-sm" style="display:block; margin-bottom:4px;">Dein Hauptziel</span>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                        <button class="btn-gold" id="goalReduce" onclick="setGoal('Reduzieren', this)" style="background: var(--accent); color: #000;">Reduzieren</button>
+                        <button class="btn-surface" id="goalQuit" onclick="setGoal('Rauchfrei', this)">Rauchfrei</button>
+                    </div>
+                </div>
+            </div>
+
+            <button class="btn-gold" onclick="completeOnboarding()" style="margin-top: 6px;">Labor starten</button>
+        </div>
+
+        <div id="view-heute" class="view">
+            <div style="display: flex; justify-content: space-between; align-items: center; padding-top: 2px;">
+                <span class="label-sm" style="color: var(--accent);" id="currentGoalLabel">REDUZIEREN</span>
+                <span class="label-sm">DE</span>
+            </div>
+
+            <div class="bento-grid">
+                <div class="bento-card full" style="background: linear-gradient(135deg, #1C1C1E 0%, #121212 100%); border: 1px solid rgba(229,169,59,0.2);">
+                    <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+                        <div>
+                            <span class="label-sm">Kontrollwert</span>
+                            <div class="bento-value" id="controlScore">50</div>
+                        </div>
+                        <div style="background: rgba(229,169,59,0.12); padding: 4px 10px; border-radius: 20px; font-size: 10px; font-weight: 800; color: var(--accent);">
+                            Phase 1 · Beobachten
+                        </div>
+                    </div>
+                    <div style="width: 100%; height: 4px; background: #2C2C2E; border-radius: 2px; margin-top: 6px; overflow: hidden;">
+                        <div id="scoreBar" style="width: 50%; height: 100%; background: var(--accent);"></div>
+                    </div>
+                    <p style="font-size: 12px; color: var(--muted); line-height: 1.35; margin-top: 2px;">Beobachten statt bewerten. Jede bewusste Entscheidung liefert ein klareres Muster.</p>
+                </div>
+
+                <div class="bento-card">
+                    <span class="label-sm">Rauchfreies Fenster</span>
+                    <div class="bento-value" id="smokeFreeHours" style="color: var(--accent);">0</div>
+                    <span style="font-size: 11px; color: var(--muted);">Stunden seit letztem Moment</span>
+                </div>
+
+                <div class="bento-card">
+                    <span class="label-sm">Heute Geraucht</span>
+                    <div class="bento-value" id="statSmoked">0</div>
+                    <span style="font-size: 11px; color: var(--muted);">Autopilot lief</span>
+                </div>
+
+                <div class="bento-card">
+                    <span class="label-sm">Unterbrochen</span>
+                    <div class="bento-value" id="statResisted" style="color: #34C759;">0</div>
+                    <span style="font-size: 11px; color: var(--muted);">Bewusst gestoppt</span>
+                </div>
+
+                <div class="bento-card">
+                    <span class="label-sm">Gespart</span>
+                    <div class="bento-value" id="moneySaved" style="color: var(--accent);">€0.00</div>
+                    <span style="font-size: 11px; color: var(--muted);">Finanzieller Effekt</span>
+                </div>
+
+                <div class="bento-card full" onclick="openModal('logSheet')" style="cursor: pointer; background: linear-gradient(135deg, #18221D 0%, #121212 100%); border: 1px solid rgba(52,199,89,0.2);">
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <span class="label-sm" style="color: #34C759;">Aktion</span>
+                        <span style="font-size: 14px;">↗</span>
+                    </div>
+                    <div>
+                        <div style="font-size: 15px; font-weight: 800; color: var(--primary);">Autopilot unterbrochen</div>
+                        <div style="font-size: 11px; color: var(--muted); margin-top: 1px;">Bewusste Entscheidung erfassen</div>
+                    </div>
+                </div>
+
+                <div class="bento-card full" onclick="openModal('logSheet')" style="cursor: pointer;">
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <span class="label-sm">Protokoll</span>
+                        <span style="font-size: 14px;">+</span>
+                    </div>
+                    <div>
+                        <div style="font-size: 15px; font-weight: 800; color: var(--primary);">Moment dokumentieren</div>
+                        <div style="font-size: 11px; color: var(--muted); margin-top: 1px;">Ohne Wertung erfassen</div>
+                    </div>
+                </div>
+
+                <div class="bento-card full" onclick="openModal('sosSheet')" style="cursor: pointer; background: linear-gradient(135deg, #261D1A 0%, #121212 100%); border: 1px solid rgba(229,169,59,0.2);">
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <span class="label-sm" style="color: var(--accent);">Akut-Hilfe</span>
+                        <span style="font-size: 11px; font-weight: 800; color: var(--accent);">SOS</span>
+                    </div>
+                    <div style="font-size: 15px; font-weight: 800; color: var(--primary);">Drang stoppen / SOS</div>
+                </div>
+            </div>
+        </div>
+
+        <div id="view-labor" class="view">
+            <h1 class="title-hero">Labor & Programm</h1>
+            <div class="bento-card full">
+                <span class="label-sm">30-Tage KVT Protokoll</span>
+                <p style="font-size: 13px; color: var(--muted); line-height: 1.4;">Phase 1 aktiv: Erfasse unbewusste Handlungen, ohne sie zu bewerten.</p>
+            </div>
+        </div>
+
+        <div id="view-muster" class="view">
+            <h1 class="title-hero">Rauchmuster</h1>
+            <div class="bento-card full">
+                <span class="label-sm">Trigger-Signal</span>
+                <p style="font-size: 13px; color: var(--muted); line-height: 1.4;">Noch nicht belastbar. Erfasse die ersten Momente, um Muster zu erkennen.</p>
+            </div>
+        </div>
+
+        <div id="view-daten" class="view">
+            <h1 class="title-hero">Einstellungen</h1>
+            <div class="bento-card full">
+                <span class="label-sm">Datenschutz & Gerät</span>
+                <p style="font-size: 13px; color: var(--muted); line-height: 1.4;">Alle Labor-Daten bleiben zu 100% lokal auf diesem Gerät.</p>
+                <button class="btn-surface" style="margin-top: 8px; color: #FF453A; font-size: 13px;" onclick="resetApp()">Labor zurücksetzen</button>
+            </div>
+        </div>
+
+        <nav class="bottom-nav" id="bottomNav">
+            <button class="nav-item active" onclick="switchView('heute', this)">
+                <svg viewBox="0 0 24 24"><path d="M12 3L4 9v12h5v-7h6v7h5V9z"/></svg>
+                HEUTE
+            </button>
+            <button class="nav-item" onclick="switchView('muster', this)">
+                <svg viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2M9 17H7v-7h2zm4 0h-2V7h2zm4 0h-2v-4h2z"/></svg>
+                MUSTER
+            </button>
+            <button class="nav-item" onclick="switchView('daten', this)">
+                <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2m0 3c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3m0 14.2c-2.5 0-4.71-1.28-6-3.22.03-1.99 4-3.08 6-3.08 1.99 0 5.97 1.09 6 3.08-1.29 1.94-3.5 3.22-6 3.22"/></svg>
+                DATEN
+            </button>
+        </nav>
+
+        <div id="logSheet" class="sheet-overlay" onclick="closeModals(event)">
+            <div class="sheet-content">
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <div>
+                        <span class="label-sm">Protokoll</span>
+                        <h3 style="font-size: 18px; font-weight: 850; margin-top: 2px;">Was war der Auslöser?</h3>
+                    </div>
+                    <button onclick="closeModals()" style="background: var(--surface); border: 1px solid var(--border); width: 30px; height: 30px; border-radius: 50%; color: var(--primary); cursor: pointer;">✕</button>
+                </div>
+
+                <span class="label-sm">Trigger</span>
+                <div class="trigger-grid">
+                    <div class="trigger-chip active" onclick="setTrigger('Stress', this)">Stress</div>
+                    <div class="trigger-chip" onclick="setTrigger('Kaffee', this)">Kaffee</div>
+                    <div class="trigger-chip" onclick="setTrigger('Gewohnheit', this)">Gewohnheit</div>
+                    <div class="trigger-chip" onclick="setTrigger('Pause', this)">Pause</div>
+                    <div class="trigger-chip" onclick="setTrigger('Nach dem Essen', this)">Nach dem Essen</div>
+                    <div class="trigger-chip" onclick="setTrigger('Gesellschaft', this)">Gesellschaft</div>
+                </div>
+
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 2px;">
+                    <span class="label-sm">Drangstärke</span>
+                    <span id="intensityVal" style="font-size: 12px; font-weight: 800; color: var(--accent);">3/5</span>
+                </div>
+                <input type="range" id="intensityRange" min="1" max="5" value="3" style="width: 100%; accent-color: var(--accent);" oninput="document.getElementById('intensityVal').innerText = this.value + '/5'">
+
+                <div style="display: flex; gap: 8px; margin-top: 4px;">
+                    <button class="btn-surface" onclick="saveLogData('smoke')" style="flex: 1; font-size: 12px;">Moment dokumentieren</button>
+                    <button class="btn-gold" onclick="saveLogData('resist')" style="flex: 1; font-size: 12px;">Autopilot unterbrochen</button>
+                </div>
+            </div>
+        </div>
+
+        <div id="sosSheet" class="sheet-overlay" onclick="closeModals(event)">
+            <div class="sheet-content">
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <div>
+                        <span class="label-sm" style="color: var(--accent);">SOS Urge Protocol</span>
+                        <h3 style="font-size: 18px; font-weight: 850; margin-top: 2px;">Unterbrich den Autopiloten.</h3>
+                    </div>
+                    <button onclick="closeModals()" style="background: var(--surface); border: 1px solid var(--border); width: 30px; height: 30px; border-radius: 50%; color: var(--primary); cursor: pointer;">✕</button>
+                </div>
+                <p style="font-size: 12px; color: var(--muted);">Welcher Trigger drückt gerade?</p>
+                <div class="trigger-grid">
+                    <div class="trigger-chip" onclick="triggerSosAction('Stress')">Stress</div>
+                    <div class="trigger-chip" onclick="triggerSosAction('Kaffee')">Kaffee</div>
+                    <div class="trigger-chip" onclick="triggerSosAction('Gewohnheit')">Gewohnheit</div>
+                    <div class="trigger-chip" onclick="triggerSosAction('Pause')">Pause</div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        let selectedGoal = 'Reduzieren';
+        let currentTrigger = 'Stress';
+        let stats = { smoked: 0, resisted: 0 };
+
+        function setGoal(goal, btn) {
+            selectedGoal = goal;
+            document.getElementById('goalReduce').style.background = goal === 'Reduzieren' ? 'var(--accent)' : 'var(--surface-card)';
+            document.getElementById('goalReduce').style.color = goal === 'Reduzieren' ? '#000' : 'var(--primary)';
+            document.getElementById('goalQuit').style.background = goal === 'Rauchfrei' ? 'var(--accent)' : 'var(--surface-card)';
+            document.getElementById('goalQuit').style.color = goal === 'Rauchfrei' ? '#000' : 'var(--primary)';
+        }
+
+        function completeOnboarding() {
+            const name = document.getElementById('setupName').value.trim() || 'Daniel';
+            document.getElementById('currentGoalLabel').innerText = selectedGoal.toUpperCase();
+            document.getElementById('view-onboarding').classList.remove('active');
+            document.getElementById('bottomNav').classList.add('active');
+            switchView('heute', document.querySelector('.nav-item'));
+        }
+
+        function switchView(viewName, btn) {
+            document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+            document.getElementById('view-' + viewName).classList.add('active');
+            document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
+            if(btn) btn.classList.add('active');
+            window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
+        }
+
+        function openModal(id) {
+            document.getElementById(id).classList.add('open');
+        }
+
+        function closeModals(e) {
+            if(!e || e.target.classList.contains('sheet-overlay')) {
+                document.querySelectorAll('.sheet-overlay').forEach(s => s.classList.remove('open'));
+            }
+        }
+
+        function setTrigger(trigger, el) {
+            currentTrigger = trigger;
+            document.querySelectorAll('.trigger-chip').forEach(c => c.classList.remove('active'));
+            el.classList.add('active');
+        }
+
+        function saveLogData(type) {
+            closeModals();
+            if(type === 'smoke') {
+                stats.smoked++;
+                document.getElementById('statSmoked').innerText = stats.smoked;
+            } else {
+                stats.resisted++;
+                document.getElementById('statResisted').innerText = stats.resisted;
+                document.getElementById('controlScore').innerText = "75";
+                document.getElementById('scoreBar').style.width = "75%";
+            }
+        }
+
+        function triggerSosAction(trigger) {
+            closeModals();
+            stats.resisted++;
+            document.getElementById('statResisted').innerText = stats.resisted;
+            document.getElementById('controlScore').innerText = "85";
+            document.getElementById('scoreBar').style.width = "85%";
+        }
+
+        function resetApp() {
+            if(confirm("Labor wirklich zurücksetzen?")) {
+                document.querySelectorAll('.sheet-overlay').forEach(s => s.classList.remove('open'));
+                document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+                document.getElementById('view-onboarding').classList.add('active');
+                document.getElementById('bottomNav').classList.remove('active');
+                window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
+            }
+        }
+    </script>
 </body>
 </html>
