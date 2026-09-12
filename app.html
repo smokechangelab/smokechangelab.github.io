@@ -1,1 +1,174 @@
-<!doctype html><html lang="de"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta http-equiv="cache-control" content="no-store"><title>Smoke Lab</title></head><body><script>location.replace('./app-v40.html?v=force-20260907-2347')</script></body></html>
+<!DOCTYPE html>
+<html lang="de" class="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover" />
+  <meta name="theme-color" content="#050505" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <title>Smoke Lab — Pattern & Habit Tracker</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+  <script>
+    tailwind.config={darkMode:'class',theme:{extend:{colors:{oled:'#050505',panel:'#0B0D0E',panel2:'#111416',line:'#202427',amberx:'#D7A24B',mint:'#77D6B2'},boxShadow:{soft:'0 18px 50px rgba(0,0,0,.28)'}}}}
+  </script>
+  <style>
+    [x-cloak]{display:none!important} html,body{background:#050505} body{min-height:100dvh}
+    *{-webkit-tap-highlight-color:transparent} ::-webkit-scrollbar{width:4px} ::-webkit-scrollbar-thumb{background:#27272a;border-radius:999px}
+    .safe-top{padding-top:max(12px,env(safe-area-inset-top))}.safe-bottom{padding-bottom:max(18px,env(safe-area-inset-bottom))}
+    .glass{background:rgba(11,13,14,.82);backdrop-filter:blur(22px);-webkit-backdrop-filter:blur(22px)}
+    .sheet-in{animation:sheetIn .28s cubic-bezier(.16,1,.3,1)} @keyframes sheetIn{from{transform:translateY(100%);opacity:.4}to{transform:translateY(0);opacity:1}}
+    .pop-in{animation:popIn .18s cubic-bezier(.16,1,.3,1)} @keyframes popIn{from{transform:scale(.97);opacity:0}to{transform:scale(1);opacity:1}}
+    .pulse-ring{animation:pulseRing 4s ease-in-out infinite}@keyframes pulseRing{0%,100%{transform:scale(.86);opacity:.65}50%{transform:scale(1);opacity:1}}
+  </style>
+</head>
+<body class="bg-oled text-zinc-100 antialiased selection:bg-amberx selection:text-black" x-data="smokeLabApp()" x-init="init()">
+<div class="mx-auto min-h-screen max-w-md bg-oled">
+
+  <header class="safe-top glass sticky top-0 z-30 border-b border-line px-4 pb-3">
+    <div class="flex items-center justify-between gap-3">
+      <div class="min-w-0">
+        <div class="flex items-center gap-2"><span class="h-2 w-2 rounded-full bg-amberx shadow-[0_0_14px_rgba(215,162,75,.45)]"></span><span class="font-mono text-[10px] uppercase tracking-[.18em] text-zinc-500">Smoke Lab / <span x-text="mode==='reduce'?t('modeReduce'):t('modeQuit')"></span></span></div>
+        <h1 class="mt-1 text-[19px] font-semibold tracking-[-.03em]">Smoke Lab</h1>
+      </div>
+      <div class="flex items-center gap-2">
+        <button @click="toggleMode()" class="rounded-lg border border-line bg-panel px-2.5 py-1.5 text-[11px] font-medium text-zinc-300 transition active:scale-95" x-text="mode==='reduce'?t('reduce'):t('quit')"></button>
+        <button @click="toggleLang()" class="rounded-lg border border-line bg-panel px-2.5 py-1.5 font-mono text-[11px] text-zinc-400 transition active:scale-95" x-text="lang.toUpperCase()"></button>
+        <button @click="settingsOpen=true" class="grid h-8 w-8 place-items-center rounded-lg border border-line bg-panel text-zinc-400">•••</button>
+      </div>
+    </div>
+  </header>
+
+  <main class="space-y-3 px-4 py-4 pb-28">
+    <section class="grid grid-cols-12 gap-2">
+      <div class="col-span-7 rounded-2xl border border-line bg-gradient-to-br from-[#111718] to-panel p-4 shadow-soft">
+        <div class="flex items-start justify-between gap-3">
+          <div><p class="font-mono text-[10px] uppercase tracking-[.16em] text-mint" x-text="t('control')"></p><div class="mt-1 text-4xl font-semibold tracking-[-.06em]" x-text="controlScore"></div></div>
+          <div class="rounded-full border border-mint/20 bg-mint/10 px-2.5 py-1 text-[10px] font-medium text-mint" x-text="t('phaseObserve')"></div>
+        </div>
+        <p class="mt-3 max-w-[24rem] text-xs leading-5 text-zinc-500" x-text="t('controlCopy')"></p>
+      </div>
+      <div class="col-span-5 rounded-2xl border border-line bg-panel p-4">
+        <p class="font-mono text-[10px] uppercase tracking-[.16em] text-zinc-500" x-text="t('savedMoney')"></p>
+        <div class="mt-2 text-2xl font-semibold tracking-[-.04em] text-amberx" x-text="moneySaved"></div>
+        <p class="mt-1 text-[11px] text-zinc-600" x-text="t('estimated')"></p>
+      </div>
+
+      <button @click="openLog('resisted')" class="col-span-6 flex h-24 flex-col justify-between rounded-2xl border border-mint/15 bg-mint/[.06] p-4 text-left transition active:scale-[.98]">
+        <span class="font-mono text-[10px] uppercase tracking-[.15em] text-mint">01 / Action</span>
+        <span><b class="block text-sm" x-text="t('interrupted')"></b><small class="text-[11px] text-zinc-500" x-text="t('interruptedSub')"></small></span>
+      </button>
+      <button @click="openLog('smoked')" class="col-span-6 flex h-24 flex-col justify-between rounded-2xl border border-amberx/15 bg-amberx/[.05] p-4 text-left transition active:scale-[.98]">
+        <span class="font-mono text-[10px] uppercase tracking-[.15em] text-amberx">02 / Log</span>
+        <span><b class="block text-sm" x-text="t('documentMoment')"></b><small class="text-[11px] text-zinc-500" x-text="t('documentMomentSub')"></small></span>
+      </button>
+
+      <button @click="startSOS()" class="col-span-12 flex items-center justify-between rounded-2xl border border-amberx/20 bg-gradient-to-r from-amberx/10 to-transparent p-4 text-left transition active:scale-[.99]">
+        <div><p class="font-mono text-[10px] uppercase tracking-[.15em] text-amberx">SOS Urge Protocol</p><p class="mt-1 text-sm font-medium" x-text="t('sosTitle')"></p></div><span class="text-2xl text-amberx">→</span>
+      </button>
+    </section>
+
+    <section class="grid grid-cols-3 gap-2">
+      <div class="rounded-xl border border-line bg-panel px-3 py-3"><span class="text-[10px] uppercase tracking-wider text-zinc-600" x-text="t('todaySmoked')"></span><div class="mt-1 text-xl font-semibold" x-text="todaySmoked"></div></div>
+      <div class="rounded-xl border border-line bg-panel px-3 py-3"><span class="text-[10px] uppercase tracking-wider text-zinc-600" x-text="t('todayInterrupted')"></span><div class="mt-1 text-xl font-semibold text-mint" x-text="todayResisted"></div></div>
+      <div class="rounded-xl border border-line bg-panel px-3 py-3"><span class="text-[10px] uppercase tracking-wider text-zinc-600" x-text="t('topTrigger')"></span><div class="mt-1 truncate text-sm font-semibold text-amberx" x-text="topTrigger"></div></div>
+    </section>
+
+    <section class="grid grid-cols-12 gap-2">
+      <div class="col-span-7 rounded-2xl border border-line bg-panel p-4">
+        <div class="flex items-center justify-between"><p class="font-mono text-[10px] uppercase tracking-[.15em] text-zinc-500" x-text="t('patternWindow')"></p><span class="text-[10px] text-zinc-600" x-text="logs.length+'/8'"></span></div>
+        <div class="mt-3 flex h-10 items-end gap-1.5">
+          <template x-for="n in 8"><div class="flex-1 rounded-sm bg-zinc-800" :class="n<=Math.min(8,logs.length)?'bg-mint/60':'bg-zinc-800'" :style="`height:${16+n*3}px`"></div></template>
+        </div>
+        <p class="mt-3 text-[11px] leading-4 text-zinc-600" x-text="logs.length<8?t('calibrating'):t('patternReady')"></p>
+      </div>
+      <div class="col-span-5 rounded-2xl border border-line bg-panel p-4">
+        <p class="font-mono text-[10px] uppercase tracking-[.15em] text-zinc-500" x-text="t('recovery')"></p>
+        <div class="mt-3 flex items-end gap-1"><span class="text-3xl font-semibold tracking-[-.05em] text-mint" x-text="recoveryScore"></span><span class="mb-1 text-[10px] text-zinc-600">/100</span></div>
+        <p class="mt-2 text-[11px] leading-4 text-zinc-600" x-text="t('recoveryCopy')"></p>
+      </div>
+    </section>
+
+    <section class="rounded-2xl border border-line bg-panel p-4">
+      <div class="flex items-center justify-between"><p class="font-mono text-[10px] uppercase tracking-[.15em] text-zinc-500" x-text="t('recent')"></p><span class="text-[10px] text-zinc-600" x-text="logs.length"></span></div>
+      <div class="mt-2 max-h-36 space-y-1.5 overflow-y-auto">
+        <template x-for="log in logs.slice(0,6)" :key="log.id"><div class="flex items-center justify-between rounded-lg border border-line bg-oled px-3 py-2"><div class="min-w-0"><span class="mr-2 inline-block h-1.5 w-1.5 rounded-full" :class="log.type==='resisted'?'bg-mint':'bg-amberx'"></span><span class="text-xs" x-text="log.type==='resisted'?t('interrupted'):t('documentMoment')"></span><span class="ml-2 text-[10px] text-zinc-600" x-text="log.trigger"></span></div><span class="font-mono text-[10px] text-zinc-600" x-text="formatTime(log.timestamp)"></span></div></template>
+        <div x-show="!logs.length" class="py-4 text-center font-mono text-[10px] text-zinc-700" x-text="t('noLogs')"></div>
+      </div>
+    </section>
+  </main>
+
+  <div x-show="logOpen" x-cloak class="fixed inset-0 z-50 flex items-end bg-black/80 backdrop-blur-xl" @click.self="closeLog()">
+    <section class="sheet-in safe-bottom mx-auto w-full max-w-md rounded-t-[28px] border border-line bg-[#0D1011] px-4 pt-4 shadow-2xl">
+      <div class="mx-auto mb-4 h-1 w-10 rounded-full bg-zinc-700"></div>
+      <div class="flex items-start justify-between"><div><p class="font-mono text-[10px] uppercase tracking-[.15em] text-zinc-600" x-text="logDraft.type==='resisted'?t('interrupted'):t('documentMoment')"></p><h2 class="mt-1 text-xl font-semibold tracking-[-.03em]" x-text="t('whatTriggered')"></h2></div><button @click="closeLog()" class="grid h-8 w-8 place-items-center rounded-full bg-zinc-900 text-zinc-500">×</button></div>
+      <div class="mt-4 grid grid-cols-3 gap-2"><template x-for="tr in triggers"><button @click="logDraft.trigger=tr" class="rounded-xl border px-2 py-3 text-xs transition" :class="logDraft.trigger===tr?'border-amberx/50 bg-amberx/10 text-amberx':'border-line bg-panel text-zinc-400'" x-text="triggerLabel(tr)"></button></template></div>
+      <div class="mt-4"><div class="flex items-center justify-between"><span class="font-mono text-[10px] uppercase tracking-wider text-zinc-600" x-text="t('urgeStrength')"></span><b class="text-xs text-zinc-300" x-text="logDraft.intensity+'/5'"></b></div><input x-model.number="logDraft.intensity" type="range" min="1" max="5" class="mt-3 w-full accent-amber-500"></div>
+      <button @click="saveLog()" class="mt-5 w-full rounded-2xl bg-zinc-100 py-3.5 text-sm font-semibold text-black transition active:scale-[.99]" x-text="t('saveMoment')"></button>
+    </section>
+  </div>
+
+  <div x-show="sosOpen" x-cloak class="fixed inset-0 z-50 flex items-end bg-black/85 backdrop-blur-xl" @click.self="closeSOS()">
+    <section class="sheet-in safe-bottom mx-auto w-full max-w-md rounded-t-[28px] border border-line bg-[#0D1011] px-4 pt-4 shadow-2xl">
+      <div class="mx-auto mb-4 h-1 w-10 rounded-full bg-zinc-700"></div>
+      <div class="flex items-start justify-between"><div><p class="font-mono text-[10px] uppercase tracking-[.15em] text-amberx">SOS / <span x-text="sosStep+'/3'"></span></p><h2 class="mt-1 text-xl font-semibold tracking-[-.03em]" x-text="sosStep===1?t('sosTriggerQ'):sosStep===2?t('sosReset'):t('sosCheck')"></h2></div><button @click="closeSOS()" class="grid h-8 w-8 place-items-center rounded-full bg-zinc-900 text-zinc-500">×</button></div>
+
+      <div x-show="sosStep===1" class="mt-4 grid grid-cols-2 gap-2"><template x-for="tr in triggers"><button @click="selectSosTrigger(tr)" class="rounded-xl border border-line bg-panel px-3 py-3 text-left text-xs text-zinc-300 transition active:scale-[.98]" x-text="triggerLabel(tr)"></button></template></div>
+
+      <div x-show="sosStep===2" class="mt-5 text-center">
+        <div class="relative mx-auto grid h-40 w-40 place-items-center"><div class="pulse-ring absolute inset-0 rounded-full border border-mint/25 bg-mint/[.04]"></div><div class="relative"><div class="text-4xl font-semibold tracking-[-.05em] text-mint" x-text="breathSeconds"></div><div class="mt-1 font-mono text-[10px] uppercase tracking-wider text-zinc-500" x-text="breathLabel"></div></div></div>
+        <div class="mt-4 rounded-2xl border border-line bg-panel p-4 text-left"><p class="font-mono text-[10px] uppercase tracking-wider text-amberx" x-text="t('microAction')"></p><p class="mt-2 text-sm leading-5 text-zinc-300" x-text="sosTip"></p></div>
+        <button @click="sosStep=3" class="mt-4 w-full rounded-2xl border border-line bg-zinc-100 py-3 text-sm font-semibold text-black" x-text="t('checkUrge')"></button>
+      </div>
+
+      <div x-show="sosStep===3" class="mt-5 space-y-2"><button @click="finishSOS(true)" class="w-full rounded-2xl bg-mint py-3.5 text-sm font-semibold text-black" x-text="t('urgeDown')"></button><button @click="finishSOS(false)" class="w-full rounded-2xl border border-line bg-panel py-3.5 text-sm font-semibold text-zinc-300" x-text="t('urgeSame')"></button><p class="pt-1 text-center text-[10px] leading-4 text-zinc-600" x-text="t('sosNoJudgement')"></p></div>
+    </section>
+  </div>
+
+  <div x-show="settingsOpen" x-cloak class="fixed inset-0 z-50 grid place-items-center bg-black/80 p-4 backdrop-blur-xl" @click.self="settingsOpen=false">
+    <section class="pop-in w-full max-w-sm rounded-2xl border border-line bg-panel p-4">
+      <div class="flex items-center justify-between"><h2 class="text-base font-semibold" x-text="t('settings')"></h2><button @click="settingsOpen=false" class="text-zinc-500">×</button></div>
+      <div class="mt-4 grid grid-cols-2 gap-2"><button @click="exportData()" class="rounded-xl border border-line bg-oled px-3 py-3 text-xs text-zinc-300" x-text="t('export')"></button><label class="cursor-pointer rounded-xl border border-line bg-oled px-3 py-3 text-center text-xs text-zinc-300"><span x-text="t('import')"></span><input type="file" accept="application/json" class="hidden" @change="importData($event)"></label></div>
+      <button @click="resetData()" class="mt-2 w-full rounded-xl border border-rose-900/40 bg-rose-950/20 px-3 py-3 text-xs text-rose-400" x-text="t('reset')"></button>
+      <p class="mt-3 text-[10px] leading-4 text-zinc-600" x-text="t('localOnly')"></p>
+    </section>
+  </div>
+
+  <div x-show="toast" x-transition x-cloak class="fixed bottom-6 left-1/2 z-[60] -translate-x-1/2 rounded-full border border-line bg-zinc-100 px-4 py-2 text-xs font-semibold text-black shadow-2xl" x-text="toast"></div>
+</div>
+
+<script>
+function smokeLabApp(){return{
+  lang:'de',mode:'reduce',logOpen:false,sosOpen:false,settingsOpen:false,sosStep:1,toast:'',breathSeconds:4,breathLabel:'',timer:null,
+  pricePerCig:.38,baseline:12,logs:[],logDraft:{type:'smoked',trigger:'stress',intensity:3},sosTrigger:'stress',
+  triggers:['stress','coffee','habit','break','meal','social'],
+  tx:{de:{modeReduce:'Reduzieren',modeQuit:'Rauchfrei',reduce:'Reduzieren',quit:'Rauchfrei',control:'Kontrollwert',phaseObserve:'Phase 1 · Beobachten',controlCopy:'Nicht Perfektion zählt, sondern wie oft du den Autopiloten bemerkst und bewusst unterbrichst.',savedMoney:'Geschätzt gespart',estimated:'gegenüber deinem Ausgangswert',interrupted:'Autopiloten unterbrochen',interruptedSub:'Drang bewusst nicht gefolgt',documentMoment:'Moment dokumentieren',documentMomentSub:'Situation ohne Bewertung erfassen',sosTitle:'Akuten Drang jetzt unterbrechen',todaySmoked:'Heute geraucht',todayInterrupted:'Unterbrochen',topTrigger:'Top-Trigger',patternWindow:'Muster-Kalibrierung',calibrating:'Noch nicht belastbar. Ab 8 Ereignissen werden Muster vorsichtig sichtbar.',patternReady:'Genug Daten für erste Muster. Keine Diagnose – nur Verhaltenssignale.',recovery:'Recovery',recoveryCopy:'Verhaltensbasierter Index aus Unterbrechungen und Reduktion.',recent:'Letzte Momente',noLogs:'Noch keine Situationen erfasst.',whatTriggered:'Was hat den Moment ausgelöst?',urgeStrength:'Drangstärke',saveMoment:'Moment speichern',sosTriggerQ:'Was drückt gerade?',sosReset:'90-Sekunden Reset',sosCheck:'Wie ist der Drang jetzt?',microAction:'Mikro-Intervention',checkUrge:'Drang neu einschätzen',urgeDown:'Drang ist gesunken ✨',urgeSame:'Drang ist noch da',sosNoJudgement:'Beides ist ein valider Messpunkt. Kein Erfolg/Versagen.',settings:'Daten & Einstellungen',export:'Exportieren',import:'Importieren',reset:'Zurücksetzen',localOnly:'Alle Daten bleiben lokal in diesem Browser. Exportiere regelmäßig ein Backup.',saved:'Gespeichert',imported:'Import abgeschlossen',resetDone:'Daten zurückgesetzt',stress:'Stress',coffee:'Kaffee',habit:'Gewohnheit',break:'Pause',meal:'Nach dem Essen',social:'Gesellschaft'},
+  en:{modeReduce:'Reduce',modeQuit:'Quit',reduce:'Reduce',quit:'Quit',control:'Control score',phaseObserve:'Phase 1 · Observe',controlCopy:'Progress is noticing the autopilot and creating more conscious choices—not perfection.',savedMoney:'Estimated saved',estimated:'versus your baseline',interrupted:'Autopilot interrupted',interruptedSub:'You noticed the urge and chose differently',documentMoment:'Document moment',documentMomentSub:'Capture the situation without judgment',sosTitle:'Interrupt an acute craving now',todaySmoked:'Smoked today',todayInterrupted:'Interrupted',topTrigger:'Top trigger',patternWindow:'Pattern calibration',calibrating:'Not reliable yet. Patterns become cautiously visible after 8 events.',patternReady:'Enough data for early patterns. Not a diagnosis—just behavioral signals.',recovery:'Recovery',recoveryCopy:'Behavior-based index from interruptions and reduction.',recent:'Recent moments',noLogs:'No situations logged yet.',whatTriggered:'What triggered the moment?',urgeStrength:'Urge intensity',saveMoment:'Save moment',sosTriggerQ:'What is pressing right now?',sosReset:'90-second reset',sosCheck:'How is the urge now?',microAction:'Micro intervention',checkUrge:'Re-check urge',urgeDown:'The urge went down ✨',urgeSame:'The urge is still here',sosNoJudgement:'Both are valid data points. No success/failure.',settings:'Data & settings',export:'Export',import:'Import',reset:'Reset',localOnly:'All data stays in this browser. Export a backup regularly.',saved:'Saved',imported:'Import complete',resetDone:'Data reset',stress:'Stress',coffee:'Coffee',habit:'Habit',break:'Break',meal:'After meal',social:'Social'}},
+  tips:{stress:{de:'Wechsle für 90 Sekunden den Ort. Schultern lösen, länger aus- als einatmen.',en:'Change location for 90 seconds. Drop your shoulders and exhale longer than you inhale.'},coffee:{de:'Trink den Kaffee an einem anderen Platz und halte die Hände bewusst beschäftigt.',en:'Drink your coffee somewhere else and keep your hands deliberately occupied.'},habit:{de:'Verändere nur einen Schritt der Routine: andere Hand, anderer Ort oder 2 Minuten Verzögerung.',en:'Change one step of the routine: other hand, different place, or a 2-minute delay.'},break:{de:'Mach die Pause trotzdem – aber geh 90 Sekunden ohne Zigarette.',en:'Take the break anyway—just spend 90 seconds without a cigarette.'},meal:{de:'Steh nach dem Essen direkt auf und wechsle den Raum oder putze die Zähne.',en:'Stand up right after eating and change rooms or brush your teeth.'},social:{de:'Bleib 60 Sekunden länger sitzen und entscheide erst danach bewusst.',en:'Stay seated 60 seconds longer and decide consciously after that.'}},
+  init(){try{const s=JSON.parse(localStorage.getItem('smokelab_premium_v1')||'{}');this.lang=s.lang||'de';this.mode=s.mode||'reduce';this.baseline=s.baseline||12;this.pricePerCig=s.pricePerCig||.38;this.logs=Array.isArray(s.logs)?s.logs:[]}catch(e){}this.breathLabel=this.lang==='de'?'Einatmen':'Inhale'},
+  t(k){return this.tx[this.lang][k]||k},triggerLabel(k){return this.t(k)},
+  toggleLang(){this.lang=this.lang==='de'?'en':'de';this.breathLabel=this.lang==='de'?'Einatmen':'Inhale';this.persist()},toggleMode(){this.mode=this.mode==='reduce'?'quit':'reduce';this.persist()},
+  dayKey(ts){const d=new Date(ts);return `${d.getFullYear()}-${d.getMonth()+1}-${d.getDate()}`},
+  get todayLogs(){const k=this.dayKey(Date.now());return this.logs.filter(x=>this.dayKey(x.timestamp)===k)},
+  get todaySmoked(){return this.todayLogs.filter(x=>x.type==='smoked').length},get todayResisted(){return this.todayLogs.filter(x=>x.type==='resisted').length},
+  get controlScore(){if(!this.logs.length)return 50;const r=this.logs.slice(0,20),res=r.filter(x=>x.type==='resisted').length;return Math.max(30,Math.min(96,Math.round(48+(res/r.length)*40+Math.min(r.length,8))))},
+  get topTrigger(){if(!this.logs.length)return '—';const m={};this.logs.forEach(x=>m[x.trigger]=(m[x.trigger]||0)+1);return this.triggerLabel(Object.entries(m).sort((a,b)=>b[1]-a[1])[0][0])},
+  get moneySaved(){const smoked=this.todaySmoked,delta=Math.max(0,this.baseline-smoked);return new Intl.NumberFormat(this.lang==='de'?'de-DE':'en-US',{style:'currency',currency:'EUR'}).format(delta*this.pricePerCig)},
+  get recoveryScore(){if(!this.logs.length)return 50;const ratio=this.todayResisted/Math.max(1,this.todayResisted+this.todaySmoked),red=Math.max(0,(this.baseline-this.todaySmoked)/Math.max(1,this.baseline));return Math.min(98,Math.round(45+ratio*30+red*20))},
+  openLog(type){this.logDraft={type,trigger:'stress',intensity:3};this.logOpen=true},closeLog(){this.logOpen=false},
+  saveLog(){this.logs.unshift({id:Date.now(),type:this.logDraft.type,trigger:this.logDraft.trigger,intensity:this.logDraft.intensity,timestamp:Date.now(),source:'log'});this.persist();this.logOpen=false;this.showToast(this.t('saved'))},
+  startSOS(){this.sosStep=1;this.sosOpen=true},closeSOS(){this.sosOpen=false;clearInterval(this.timer)},
+  selectSosTrigger(tr){this.sosTrigger=tr;this.sosStep=2;this.startBreath()},
+  startBreath(){clearInterval(this.timer);let phase=0,sec=4;const labelsDe=['Einatmen','Halten','Ausatmen','Pause'],labelsEn=['Inhale','Hold','Exhale','Pause'];this.breathSeconds=4;this.breathLabel=(this.lang==='de'?labelsDe:labelsEn)[0];this.timer=setInterval(()=>{sec--;if(sec<=0){phase=(phase+1)%4;sec=4}this.breathSeconds=sec;this.breathLabel=(this.lang==='de'?labelsDe:labelsEn)[phase]},1000)},
+  get sosTip(){return this.tips[this.sosTrigger]?.[this.lang]||''},
+  finishSOS(down){clearInterval(this.timer);this.logs.unshift({id:Date.now(),type:'resisted',trigger:this.sosTrigger,intensity:down?2:4,timestamp:Date.now(),source:'sos',urgeDown:down});this.persist();this.sosOpen=false;this.showToast(down?this.t('urgeDown'):this.t('saved'))},
+  formatTime(ts){return new Date(ts).toLocaleTimeString(this.lang==='de'?'de-DE':'en-US',{hour:'2-digit',minute:'2-digit'})},
+  persist(){localStorage.setItem('smokelab_premium_v1',JSON.stringify({lang:this.lang,mode:this.mode,baseline:this.baseline,pricePerCig:this.pricePerCig,logs:this.logs}))},
+  exportData(){const blob=new Blob([JSON.stringify({version:1,exportedAt:new Date().toISOString(),data:{lang:this.lang,mode:this.mode,baseline:this.baseline,pricePerCig:this.pricePerCig,logs:this.logs}},null,2)],{type:'application/json'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='smoke-lab-backup.json';a.click();URL.revokeObjectURL(a.href)},
+  importData(e){const f=e.target.files?.[0];if(!f)return;const r=new FileReader();r.onload=()=>{try{const j=JSON.parse(r.result),d=j.data||j;this.lang=d.lang||'de';this.mode=d.mode||'reduce';this.baseline=Number(d.baseline)||12;this.pricePerCig=Number(d.pricePerCig)||.38;this.logs=Array.isArray(d.logs)?d.logs:[];this.persist();this.showToast(this.t('imported'));this.settingsOpen=false}catch(err){alert('Invalid JSON')}};r.readAsText(f)},
+  resetData(){if(confirm(this.lang==='de'?'Alle Smoke-Lab-Daten wirklich löschen?':'Delete all Smoke Lab data?')){this.logs=[];this.mode='reduce';this.persist();this.settingsOpen=false;this.showToast(this.t('resetDone'))}},
+  showToast(m){this.toast=m;setTimeout(()=>this.toast='',1800)}
+}}
+</script>
+</body>
+</html>
