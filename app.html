@@ -208,13 +208,18 @@
 
     <div class="app-frame">
         
+        <!-- ONBOARDING VIEW -->
         <div id="view-onboarding" class="view active">
+            <!-- Logo Header -->
             <div style="display: flex; justify-content: space-between; align-items: center; padding-top: 4px;">
-                <span class="label-sm" style="color: var(--accent);">SMOKE LAB</span>
+                <div style="display: flex; align-items: center; gap: 8px;">
+                    <div style="width: 28px; height: 28px; background: var(--accent); border-radius: 8px; display: grid; place-items: center; font-size: 14px;">🧪</div>
+                    <span style="font-size: 14px; font-weight: 900; letter-spacing: 0.5px; color: var(--primary);">SMOKE LAB</span>
+                </div>
                 <span class="label-sm">DE</span>
             </div>
 
-            <div style="display: flex; flex-direction: column; gap: 6px;">
+            <div style="display: flex; flex-direction: column; gap: 6px; margin-top: 4px;">
                 <h1 class="title-hero">Verstehen vor Verändern.</h1>
                 <p style="font-size: 13px; color: var(--muted); line-height: 1.4;">Lege deine Basis fest. Keine Streaks, keine Schuld — nur bessere Daten und mehr Wahlfreiheit.</p>
             </div>
@@ -228,11 +233,11 @@
                 <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
                     <div>
                         <span class="label-sm" style="display:block; margin-bottom:4px;">Zigaretten / Tag</span>
-                        <input type="number" id="setupBaseline" class="lab-input" value="10" title="Durchschnitt pro Tag">
+                        <input type="number" id="setupBaseline" class="lab-input" value="10">
                     </div>
                     <div>
                         <span class="label-sm" style="display:block; margin-bottom:4px;">Ø Abstand (Stunden)</span>
-                        <input type="number" id="setupInterval" class="lab-input" value="6.5" step="0.5" title="Durchschnittlicher zeitlicher Abstand">
+                        <input type="number" id="setupInterval" class="lab-input" value="6.5" step="0.5">
                     </div>
                 </div>
 
@@ -248,13 +253,19 @@
             <button class="btn-gold" onclick="completeOnboarding()" style="margin-top: 6px;">Labor starten</button>
         </div>
 
+        <!-- HEUTE VIEW -->
         <div id="view-heute" class="view">
             <div style="display: flex; justify-content: space-between; align-items: center; padding-top: 2px;">
-                <span class="label-sm" style="color: var(--accent);" id="currentGoalLabel">REDUZIEREN</span>
+                <div style="display: flex; align-items: center; gap: 6px;">
+                    <span style="font-size: 12px;">🧪</span>
+                    <span class="label-sm" style="color: var(--accent); font-weight: 900;" id="currentGoalLabel">REDUZIEREN</span>
+                </div>
                 <span class="label-sm">DE</span>
             </div>
 
+            <!-- Bento Grid Dashboard -->
             <div class="bento-grid">
+                <!-- Kontrollwert Card -->
                 <div class="bento-card full" style="background: linear-gradient(135deg, #1C1C1E 0%, #121212 100%); border: 1px solid rgba(229,169,59,0.2);">
                     <div style="display: flex; justify-content: space-between; align-items: flex-start;">
                         <div>
@@ -271,62 +282,58 @@
                     <p style="font-size: 12px; color: var(--muted); line-height: 1.35; margin-top: 2px;">Beobachten statt bewerten. Jede bewusste Entscheidung liefert ein klareres Muster.</p>
                 </div>
 
+                <!-- Rauchfreies Fenster -->
                 <div class="bento-card">
                     <span class="label-sm">Rauchfreies Fenster</span>
                     <div class="bento-value" id="smokeFreeHours" style="color: var(--accent);">0</div>
-                    <span style="font-size: 11px; color: var(--muted);">Stunden seit letztem Moment</span>
+                    <span style="font-size: 11px; color: var(--muted);">Stunden stabil</span>
                 </div>
 
+                <!-- Heute Geraucht -->
                 <div class="bento-card">
                     <span class="label-sm">Heute Geraucht</span>
                     <div class="bento-value" id="statSmoked">0</div>
                     <span style="font-size: 11px; color: var(--muted);">Autopilot lief</span>
                 </div>
 
+                <!-- Unterbrochen -->
                 <div class="bento-card">
                     <span class="label-sm">Unterbrochen</span>
                     <div class="bento-value" id="statResisted" style="color: #34C759;">0</div>
                     <span style="font-size: 11px; color: var(--muted);">Bewusst gestoppt</span>
                 </div>
 
+                <!-- Gespart -->
                 <div class="bento-card">
                     <span class="label-sm">Gespart</span>
                     <div class="bento-value" id="moneySaved" style="color: var(--accent);">€0.00</div>
                     <span style="font-size: 11px; color: var(--muted);">Finanzieller Effekt</span>
                 </div>
 
-                <div class="bento-card full" onclick="openModal('logSheet')" style="cursor: pointer; background: linear-gradient(135deg, #18221D 0%, #121212 100%); border: 1px solid rgba(52,199,89,0.2);">
+                <!-- Quick Action: Rauchen / Verlangen erfassen (Der Haupt-Button) -->
+                <div class="bento-card full" onclick="openModal('logSheet')" style="cursor: pointer; background: linear-gradient(135deg, #221B14 0%, #121212 100%); border: 1px solid rgba(229,169,59,0.3);">
                     <div style="display: flex; justify-content: space-between; align-items: center;">
-                        <span class="label-sm" style="color: #34C759;">Aktion</span>
-                        <span style="font-size: 14px;">↗</span>
+                        <span class="label-sm" style="color: var(--accent);">Protokollieren</span>
+                        <span style="font-size: 14px; color: var(--accent);">+</span>
                     </div>
                     <div>
-                        <div style="font-size: 15px; font-weight: 800; color: var(--primary);">Autopilot unterbrochen</div>
-                        <div style="font-size: 11px; color: var(--muted); margin-top: 1px;">Bewusste Entscheidung erfassen</div>
+                        <div style="font-size: 16px; font-weight: 850; color: var(--primary);">Rauchen / Verlangen erfassen</div>
+                        <div style="font-size: 11px; color: var(--muted); margin-top: 2px;">Entscheide: Autopilot lief oder bewusst unterbrochen?</div>
                     </div>
                 </div>
 
-                <div class="bento-card full" onclick="openModal('logSheet')" style="cursor: pointer;">
-                    <div style="display: flex; justify-content: space-between; align-items: center;">
-                        <span class="label-sm">Protokoll</span>
-                        <span style="font-size: 14px;">+</span>
-                    </div>
-                    <div>
-                        <div style="font-size: 15px; font-weight: 800; color: var(--primary);">Moment dokumentieren</div>
-                        <div style="font-size: 11px; color: var(--muted); margin-top: 1px;">Ohne Wertung erfassen</div>
-                    </div>
-                </div>
-
+                <!-- Akut-Hilfe / SOS -->
                 <div class="bento-card full" onclick="openModal('sosSheet')" style="cursor: pointer; background: linear-gradient(135deg, #261D1A 0%, #121212 100%); border: 1px solid rgba(229,169,59,0.2);">
                     <div style="display: flex; justify-content: space-between; align-items: center;">
                         <span class="label-sm" style="color: var(--accent);">Akut-Hilfe</span>
                         <span style="font-size: 11px; font-weight: 800; color: var(--accent);">SOS</span>
                     </div>
-                    <div style="font-size: 15px; font-weight: 800; color: var(--primary);">Drang stoppen / SOS</div>
+                    <div style="font-size: 15px; font-weight: 800; color: var(--primary);">Drang sofort stoppen (SOS)</div>
                 </div>
             </div>
         </div>
 
+        <!-- LABOR VIEW -->
         <div id="view-labor" class="view">
             <h1 class="title-hero">Labor & Programm</h1>
             <div class="bento-card full">
@@ -335,6 +342,7 @@
             </div>
         </div>
 
+        <!-- MUSTER VIEW -->
         <div id="view-muster" class="view">
             <h1 class="title-hero">Rauchmuster</h1>
             <div class="bento-card full">
@@ -343,6 +351,7 @@
             </div>
         </div>
 
+        <!-- ICH VIEW (DATEN) -->
         <div id="view-daten" class="view">
             <h1 class="title-hero">Einstellungen</h1>
             <div class="bento-card full">
@@ -352,6 +361,7 @@
             </div>
         </div>
 
+        <!-- BOTTOM NAV -->
         <nav class="bottom-nav" id="bottomNav">
             <button class="nav-item active" onclick="switchView('heute', this)">
                 <svg viewBox="0 0 24 24"><path d="M12 3L4 9v12h5v-7h6v7h5V9z"/></svg>
@@ -367,17 +377,18 @@
             </button>
         </nav>
 
+        <!-- LOG SHEET (Glasklar: Entweder Autopilot lief oder bewusst gestoppt) -->
         <div id="logSheet" class="sheet-overlay" onclick="closeModals(event)">
             <div class="sheet-content">
                 <div style="display: flex; justify-content: space-between; align-items: center;">
                     <div>
                         <span class="label-sm">Protokoll</span>
-                        <h3 style="font-size: 18px; font-weight: 850; margin-top: 2px;">Was war der Auslöser?</h3>
+                        <h3 style="font-size: 18px; font-weight: 850; margin-top: 2px;">Was ist gerade passiert?</h3>
                     </div>
                     <button onclick="closeModals()" style="background: var(--surface); border: 1px solid var(--border); width: 30px; height: 30px; border-radius: 50%; color: var(--primary); cursor: pointer;">✕</button>
                 </div>
 
-                <span class="label-sm">Trigger</span>
+                <span class="label-sm">Auslöser wählen</span>
                 <div class="trigger-grid">
                     <div class="trigger-chip active" onclick="setTrigger('Stress', this)">Stress</div>
                     <div class="trigger-chip" onclick="setTrigger('Kaffee', this)">Kaffee</div>
@@ -393,23 +404,28 @@
                 </div>
                 <input type="range" id="intensityRange" min="1" max="5" value="3" style="width: 100%; accent-color: var(--accent);" oninput="document.getElementById('intensityVal').innerText = this.value + '/5'">
 
-                <div style="display: flex; gap: 8px; margin-top: 4px;">
-                    <button class="btn-surface" onclick="saveLogData('smoke')" style="flex: 1; font-size: 12px;">Moment dokumentieren</button>
-                    <button class="btn-gold" onclick="saveLogData('resist')" style="flex: 1; font-size: 12px;">Autopilot unterbrochen</button>
+                <div style="display: flex; flex-direction: column; gap: 8px; margin-top: 4px;">
+                    <button class="btn-surface" onclick="saveLogData('smoke')" style="font-size: 13px; border-color: rgba(255,255,255,0.15);">
+                        🚬 <b>Autopilot lief</b> (Moment ohne Wertung dokumentieren)
+                    </button>
+                    <button class="btn-gold" onclick="saveLogData('resist')" style="font-size: 13px;">
+                        ✨ <b>Bewusst unterbrochen</b> (Autopilot gestoppt / Sieg feiern)
+                    </button>
                 </div>
             </div>
         </div>
 
+        <!-- SOS SHEET -->
         <div id="sosSheet" class="sheet-overlay" onclick="closeModals(event)">
             <div class="sheet-content">
                 <div style="display: flex; justify-content: space-between; align-items: center;">
                     <div>
-                        <span class="label-sm" style="color: var(--accent);">SOS Urge Protocol</span>
-                        <h3 style="font-size: 18px; font-weight: 850; margin-top: 2px;">Unterbrich den Autopiloten.</h3>
+                        <span class="label-sm" style="color: var(--accent);">Akut-Hilfe (SOS)</span>
+                        <h3 style="font-size: 18px; font-weight: 850; margin-top: 2px;">Drang in 90 Sekunden brechen</h3>
                     </div>
                     <button onclick="closeModals()" style="background: var(--surface); border: 1px solid var(--border); width: 30px; height: 30px; border-radius: 50%; color: var(--primary); cursor: pointer;">✕</button>
                 </div>
-                <p style="font-size: 12px; color: var(--muted);">Welcher Trigger drückt gerade?</p>
+                <p style="font-size: 12px; color: var(--muted);">Wähle deinen aktuellen Impuls für eine Sofort-Intervention:</p>
                 <div class="trigger-grid">
                     <div class="trigger-chip" onclick="triggerSosAction('Stress')">Stress</div>
                     <div class="trigger-chip" onclick="triggerSosAction('Kaffee')">Kaffee</div>
