@@ -1,1 +1,459 @@
-<!DOCTYPE html><html lang="de"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover"><meta name="theme-color" content="#F4F6F8"><title>Smoke Lab – KVT Labor</title><style>:root{--bg:#F4F6F8;--card:#fff;--primary:#0B1E1D;--accent:#FF5722;--muted:#8A929A;--border:rgba(0,0,0,.05);--radius-card:28px;--radius-btn:18px}*{box-sizing:border-box;margin:0;padding:0;font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","SF Pro Text",Roboto,sans-serif;-webkit-font-smoothing:antialiased;-webkit-tap-highlight-color:transparent}body{background:var(--bg);color:var(--primary);display:flex;justify-content:center;min-height:100vh;overflow-x:hidden}.app-frame{width:100%;max-width:414px;min-height:100vh;background:var(--bg);display:flex;flex-direction:column;position:relative}.view{display:none;flex-direction:column;padding:32px 20px 130px;gap:18px;animation:fadeIn .3s cubic-bezier(.16,1,.3,1) forwards}.view.active{display:flex}@keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}.ios-card{background:#fff;border-radius:28px;padding:22px;border:1px solid var(--border);box-shadow:0 10px 30px rgba(0,0,0,.03);display:flex;flex-direction:column;gap:14px}.title-hero{font-size:28px;font-weight:800;color:var(--primary);letter-spacing:-.9px;line-height:1.1}.label-sm{font-size:11px;text-transform:uppercase;color:var(--muted);font-weight:750;letter-spacing:.9px}.btn-orange,.btn-dark{border:0;border-radius:18px;height:58px;font-size:16px;font-weight:750;width:100%;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:transform .1s ease}.btn-orange{background:linear-gradient(135deg,#FF7043,#FF5722);color:#fff;box-shadow:0 10px 25px rgba(255,87,34,.25)}.btn-dark{background:var(--primary);color:#fff;box-shadow:0 10px 25px rgba(11,30,29,.15)}.btn-orange:active,.btn-dark:active{transform:scale(.98)}.health-input{width:100%;height:52px;padding:0 16px;border-radius:14px;border:1px solid rgba(0,0,0,.08);background:#FAFAFC;font-size:15px;color:var(--primary);outline:none}.health-input:focus{border-color:var(--primary);background:#fff;box-shadow:0 0 0 4px rgba(11,30,29,.06)}.bottom-nav{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:414px;height:82px;background:rgba(255,255,255,.85);backdrop-filter:blur(25px);-webkit-backdrop-filter:blur(25px);border-top:1px solid rgba(0,0,0,.05);display:flex;justify-content:space-around;align-items:center;padding-bottom:12px;z-index:100}.nav-item{background:none;border:0;color:var(--muted);font-size:10px;text-align:center;flex:1;font-weight:700;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:4px}.nav-item svg{width:22px;height:22px;fill:currentColor}.nav-item.active{color:var(--primary)}.sheet-overlay{position:fixed;inset:0;background:rgba(0,0,0,.45);backdrop-filter:blur(6px);z-index:200;display:none;align-items:flex-end;justify-content:center}.sheet-overlay.open{display:flex}.sheet-content{width:100%;max-width:414px;background:#fff;border-radius:36px 36px 0 0;padding:30px 24px 46px;display:flex;flex-direction:column;gap:18px;animation:slideUp .35s cubic-bezier(.16,1,.3,1) forwards;box-shadow:0 -20px 40px rgba(0,0,0,.15)}@keyframes slideUp{from{transform:translateY(100%)}to{transform:none}}.trigger-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}.trigger-chip{padding:14px;border-radius:14px;border:1px solid rgba(11,30,29,.08);background:#FAFAFC;color:var(--primary);font-size:13px;font-weight:700;cursor:pointer;text-align:center;transition:.15s}.trigger-chip.active{background:var(--primary);color:#fff;border-color:var(--primary)}</style></head><body><div class="app-frame"><div id="view-onboarding" class="view active"><div style="display:flex;flex-direction:column;gap:8px"><span class="label-sm">Wissenschaftliches KVT-Labor</span><h1 class="title-hero">Kontrolle beginnt mit Verstehen.</h1><p style="font-size:14px;color:var(--muted);line-height:1.5">Kein Druck. Keine Streaks. Beobachte Trigger, unterbrich Autopiloten und entwickle echte Wahlfreiheit.</p></div><div class="ios-card"><div style="display:flex;flex-direction:column;gap:6px"><label class="label-sm">Dein Vorname</label><input id="setupName" class="health-input" placeholder="z. B. Daniel"></div><div style="display:flex;flex-direction:column;gap:6px"><label class="label-sm">Zigaretten pro Tag</label><input type="number" id="setupBaseline" class="health-input" value="10"></div><div style="display:flex;flex-direction:column;gap:6px"><label class="label-sm">Hauptziel</label><select id="setupGoal" class="health-input"><option>Mehr Kontrolle & reduzieren</option><option>Schritt für Schritt aufhören</option></select></div></div><button class="btn-orange" onclick="completeOnboarding()">Labor starten ✨</button><p style="text-align:center;font-size:11px;color:var(--muted)">Deine Daten bleiben lokal auf diesem Gerät.</p></div><div id="view-heute" class="view"><div style="display:flex;justify-content:space-between;align-items:flex-end"><div><span id="greetingText" style="font-size:13px;color:var(--muted);font-weight:600">Guten Tag,</span><h1 class="title-hero" id="displayName" style="margin-top:2px">Daniel</h1></div><div id="avatarLetter" style="background:#E5E5EA;width:42px;height:42px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:15px;color:var(--primary)">D</div></div><div class="ios-card" style="background:linear-gradient(135deg,#0B1E1D,#153836);color:#fff;border:0"><div style="display:flex;justify-content:space-between;align-items:flex-start"><div><span class="label-sm" style="color:rgba(255,255,255,.65)">Phase 1 · Beobachten</span><div style="font-size:22px;font-weight:800;margin-top:4px">Kontrolle statt Verbot</div></div><div id="controlScoreBadge" style="background:rgba(255,255,255,.15);backdrop-filter:blur(10px);padding:6px 14px;border-radius:20px;font-size:12px;font-weight:750">50/100</div></div><p style="font-size:13px;color:rgba(255,255,255,.7);line-height:1.4;margin-top:4px">Beobachte, wann der Autopilot startet. Jede bewusste Unterbrechung erweitert deinen Entscheidungsspielraum.</p></div><button class="btn-orange" onclick="openModal('logSheet')">+ Moment erfassen</button><button class="btn-dark" onclick="openModal('sosSheet')">⚡ Drang stoppen / SOS</button><div class="ios-card"><span class="label-sm">Tages-Radar</span><div style="font-size:18px;font-weight:800;color:var(--primary)">Heute auf einen Blick</div><div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:4px"><div style="background:#FAFAFC;padding:14px;border-radius:16px;border:1px solid rgba(0,0,0,.04)"><span style="font-size:10px;text-transform:uppercase;color:var(--muted);font-weight:750">Zigaretten</span><div id="statSmoked" style="font-size:28px;font-weight:850;color:var(--primary);margin-top:2px">0</div></div><div style="background:#FAFAFC;padding:14px;border-radius:16px;border:1px solid rgba(0,0,0,.04)"><span style="font-size:10px;text-transform:uppercase;color:var(--muted);font-weight:750">Unterbrechungen</span><div id="statResisted" style="font-size:28px;font-weight:850;color:var(--primary);margin-top:2px">0</div></div></div><div id="radarStatus" style="padding-top:4px;text-align:center;color:var(--muted);font-size:13px">🌱 Noch keine Situation erfasst. Beobachte einfach, wann der Autopilot startet.</div></div></div><div id="view-labor" class="view"><h1 class="title-hero">Labor & Programm</h1><div class="ios-card"><span class="label-sm">30-Tage-Protokoll</span><p style="font-size:14px;color:var(--muted);line-height:1.4">Phase 1 ist aktiv: Situationen beobachten, ohne sie zu bewerten.</p></div></div><div id="view-muster" class="view"><h1 class="title-hero">Rauchmuster</h1><div class="ios-card"><span class="label-sm">Kalibrierung</span><p style="font-size:14px;color:var(--muted);line-height:1.4">Nach mehreren Situationen werden hier deine häufigsten Trigger sichtbar.</p></div></div><div id="view-fortschritt" class="view"><h1 class="title-hero">Fortschritt</h1><div class="ios-card"><span class="label-sm">Kontrollwert</span><div id="progressScore" style="font-size:34px;font-weight:850;color:var(--primary)">50</div><p style="font-size:13px;color:var(--muted)">Dein Kontrollwert basiert auf dokumentierten Situationen und bewussten Unterbrechungen.</p></div></div><div id="view-ich" class="view"><h1 class="title-hero">Einstellungen</h1><div class="ios-card"><span class="label-sm">Lokale Daten</span><p style="font-size:14px;color:var(--muted)">Deine Smoke-Lab-Daten werden lokal auf diesem Gerät gespeichert.</p><button class="btn-dark" style="margin-top:6px;height:46px;font-size:14px" onclick="resetApp()">App zurücksetzen</button></div></div><nav class="bottom-nav" id="bottomNav" style="display:none"><button class="nav-item active" onclick="switchView('heute',this)"><svg viewBox="0 0 24 24"><path d="M12 3L4 9v12h5v-7h6v7h5V9z"/></svg>HEUTE</button><button class="nav-item" onclick="switchView('labor',this)"><svg viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2m-2 10h-4v4h-2v-4H7v-2h4V7h2v4h4z"/></svg>LABOR</button><button class="nav-item" onclick="switchView('muster',this)"><svg viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2M9 17H7v-7h2zm4 0h-2V7h2zm4 0h-2v-4h2z"/></svg>MUSTER</button><button class="nav-item" onclick="switchView('fortschritt',this)"><svg viewBox="0 0 24 24"><path d="M16 6l2.29 2.29-4.88 4.88-4-4L2 16.59 3.41 18l6-6 4 4 6.3-6.29L22 12V6z"/></svg>FORTSCHRITT</button><button class="nav-item" onclick="switchView('ich',this)"><svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2m0 3c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3m0 14.2c-2.5 0-4.71-1.28-6-3.22.03-1.99 4-3.08 6-3.08 1.99 0 5.97 1.09 6 3.08-1.29 1.94-3.5 3.22-6 3.22"/></svg>ICH</button></nav><div id="logSheet" class="sheet-overlay" onclick="closeModals(event)"><div class="sheet-content"><div style="display:flex;justify-content:space-between;align-items:center"><div><span class="label-sm">Moment erfassen</span><h3 class="title-hero" style="font-size:22px;margin-top:2px">Was ist passiert?</h3></div><button onclick="closeModals()" style="background:#F0F2F4;border:0;width:32px;height:32px;border-radius:50%;font-size:16px;color:var(--primary)">✕</button></div><div style="display:grid;grid-template-columns:1fr 1fr;gap:8px"><button class="btn-dark" id="typeSmoke" onclick="setLogType('smoke',this)" style="height:48px;font-size:13px">Moment dokumentieren</button><button class="btn-orange" id="typeResist" onclick="setLogType('resist',this)" style="height:48px;font-size:13px;background:#E4E7EC;color:var(--primary);box-shadow:none">Unterbrechen ✨</button></div><span class="label-sm">Auslöser</span><div class="trigger-grid"><div class="trigger-chip active" onclick="setTrigger('Stress',this)">Stress</div><div class="trigger-chip" onclick="setTrigger('Kaffee',this)">Kaffee</div><div class="trigger-chip" onclick="setTrigger('Gewohnheit',this)">Gewohnheit</div><div class="trigger-chip" onclick="setTrigger('Pause',this)">Pause</div></div><button class="btn-orange" style="margin-top:6px" onclick="saveLogData()">Speichern</button></div></div><div id="sosSheet" class="sheet-overlay" onclick="closeModals(event)"><div class="sheet-content"><div style="display:flex;justify-content:space-between;align-items:center"><div><span class="label-sm">Akut-Hilfe</span><h3 class="title-hero" style="font-size:22px;margin-top:2px">Unterbrich den Autopiloten.</h3></div><button onclick="closeModals()" style="background:#F0F2F4;border:0;width:32px;height:32px;border-radius:50%;font-size:16px;color:var(--primary)">✕</button></div><p style="font-size:13px;color:var(--muted)">Welcher Trigger drückt gerade am stärksten?</p><div class="trigger-grid"><div class="trigger-chip" onclick="triggerSosAction('Stress')">🤯 Stress & Druck</div><div class="trigger-chip" onclick="triggerSosAction('Kaffee')">☕ Kaffee-Gewohnheit</div></div></div></div></div><script>let currentLogType='smoke',currentTrigger='Stress',stats={smoked:0,resisted:0};function completeOnboarding(){const n=document.getElementById('setupName').value.trim()||'Daniel';greetingText.innerText='Guten Tag,';displayName.innerText=n;avatarLetter.innerText=n.charAt(0).toUpperCase();document.getElementById('view-onboarding').classList.remove('active');bottomNav.style.display='grid';switchView('heute',document.querySelector('.nav-item'))}function switchView(n,b){document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));document.getElementById('view-'+n).classList.add('active');document.querySelectorAll('.nav-item').forEach(i=>i.classList.remove('active'));if(b)b.classList.add('active');window.scrollTo(0,0)}function openModal(id){document.getElementById(id).classList.add('open')}function closeModals(e){if(!e||e.target.classList.contains('sheet-overlay'))document.querySelectorAll('.sheet-overlay').forEach(s=>s.classList.remove('open'))}function setLogType(t){currentLogType=t;typeSmoke.style.background=t==='smoke'?'var(--primary)':'#E4E7EC';typeSmoke.style.color=t==='smoke'?'#FFF':'var(--primary)';typeResist.style.background=t==='resist'?'var(--accent)':'#E4E7EC';typeResist.style.color=t==='resist'?'#FFF':'var(--primary)'}function setTrigger(t,e){currentTrigger=t;document.querySelectorAll('.trigger-chip').forEach(c=>c.classList.remove('active'));e.classList.add('active')}function saveLogData(){closeModals();if(currentLogType==='smoke'){stats.smoked++;statSmoked.innerText=stats.smoked;radarStatus.innerText=`📝 Moment dokumentiert (${currentTrigger}). Keine Strafe, reine Analyse.`}else{stats.resisted++;statResisted.innerText=stats.resisted;radarStatus.innerText=`🔥 Stark! Autopilot bei '${currentTrigger}' erfolgreich unterbrochen.`;controlScoreBadge.innerText='75/100';progressScore.innerText='75'}}function triggerSosAction(t){closeModals();stats.resisted++;statResisted.innerText=stats.resisted;radarStatus.innerText=`⚡ SOS gemeistert (${t})! Drang erfolgreich umgelenkt.`;controlScoreBadge.innerText='85/100';progressScore.innerText='85'}function resetApp(){if(confirm('App wirklich zurücksetzen?')){document.querySelectorAll('.sheet-overlay').forEach(s=>s.classList.remove('open'));document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));document.getElementById('view-onboarding').classList.add('active');bottomNav.style.display='none'}}</script></body></html>
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="theme-color" content="#0B1315">
+    <title>Smoke Lab — KVT Labor</title>
+    <style>
+        :root {
+            --bg: #0B1315;
+            --surface: #131E22;
+            --surface-card: #1A282E;
+            --primary: #F3F5F7;
+            --muted: #8A9CA3;
+            --accent: #FF5A36;
+            --accent-glow: rgba(255, 90, 54, 0.25);
+            --border: rgba(255, 255, 255, 0.06);
+            --radius-card: 24px;
+            --radius-btn: 16px;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", Roboto, sans-serif;
+            -webkit-font-smoothing: antialiased;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        html { background: var(--bg); }
+        body {
+            background-color: var(--bg);
+            color: var(--primary);
+            display: flex;
+            justify-content: center;
+            min-height: 100vh;
+            min-height: 100dvh;
+            overflow-x: hidden;
+            overflow-y: auto;
+        }
+
+        .app-frame {
+            width: 100%;
+            max-width: 414px;
+            min-height: 100vh;
+            min-height: 100dvh;
+            background-color: var(--bg);
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
+
+        .view {
+            display: none;
+            flex-direction: column;
+            padding: calc(28px + env(safe-area-inset-top)) 20px calc(130px + env(safe-area-inset-bottom)) 20px;
+            gap: 20px;
+            animation: fadeIn 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+        .view.active { display: flex; }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .lab-card {
+            background-color: var(--surface-card);
+            border-radius: var(--radius-card);
+            padding: 24px;
+            border: 1px solid var(--border);
+            box-shadow: 0 16px 40px rgba(0, 0, 0, 0.3);
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .title-hero { font-size: 28px; font-weight: 800; color: var(--primary); letter-spacing: -0.8px; line-height: 1.15; }
+        .label-sm { font-size: 11px; text-transform: uppercase; color: var(--muted); font-weight: 750; letter-spacing: 1px; }
+
+        .btn-orange {
+            background: linear-gradient(135deg, #FF7043 0%, #FF5A36 100%);
+            color: #FFFFFF;
+            border: none;
+            border-radius: var(--radius-btn);
+            height: 58px;
+            font-size: 16px;
+            font-weight: 750;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 10px 30px var(--accent-glow);
+            transition: transform 0.1s ease;
+        }
+        .btn-orange:active { transform: scale(0.98); }
+
+        .btn-surface {
+            background-color: var(--surface);
+            color: var(--primary);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-btn);
+            height: 58px;
+            font-size: 16px;
+            font-weight: 750;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: transform 0.1s ease;
+        }
+        .btn-surface:active { transform: scale(0.98); }
+
+        .lab-input {
+            width: 100%;
+            height: 54px;
+            padding: 0 18px;
+            border-radius: 14px;
+            border: 1px solid var(--border);
+            background: var(--surface);
+            font-size: 16px;
+            color: var(--primary);
+            outline: none;
+        }
+        .lab-input:focus { border-color: var(--accent); background: #16242B; }
+
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100%;
+            max-width: 414px;
+            height: calc(84px + env(safe-area-inset-bottom));
+            background: rgba(19, 30, 34, 0.82);
+            backdrop-filter: blur(25px);
+            -webkit-backdrop-filter: blur(25px);
+            border-top: 1px solid var(--border);
+            display: none;
+            justify-content: space-around;
+            align-items: center;
+            padding-bottom: calc(12px + env(safe-area-inset-bottom));
+            z-index: 100;
+        }
+        .bottom-nav.active { display: flex; }
+        .nav-item {
+            background: none; border: none;
+            color: var(--muted);
+            font-size: 10px; text-align: center;
+            flex: 1; font-weight: 700; cursor: pointer;
+            display: flex; flex-direction: column; align-items: center; gap: 4px;
+            transition: color 0.2s ease;
+        }
+        .nav-item svg { width: 22px; height: 22px; fill: currentColor; }
+        .nav-item.active { color: var(--accent); }
+
+        .sheet-overlay {
+            position: fixed; inset: 0; background: rgba(0,0,0,0.65); backdrop-filter: blur(8px);
+            z-index: 200; display: none; align-items: flex-end; justify-content: center;
+        }
+        .sheet-overlay.open { display: flex; }
+        .sheet-content {
+            width: 100%; max-width: 414px; background: var(--surface-card);
+            border: 1px solid var(--border);
+            border-top-left-radius: 36px; border-top-right-radius: 36px;
+            padding: 32px 24px calc(48px + env(safe-area-inset-bottom)) 24px;
+            display: flex; flex-direction: column; gap: 20px;
+            animation: slideUp 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+            box-shadow: 0 -25px 50px rgba(0,0,0,0.5);
+        }
+        @keyframes slideUp {
+            from { transform: translateY(100%); }
+            to { transform: translateY(0); }
+        }
+
+        .trigger-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+        .trigger-chip {
+            padding: 14px;
+            border-radius: 14px;
+            border: 1px solid var(--border);
+            background: var(--surface);
+            color: var(--primary);
+            font-size: 13px;
+            font-weight: 700;
+            cursor: pointer;
+            text-align: center;
+            transition: all 0.15s ease;
+        }
+        .trigger-chip.active {
+            background: var(--accent);
+            color: #FFFFFF;
+            border-color: var(--accent);
+            box-shadow: 0 4px 15px var(--accent-glow);
+        }
+    </style>
+</head>
+<body>
+
+    <div class="app-frame">
+        <div id="view-onboarding" class="view active">
+            <div style="display: flex; flex-direction: column; gap: 10px; margin-top: 10px;">
+                <span class="label-sm">Wissenschaftliches KVT-Labor</span>
+                <h1 class="title-hero">Dein Rauchverhalten verstehen. Ohne Druck.</h1>
+                <p style="font-size: 14px; color: var(--muted); line-height: 1.5;">Keine toxischen Streaks. Keine Verbote. Erkenne deine Autopiloten und gewinne echte Wahlfreiheit zurück.</p>
+            </div>
+
+            <div class="lab-card">
+                <div style="display: flex; flex-direction: column; gap: 8px;">
+                    <label class="label-sm">Dein Vorname</label>
+                    <input type="text" id="setupName" class="lab-input" placeholder="z. B. Daniel">
+                </div>
+                <div style="display: flex; flex-direction: column; gap: 8px;">
+                    <label class="label-sm">Ausgangswert (Zigaretten / Tag)</label>
+                    <input type="number" id="setupBaseline" class="lab-input" value="10">
+                </div>
+                <div style="display: flex; flex-direction: column; gap: 8px;">
+                    <label class="label-sm">Dein Hauptziel</label>
+                    <select id="setupGoal" class="lab-input">
+                        <option>Autopiloten erkennen & reduzieren</option>
+                        <option>Schritt für Schritt rauchfrei werden</option>
+                    </select>
+                </div>
+            </div>
+
+            <button class="btn-orange" onclick="completeOnboarding()">Labor betreten ✨</button>
+            <p style="text-align: center; font-size: 11px; color: var(--muted);">100% lokal & privat auf deinem Gerät.</p>
+        </div>
+
+        <div id="view-heute" class="view">
+            <div style="display: flex; justify-content: space-between; align-items: flex-end;">
+                <div>
+                    <span id="greetingText" style="font-size: 13px; color: var(--muted); font-weight: 600;">Guten Tag,</span>
+                    <h1 class="title-hero" id="displayName" style="margin-top: 2px;">Daniel</h1>
+                </div>
+                <div style="background: var(--surface); width: 44px; height: 44px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 16px; color: var(--accent); border: 1px solid var(--border);" id="avatarLetter">D</div>
+            </div>
+
+            <div class="lab-card" style="background: linear-gradient(135deg, #1A282E 100%, #131E22 0%); border: 1px solid rgba(255,90,54,0.15);">
+                <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+                    <div>
+                        <span class="label-sm" style="color: var(--accent);">Phase 1 · Beobachten</span>
+                        <div style="font-size: 22px; font-weight: 800; margin-top: 4px;">Muster sichtbar machen</div>
+                    </div>
+                    <div style="background: rgba(255,90,54,0.15); padding: 6px 14px; border-radius: 20px; font-size: 12px; font-weight: 750; color: var(--accent);" id="controlScoreBadge">50/100</div>
+                </div>
+                <p style="font-size: 13px; color: var(--muted); line-height: 1.4;">Jeder dokumentierte Moment bricht den Autopiloten ein Stück weit auf.</p>
+            </div>
+
+            <button class="btn-orange" onclick="openModal('logSheet')">+ Moment erfassen</button>
+            <button class="btn-surface" onclick="openModal('sosSheet')">⚡ Drang stoppen / SOS</button>
+
+            <div class="lab-card">
+                <span class="label-sm">Tages-Radar</span>
+                <div style="font-size: 18px; font-weight: 800; color: var(--primary);">Heute auf einen Blick</div>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 4px;">
+                    <div style="background: var(--surface); padding: 16px; border-radius: 16px; border: 1px solid var(--border);">
+                        <span style="font-size: 10px; text-transform: uppercase; color: var(--muted); font-weight: 750;">Erfasste Momente</span>
+                        <div id="statSmoked" style="font-size: 28px; font-weight: 850; color: var(--primary); margin-top: 4px;">0</div>
+                    </div>
+                    <div style="background: var(--surface); padding: 16px; border-radius: 16px; border: 1px solid var(--border);">
+                        <span style="font-size: 10px; text-transform: uppercase; color: var(--muted); font-weight: 750;">Unterbrechungen</span>
+                        <div id="statResisted" style="font-size: 28px; font-weight: 850; color: var(--accent); margin-top: 4px;">0</div>
+                    </div>
+                </div>
+                <div style="padding-top: 4px; text-align: center; color: var(--muted); font-size: 13px;" id="radarStatus">🌱 Noch kein Eintrag heute. Beobachte ganz gelassen.</div>
+            </div>
+        </div>
+
+        <div id="view-labor" class="view">
+            <h1 class="title-hero">Labor & Programm</h1>
+            <div class="lab-card">
+                <span class="label-sm">30-Tage KVT Protokoll</span>
+                <p style="font-size: 14px; color: var(--muted); line-height: 1.5;">Phase 1 ist aktiv: Erfasse unbewusste Handlungen, ohne sie zu bewerten.</p>
+            </div>
+        </div>
+
+        <div id="view-muster" class="view">
+            <h1 class="title-hero">Rauchmuster</h1>
+            <div class="lab-card">
+                <span class="label-sm">Trigger-Analyse</span>
+                <p style="font-size: 14px; color: var(--muted); line-height: 1.5;">Hier erscheinen deine Daten, sobald du erste Situationen im Labor dokumentiert hast.</p>
+            </div>
+        </div>
+
+        <div id="view-fortschritt" class="view">
+            <h1 class="title-hero">Fortschritt</h1>
+            <div class="lab-card">
+                <span class="label-sm">Kontrollwert</span>
+                <div style="font-size: 36px; font-weight: 850; color: var(--accent);" id="progressScore">50</div>
+                <p style="font-size: 14px; color: var(--muted);">Dein Index für bewusste Entscheidungen im Alltag.</p>
+            </div>
+        </div>
+
+        <div id="view-ich" class="view">
+            <h1 class="title-hero">Einstellungen</h1>
+            <div class="lab-card">
+                <span class="label-sm">Datenschutz & Gerät</span>
+                <p style="font-size: 14px; color: var(--muted);">Alle Protokolle und Labor-Daten bleiben zu 100% lokal auf diesem Gerät.</p>
+                <button class="btn-surface" style="margin-top: 8px; height: 48px; font-size: 14px; color: #FF5A36;" onclick="resetApp()">Labor zurücksetzen</button>
+            </div>
+        </div>
+
+        <nav class="bottom-nav" id="bottomNav">
+            <button class="nav-item active" onclick="switchView('heute', this)">
+                <svg viewBox="0 0 24 24"><path d="M12 3L4 9v12h5v-7h6v7h5V9z"/></svg>
+                HEUTE
+            </button>
+            <button class="nav-item" onclick="switchView('labor', this)">
+                <svg viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2m-2 10h-4v4h-2v-4H7v-2h4V7h2v4h4z"/></svg>
+                LABOR
+            </button>
+            <button class="nav-item" onclick="switchView('muster', this)">
+                <svg viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2M9 17H7v-7h2zm4 0h-2V7h2zm4 0h-2v-4h2z"/></svg>
+                MUSTER
+            </button>
+            <button class="nav-item" onclick="switchView('fortschritt', this)">
+                <svg viewBox="0 0 24 24"><path d="M16 6l2.29 2.29-4.88 4.88-4-4L2 16.59 3.41 18l6-6 4 4 6.3-6.29L22 12V6z"/></svg>
+                FORTSCHRITT
+            </button>
+            <button class="nav-item" onclick="switchView('ich', this)">
+                <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2m0 3c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3m0 14.2c-2.5 0-4.71-1.28-6-3.22.03-1.99 4-3.08 6-3.08 1.99 0 5.97 1.09 6 3.08-1.29 1.94-3.5 3.22-6 3.22"/></svg>
+                ICH
+            </button>
+        </nav>
+
+        <div id="logSheet" class="sheet-overlay" onclick="closeModals(event)">
+            <div class="sheet-content">
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <div>
+                        <span class="label-sm">Protokoll</span>
+                        <h3 class="title-hero" style="font-size: 22px; margin-top: 2px;">Moment erfassen</h3>
+                    </div>
+                    <button onclick="closeModals()" style="background: var(--surface); border: 1px solid var(--border); width: 34px; height: 34px; border-radius: 50%; font-size: 16px; cursor: pointer; color: var(--primary);">✕</button>
+                </div>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                    <button class="btn-surface" id="typeSmoke" onclick="setLogType('smoke', this)" style="height: 50px; font-size: 13px; border-color: var(--accent);">Moment dokumentieren</button>
+                    <button class="btn-surface" id="typeResist" onclick="setLogType('resist', this)" style="height: 50px; font-size: 13px;">Unterbrechen ✨</button>
+                </div>
+                <span class="label-sm">Haupt-Auslöser</span>
+                <div class="trigger-grid">
+                    <div class="trigger-chip active" onclick="setTrigger('Stress', this)">Stress & Druck</div>
+                    <div class="trigger-chip" onclick="setTrigger('Kaffee', this)">Kaffee</div>
+                    <div class="trigger-chip" onclick="setTrigger('Gewohnheit', this)">Gewohnheit</div>
+                    <div class="trigger-chip" onclick="setTrigger('Pause', this)">Pause</div>
+                </div>
+                <button class="btn-orange" style="margin-top: 4px;" onclick="saveLogData()">Eintrag speichern</button>
+            </div>
+        </div>
+
+        <div id="sosSheet" class="sheet-overlay" onclick="closeModals(event)">
+            <div class="sheet-content">
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <div>
+                        <span class="label-sm" style="color: var(--accent);">Akut-Hilfe</span>
+                        <h3 class="title-hero" style="font-size: 22px; margin-top: 2px;">Autopiloten stoppen.</h3>
+                    </div>
+                    <button onclick="closeModals()" style="background: var(--surface); border: 1px solid var(--border); width: 34px; height: 34px; border-radius: 50%; font-size: 16px; cursor: pointer; color: var(--primary);">✕</button>
+                </div>
+                <p style="font-size: 13px; color: var(--muted);">Atme tief aus. Welcher Impuls drückt gerade?</p>
+                <div class="trigger-grid">
+                    <div class="trigger-chip" onclick="triggerSosAction('Stress')">🤯 Starker Stress</div>
+                    <div class="trigger-chip" onclick="triggerSosAction('Gewohnheit')">🔄 Automatischer Drang</div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        let currentLogType = 'smoke';
+        let currentTrigger = 'Stress';
+        let stats = { smoked: 0, resisted: 0 };
+
+        function completeOnboarding() {
+            const name = document.getElementById('setupName').value.trim() || 'Daniel';
+            document.getElementById('greetingText').innerText = "Guten Tag,";
+            document.getElementById('displayName').innerText = name;
+            document.getElementById('avatarLetter').innerText = name.charAt(0).toUpperCase();
+
+            document.getElementById('view-onboarding').classList.remove('active');
+            document.getElementById('bottomNav').classList.add('active');
+            switchView('heute', document.querySelector('.nav-item'));
+        }
+
+        function switchView(viewName, btn) {
+            document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+            document.getElementById('view-' + viewName).classList.add('active');
+            document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
+            if(btn) btn.classList.add('active');
+            window.scrollTo(0, 0);
+        }
+
+        function openModal(id) {
+            document.getElementById(id).classList.add('open');
+        }
+
+        function closeModals(e) {
+            if(!e || e.target.classList.contains('sheet-overlay')) {
+                document.querySelectorAll('.sheet-overlay').forEach(s => s.classList.remove('open'));
+            }
+        }
+
+        function setLogType(type, btn) {
+            currentLogType = type;
+            document.getElementById('typeSmoke').style.borderColor = type === 'smoke' ? 'var(--accent)' : 'var(--border)';
+            document.getElementById('typeResist').style.borderColor = type === 'resist' ? 'var(--accent)' : 'var(--border)';
+        }
+
+        function setTrigger(trigger, el) {
+            currentTrigger = trigger;
+            document.querySelectorAll('#logSheet .trigger-chip').forEach(c => c.classList.remove('active'));
+            el.classList.add('active');
+        }
+
+        function saveLogData() {
+            closeModals();
+            if(currentLogType === 'smoke') {
+                stats.smoked++;
+                document.getElementById('statSmoked').innerText = stats.smoked;
+                document.getElementById('radarStatus').innerText = `📝 Moment dokumentiert (${currentTrigger}). Reine Analyse ohne Druck.`;
+            } else {
+                stats.resisted++;
+                document.getElementById('statResisted').innerText = stats.resisted;
+                document.getElementById('radarStatus').innerText = `🔥 Stark! Autopilot bei '${currentTrigger}' erfolgreich durchbrochen.`;
+                document.getElementById('controlScoreBadge').innerText = "75/100";
+                document.getElementById('progressScore').innerText = "75";
+            }
+        }
+
+        function triggerSosAction(trigger) {
+            closeModals();
+            stats.resisted++;
+            document.getElementById('statResisted').innerText = stats.resisted;
+            document.getElementById('radarStatus').innerText = `⚡ SOS gemeistert (${trigger})! Drang erfolgreich umgelenkt.`;
+            document.getElementById('controlScoreBadge').innerText = "85/100";
+            document.getElementById('progressScore').innerText = "85";
+        }
+
+        function resetApp() {
+            if(confirm("Labor wirklich zurücksetzen?")) {
+                document.querySelectorAll('.sheet-overlay').forEach(s => s.classList.remove('open'));
+                document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+                document.getElementById('view-onboarding').classList.add('active');
+                document.getElementById('bottomNav').classList.remove('active');
+                stats = { smoked: 0, resisted: 0 };
+                document.getElementById('statSmoked').innerText = '0';
+                document.getElementById('statResisted').innerText = '0';
+            }
+        }
+    </script>
+</body>
+</html>
