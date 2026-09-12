@@ -1,628 +1,80 @@
 <!DOCTYPE html>
 <html lang="de">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-  <meta name="theme-color" content="#F6F3EE">
-  <title>Smoke Lab</title>
-  <style>
-    :root {
-      --bg: #F6F3EE;
-      --ink: #1E1D36;
-      --muted: #636278;
-      --muted-2: #9594A6;
-      --sage: #5A8367;
-      --gold: #E4A951;
-      --card: #FFFFFF;
-      --nav-h: 76px;
-      --safe-bottom: env(safe-area-inset-bottom);
-    }
-
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-      -webkit-tap-highlight-color: transparent;
-    }
-
-    html,
-    body {
-      width: 100%;
-      min-height: 100%;
-      background: var(--bg);
-      color: var(--ink);
-      font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Segoe UI", sans-serif;
-      -webkit-font-smoothing: antialiased;
-      overflow-x: hidden;
-    }
-
-    body {
-      display: flex;
-      justify-content: center;
-    }
-
-    button,
-    input {
-      font: inherit;
-    }
-
-    .app-shell {
-      width: 100%;
-      max-width: 414px;
-      min-height: 100dvh;
-      position: relative;
-      overflow: hidden;
-      background:
-        radial-gradient(circle at 80% 0%, rgba(228, 169, 81, 0.08), transparent 34%),
-        linear-gradient(180deg, #F8F5F0 0%, var(--bg) 38%, #F4F2EF 100%);
-    }
-
-    .topbar {
-      height: calc(62px + env(safe-area-inset-top));
-      padding: calc(12px + env(safe-area-inset-top)) 18px 8px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 12px;
-    }
-
-    .brand-block {
-      min-width: 0;
-    }
-
-    .brand-kicker {
-      font-size: 0.62rem;
-      font-weight: 800;
-      color: var(--sage);
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-      margin-bottom: 2px;
-    }
-
-    .brand-title {
-      font-size: 1.06rem;
-      font-weight: 850;
-      color: var(--ink);
-      letter-spacing: -0.03em;
-    }
-
-    .avatar {
-      width: 34px;
-      height: 34px;
-      flex: 0 0 auto;
-      border-radius: 50%;
-      background: rgba(255,255,255,0.85);
-      border: 1px solid rgba(30,29,54,0.05);
-      box-shadow: 0 6px 18px rgba(30,29,54,0.05);
-      display: grid;
-      place-items: center;
-      font-size: 0.75rem;
-      font-weight: 800;
-      color: var(--ink);
-    }
-
-    .tab-content {
-      height: calc(100dvh - var(--nav-h) - 8px - var(--safe-bottom) - 62px - env(safe-area-inset-top));
-      min-height: 0;
-      overflow: hidden;
-    }
-
-    .tab-pane {
-      display: none;
-      height: 100%;
-      padding: 0 16px 10px;
-      overflow: hidden;
-    }
-
-    .tab-pane.active {
-      display: block;
-    }
-
-    /* Dashboard Card Styling */
-    .vital-tile {
-      background: #FFFFFF;
-      border-radius: 20px;
-      padding: 12px 10px;
-      box-shadow: 0 4px 20px rgba(30, 29, 54, 0.04);
-      border: 1px solid rgba(255, 255, 255, 0.8);
-      display: flex;
-      flex-direction: column;
-      gap: 2px;
-    }
-
-    .vital-icon {
-      width: 28px;
-      height: 28px;
-      border-radius: 10px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 0.85rem;
-      margin-bottom: 4px;
-    }
-
-    /* Ring Styling mit echter Tiefe */
-    .ring-box {
-      width: 165px;
-      height: 165px;
-      position: relative;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      margin: 0 auto;
-      cursor: pointer;
-      filter: drop-shadow(0 10px 22px rgba(30,29,54,0.08));
-    }
-
-    .ring-inner-glow {
-      position: absolute;
-      width: 125px;
-      height: 125px;
-      border-radius: 50%;
-      background: radial-gradient(circle, rgba(90, 131, 103, 0.08) 0%, transparent 70%);
-      pointer-events: none;
-    }
-
-    /* Wetterlage Hero Card: Kompakt & Aussagekräftig */
-    .climate-hero {
-      background: linear-gradient(135deg, rgba(255, 255, 255, 0.95), rgba(250, 246, 241, 0.6));
-      border: 1px solid rgba(255, 255, 255, 0.9);
-      border-left: 4px solid var(--sage);
-      border-radius: 22px;
-      padding: 14px 16px;
-      box-shadow: 0 4px 20px rgba(30, 29, 54, 0.04);
-    }
-
-    .btn-action-primary,
-    .btn-action-subtle {
-      width: 100%;
-      border: 0;
-      font-weight: 800;
-      letter-spacing: -0.01em;
-      cursor: pointer;
-      transition: transform .14s ease, box-shadow .14s ease;
-      white-space: nowrap;
-    }
-
-    .btn-action-primary {
-      color: #fff;
-      background: linear-gradient(135deg, #E4A951 0%, #C98B43 100%);
-      box-shadow: 0 8px 18px rgba(228,169,81,0.20);
-    }
-
-    .btn-action-subtle {
-      color: #fff;
-      background: linear-gradient(135deg, #2A2947 0%, #1E1D36 100%);
-      box-shadow: 0 6px 16px rgba(30,29,54,0.13);
-    }
-
-    .btn-action-primary:active,
-    .btn-action-subtle:active {
-      transform: scale(0.985);
-    }
-
-    .bottom-nav {
-      position: fixed;
-      left: 50%;
-      bottom: calc(8px + env(safe-area-inset-bottom));
-      transform: translateX(-50%);
-      width: min(calc(100% - 18px), 396px);
-      height: var(--nav-h);
-      z-index: 100;
-      display: grid;
-      grid-template-columns: repeat(5, 1fr);
-      padding: 5px;
-      border-radius: 26px;
-      background: rgba(255,255,255,0.84);
-      border: 1px solid rgba(255,255,255,0.92);
-      backdrop-filter: blur(30px);
-      -webkit-backdrop-filter: blur(30px);
-      box-shadow: 0 18px 45px rgba(30,29,54,0.10);
-    }
-
-    .nav-item {
-      border: 0;
-      background: transparent;
-      border-radius: 20px;
-      color: #9B9AAB;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      gap: 3px;
-      font-size: 0.58rem;
-      font-weight: 750;
-      cursor: pointer;
-    }
-
-    .nav-item svg {
-      width: 20px;
-      height: 20px;
-      fill: none;
-      stroke: currentColor;
-      stroke-width: 1.8;
-      stroke-linecap: round;
-      stroke-linejoin: round;
-    }
-
-    .nav-item.active {
-      color: var(--ink);
-      background: rgba(30,29,54,0.055);
-    }
-
-    .backdrop {
-      position: fixed;
-      inset: 0;
-      z-index: 200;
-      display: none;
-      background: rgba(30,29,54,0.38);
-      backdrop-filter: blur(8px);
-      -webkit-backdrop-filter: blur(8px);
-    }
-
-    .backdrop.open {
-      display: block;
-    }
-
-    .sheet {
-      position: fixed;
-      left: 50%;
-      bottom: 0;
-      z-index: 210;
-      width: 100%;
-      max-width: 414px;
-      padding: 12px 18px calc(24px + env(safe-area-inset-bottom));
-      background: rgba(255,255,255,0.97);
-      border-radius: 30px 30px 0 0;
-      box-shadow: 0 -24px 64px rgba(30,29,54,0.18);
-      transform: translate(-50%, 110%);
-      transition: transform .34s cubic-bezier(.16,1,.3,1);
-    }
-
-    .sheet.open {
-      transform: translate(-50%, 0);
-    }
-
-    .handle {
-      width: 38px;
-      height: 4px;
-      margin: 0 auto 14px;
-      border-radius: 999px;
-      background: #D9D8DF;
-    }
-
-    .sheet h2 {
-      font-size: 1.1rem;
-      color: var(--ink);
-      margin-bottom: 5px;
-    }
-
-    .sheet p {
-      font-size: 0.8rem;
-      line-height: 1.45;
-      color: var(--muted);
-      margin-bottom: 14px;
-    }
-
-    .choice-grid {
-      display: grid;
-      grid-template-columns: repeat(5, 1fr);
-      gap: 7px;
-      margin: 12px 0 16px;
-    }
-
-    .choice {
-      height: 42px;
-      border: 1px solid rgba(30,29,54,0.06);
-      border-radius: 13px;
-      background: #F8F7FA;
-      color: var(--ink);
-      font-weight: 800;
-      cursor: pointer;
-    }
-
-    .choice.active {
-      background: var(--ink);
-      color: #fff;
-    }
-
-    .sheet-actions {
-      display: grid;
-      gap: 8px;
-    }
-
-    @media (max-height: 760px) {
-      .ring-box { width: 146px; height: 146px; }
-      .ring-inner-glow { width: 110px; height: 110px; }
-      .climate-hero { padding: 11px 14px; }
-      .vital-tile { padding: 10px 9px; }
-      #pane-heute { transform: scale(0.96); transform-origin: top center; width: 104.17%; margin-left: -2.08%; }
-    }
-
-    @media (max-height: 680px) {
-      #pane-heute { transform: scale(0.90); width: 111.11%; margin-left: -5.55%; }
-    }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+<meta name="theme-color" content="#F2F4F7">
+<title>Smoke Lab</title>
+<style>
+:root{--bg:#F2F4F7;--card:#fff;--petrol:#0F2E2C;--petrol2:#1A4D4A;--orange:#FF6B35;--orange2:#FF8A65;--muted:#8E8E93;--text:#26353D;--line:rgba(0,0,0,.045);--shadow:0 12px 35px rgba(0,0,0,.03);--r:26px;--nav:74px}*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}html{background:var(--bg);scroll-behavior:smooth}body{min-height:100vh;min-height:100dvh;overflow-x:hidden;overflow-y:auto;background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","SF Pro Text","Segoe UI",sans-serif;-webkit-font-smoothing:antialiased}button,input{font:inherit}.app{width:100%;max-width:414px;min-height:100vh;min-height:100dvh;margin:0 auto;position:relative}.pane{display:none;padding:calc(18px + env(safe-area-inset-top)) 16px calc(118px + env(safe-area-inset-bottom));min-height:100vh;min-height:100dvh}.pane.active{display:block}.header{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:14px}.greet{font-size:13px;font-weight:650;color:var(--muted)}.name{font-size:26px;line-height:1.05;font-weight:850;letter-spacing:-.8px;color:var(--petrol);margin-top:2px}.avatar{width:42px;height:42px;border-radius:50%;display:grid;place-items:center;background:linear-gradient(145deg,#fff,#E9EEEC);border:1px solid rgba(15,46,44,.05);box-shadow:0 8px 24px rgba(15,46,44,.08);color:var(--petrol);font-size:14px;font-weight:850}.card{background:var(--card);border:1px solid var(--line);border-radius:var(--r);box-shadow:var(--shadow)}.status{padding:18px;background:linear-gradient(135deg,var(--petrol),var(--petrol2));color:#fff;border:0;box-shadow:0 16px 38px rgba(15,46,44,.14);position:relative;overflow:hidden}.status:after{content:"";position:absolute;width:190px;height:190px;right:-95px;bottom:-115px;border-radius:50%;background:radial-gradient(circle,rgba(255,255,255,.12),transparent 70%)}.status-top{display:flex;justify-content:space-between;gap:14px;align-items:flex-start;position:relative;z-index:1}.label{font-size:11px;line-height:1.2;text-transform:uppercase;letter-spacing:.8px;font-weight:800;color:var(--muted)}.status .label{color:rgba(255,255,255,.68)}.status-title{font-size:22px;font-weight:850;letter-spacing:-.45px;margin-top:5px}.score{min-width:74px;height:34px;padding:0 12px;border-radius:999px;background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.08);backdrop-filter:blur(12px);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:850;white-space:nowrap}.status-copy{position:relative;z-index:1;margin-top:17px;font-size:13px;line-height:1.4;color:rgba(255,255,255,.72)}.actions{display:grid;gap:9px;margin:12px 0}.btn{width:100%;height:54px;border:0;border-radius:16px;display:flex;align-items:center;justify-content:center;padding:0 14px;font-size:15px;font-weight:800;white-space:nowrap;cursor:pointer;transition:transform .12s ease,box-shadow .15s ease}.btn:active{transform:scale(.98)}.btn.orange{color:#fff;background:linear-gradient(135deg,var(--orange2),var(--orange));box-shadow:0 10px 24px rgba(255,107,53,.22)}.btn.petrol{color:#fff;background:var(--petrol);border:1px solid rgba(255,255,255,.08);box-shadow:0 8px 20px rgba(15,46,44,.15)}.btn.soft{color:var(--petrol);background:#F4F6F6;border:1px solid rgba(15,46,44,.06);box-shadow:none}.radar{padding:17px}.radar-head{margin-bottom:12px}.radar-title{font-size:17px;font-weight:800;color:var(--petrol);margin-top:3px}.radar-grid{display:grid;grid-template-columns:1fr 1fr;gap:9px}.metric{min-height:90px;padding:13px;border-radius:19px;background:linear-gradient(145deg,#FBFCFD,#F5F7F8);border:1px solid rgba(15,46,44,.05);display:flex;flex-direction:column;justify-content:space-between}.metric span{font-size:10px;text-transform:uppercase;letter-spacing:.55px;font-weight:800;color:var(--muted)}.metric strong{font-size:30px;line-height:1;font-weight:850;letter-spacing:-1px;color:var(--petrol)}.feedback{margin-top:12px;padding-top:12px;border-top:1px solid rgba(15,46,44,.06);font-size:13px;line-height:1.42;color:#707885}.bottom-nav{position:fixed;left:50%;bottom:calc(8px + env(safe-area-inset-bottom));transform:translateX(-50%);z-index:100;width:min(calc(100% - 18px),396px);height:var(--nav);display:grid;grid-template-columns:repeat(5,1fr);padding:5px;border-radius:26px;background:rgba(255,255,255,.85);border:1px solid rgba(255,255,255,.72);backdrop-filter:blur(30px);-webkit-backdrop-filter:blur(30px);box-shadow:0 16px 42px rgba(15,46,44,.10)}.nav{border:0;background:transparent;border-radius:19px;color:#7B8491;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;font-size:9px;font-weight:700;cursor:pointer}.nav.active{color:var(--petrol);background:rgba(15,46,44,.07)}.nav svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}.simple-title{font-size:26px;font-weight:850;letter-spacing:-.8px;color:var(--petrol);margin-bottom:14px}.simple-card{padding:18px}.simple-card p{font-size:14px;line-height:1.45;color:#707885}.backdrop{position:fixed;inset:0;z-index:200;background:rgba(15,23,42,.38);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);opacity:0;visibility:hidden;transition:.2s}.backdrop.open{opacity:1;visibility:visible}.sheet{position:fixed;left:50%;bottom:0;z-index:210;width:100%;max-width:414px;max-height:88dvh;overflow-y:auto;padding:12px 16px calc(22px + env(safe-area-inset-bottom));background:#fff;border-radius:32px 32px 0 0;box-shadow:0 -24px 60px rgba(0,0,0,.16);transform:translate(-50%,110%);transition:transform .32s cubic-bezier(.16,1,.3,1)}.sheet.open{transform:translate(-50%,0)}.handle{width:38px;height:4px;border-radius:999px;background:#D6D8DB;margin:0 auto 13px}.sheet-head{display:flex;justify-content:space-between;align-items:flex-start;gap:10px;margin-bottom:14px}.sheet-title{font-size:22px;line-height:1.1;font-weight:850;letter-spacing:-.5px;color:var(--petrol);margin-top:3px}.close{width:32px;height:32px;border:0;border-radius:50%;background:#F0F2F3;color:var(--petrol);font-size:20px;cursor:pointer}.sheet-stack{display:grid;gap:14px}.seg{display:grid;grid-template-columns:1fr 1fr;gap:4px;padding:4px;border-radius:15px;background:#F1F3F4}.seg button{height:44px;border:0;border-radius:12px;background:transparent;color:var(--muted);font-weight:750;cursor:pointer}.seg button.active{background:#fff;color:var(--petrol);box-shadow:0 2px 8px rgba(0,0,0,.06)}.trigger-grid{display:grid;grid-template-columns:1fr 1fr;gap:7px}.trigger{min-height:44px;border:1px solid rgba(15,46,44,.06);border-radius:13px;background:#FAFBFC;color:var(--petrol);font-size:12px;font-weight:800;cursor:pointer}.trigger.active{background:var(--petrol);color:#fff}.intensity-row{display:flex;justify-content:space-between;align-items:center;gap:10px}.range{width:100%;accent-color:var(--petrol)}.range-labels{display:flex;justify-content:space-between;font-size:10px;color:var(--muted)}.intervention{padding:16px;border-radius:18px;background:linear-gradient(145deg,#F6F9F8,#EDF3F1);border:1px solid rgba(15,46,44,.045);font-size:14px;line-height:1.45;color:var(--text)}.toast{position:fixed;left:50%;bottom:calc(95px + env(safe-area-inset-bottom));z-index:300;transform:translate(-50%,12px);opacity:0;background:var(--petrol);color:#fff;padding:9px 13px;border-radius:999px;font-size:11px;font-weight:800;white-space:nowrap;transition:.18s}.toast.show{opacity:1;transform:translate(-50%,0)}@media(max-width:360px){.pane{padding-left:12px;padding-right:12px}.btn{font-size:14px}.bottom-nav{width:calc(100% - 10px)}}
+</style>
 </head>
 <body>
-  <div class="app-shell">
-    <header class="topbar">
-      <div class="brand-block">
-        <div class="brand-kicker">Smoke Lab · Heute</div>
-        <div class="brand-title">Deine Tageslage</div>
-      </div>
-      <div class="avatar">D</div>
+<div class="app">
+  <main id="today" class="pane active">
+    <header class="header">
+      <div><div id="greeting" class="greet">Guten Tag,</div><div id="displayName" class="name">Du</div></div>
+      <div id="avatar" class="avatar">D</div>
     </header>
-
-    <div class="tab-content">
-      <main id="pane-heute" class="tab-pane active" style="padding-bottom: 10px;">
-
-        <!-- HERO RING -->
-        <div style="text-align: center; margin-bottom: 12px;">
-          <div class="ring-box" onclick="openBaselineModal()">
-            <div class="ring-inner-glow"></div>
-            <svg class="ring-svg" viewBox="0 0 180 180" style="width: 100%; height: 100%; transform: rotate(-90deg);">
-              <defs>
-                <linearGradient id="lunaGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                  <stop offset="0%" stop-color="#5A8367"/>
-                  <stop offset="50%" stop-color="#E4A951"/>
-                  <stop offset="100%" stop-color="#1E1D36"/>
-                </linearGradient>
-              </defs>
-              <circle cx="90" cy="90" r="74" fill="none" stroke="rgba(30, 29, 54, 0.06)" stroke-width="12"/>
-              <circle id="ring-fill-bar" cx="90" cy="90" r="74" fill="none" stroke="url(#lunaGradient)" stroke-width="12" stroke-linecap="round" stroke-dasharray="465" stroke-dashoffset="465" style="transition: stroke-dashoffset 1s ease;"/>
-            </svg>
-            <div class="ring-center" style="position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center;">
-              <div id="score-val" style="font-size: 2.2rem; font-weight: 800; color: #1E1D36; line-height: 1;">—</div>
-              <div style="font-size: 0.72rem; font-weight: 700; color: #636278; margin-top: 4px;">Tages-Balance</div>
-              <div id="score-sub" style="font-size: 0.68rem; font-weight: 700; color: #5A8367; margin-top: 2px;">Tippen zum Starten</div>
-            </div>
-          </div>
-        </div>
-
-        <!-- 3 VITALS TILES MIT BADGES -->
-        <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-bottom: 12px;">
-          <div class="vital-tile">
-            <div style="display: flex; align-items: center; justify-content: space-between;">
-              <span style="font-size: 0.65rem; font-weight: 700; color: #9594A6; text-transform: uppercase;">Energie</span>
-              <span style="font-size: 0.75rem;">⚡️</span>
-            </div>
-            <div id="vital-energy" style="font-size: 1rem; font-weight: 800; color: #1E1D36; margin-top: 4px;">— / 5</div>
-          </div>
-
-          <div class="vital-tile">
-            <div style="display: flex; align-items: center; justify-content: space-between;">
-              <span style="font-size: 0.65rem; font-weight: 700; color: #9594A6; text-transform: uppercase;">Schlaf</span>
-              <span style="font-size: 0.75rem;">🌙</span>
-            </div>
-            <div id="vital-sleep" style="font-size: 1rem; font-weight: 800; color: #1E1D36; margin-top: 4px;">—</div>
-          </div>
-
-          <div class="vital-tile">
-            <div style="display: flex; align-items: center; justify-content: space-between;">
-              <span style="font-size: 0.65rem; font-weight: 700; color: #9594A6; text-transform: uppercase;">Signale</span>
-              <span style="font-size: 0.75rem;">💓</span>
-            </div>
-            <div id="vital-signals" style="font-size: 1rem; font-weight: 800; color: #1E1D36; margin-top: 4px;">0 aktiv</div>
-          </div>
-        </div>
-
-        <!-- KÖRPER-WETTERLAGE (KOMPAKT & EDEL) -->
-        <div class="climate-hero" id="climate-card" style="margin-bottom: 12px;">
-          <div style="font-size: 0.68rem; font-weight: 800; text-transform: uppercase; color: #5A8367; letter-spacing: 0.05em;" id="climate-badge">Biowetter</div>
-          <div id="climate-headline" style="font-size: 0.95rem; font-weight: 800; color: #1E1D36; margin: 2px 0 4px 0;">Bereit für deinen Tag</div>
-          <div id="climate-desc" style="font-size: 0.78rem; color: #636278; line-height: 1.4;">
-            Erfasse kurz deine Baseline. LUNA ermittelt daraus deinen Stress-Puffer und den besten Hebel für heute.
-          </div>
-        </div>
-
-        <!-- BUTTONS (KOMPAKT FÜR VIEWPORT-FIT) -->
-        <button class="btn-action-primary" style="height: 48px; border-radius: 16px; margin-bottom: 8px;" onclick="openBaselineModal()">
-          <span>+ Tages-Baseline erfassen (8 Sek.)</span>
-        </button>
-
-        <button class="btn-action-subtle" style="height: 44px; border-radius: 16px;" onclick="openAcuteModal()">
-          <span>⚡️ Akut-SOS erfassen</span>
-        </button>
-
-      </main>
-    </div>
-  </div>
-
-  <nav class="bottom-nav" aria-label="Hauptnavigation">
-    <button class="nav-item active" aria-label="Heute">
-      <svg viewBox="0 0 24 24"><path d="M3 11.5 12 4l9 7.5"/><path d="M5.5 10v10h13V10"/></svg>
-      <span>HEUTE</span>
-    </button>
-    <button class="nav-item" aria-label="Labor">
-      <svg viewBox="0 0 24 24"><path d="M9 3h6"/><path d="M10 3v6l-5 9a2 2 0 0 0 1.8 3h10.4A2 2 0 0 0 19 18l-5-9V3"/></svg>
-      <span>LABOR</span>
-    </button>
-    <button class="nav-item" aria-label="Muster">
-      <svg viewBox="0 0 24 24"><path d="M5 20v-5M12 20V9M19 20V4"/></svg>
-      <span>MUSTER</span>
-    </button>
-    <button class="nav-item" aria-label="Fortschritt">
-      <svg viewBox="0 0 24 24"><path d="m4 17 5-6 4 3 7-9"/></svg>
-      <span>FORTSCHRITT</span>
-    </button>
-    <button class="nav-item" aria-label="Ich">
-      <svg viewBox="0 0 24 24"><circle cx="12" cy="7" r="4"/><path d="M4.5 21a7.5 7.5 0 0 1 15 0"/></svg>
-      <span>ICH</span>
-    </button>
-  </nav>
-
-  <div id="backdrop" class="backdrop" onclick="closeSheets()"></div>
-
-  <section id="baselineSheet" class="sheet" aria-modal="true">
-    <div class="handle"></div>
-    <h2>Tages-Baseline</h2>
-    <p>Wie fühlt sich dein System gerade an? Drei kurze Angaben genügen.</p>
-
-    <strong style="font-size:.72rem;color:#636278;text-transform:uppercase;letter-spacing:.06em;">Energie</strong>
-    <div class="choice-grid" id="energyChoices"></div>
-
-    <strong style="font-size:.72rem;color:#636278;text-transform:uppercase;letter-spacing:.06em;">Schlaf</strong>
-    <div class="choice-grid" id="sleepChoices"></div>
-
-    <strong style="font-size:.72rem;color:#636278;text-transform:uppercase;letter-spacing:.06em;">Aktive Signale</strong>
-    <div class="choice-grid" id="signalChoices"></div>
-
-    <div class="sheet-actions">
-      <button class="btn-action-primary" style="height:48px;border-radius:16px" onclick="saveBaseline()">Baseline speichern</button>
-      <button class="btn-action-subtle" style="height:44px;border-radius:16px" onclick="closeSheets()">Schließen</button>
-    </div>
-  </section>
-
-  <section id="acuteSheet" class="sheet" aria-modal="true">
-    <div class="handle"></div>
-    <h2>Akut-SOS</h2>
-    <p>Nur kurz markieren: Wie stark ist der akute Drang gerade?</p>
-    <div class="choice-grid" id="acuteChoices"></div>
-    <div class="sheet-actions">
-      <button class="btn-action-primary" style="height:48px;border-radius:16px" onclick="saveAcute()">SOS erfassen</button>
-      <button class="btn-action-subtle" style="height:44px;border-radius:16px" onclick="closeSheets()">Schließen</button>
-    </div>
-  </section>
-
-  <script>
-    const KEY = 'smokeLab.screen83.today';
-    let state = readState();
-    let draft = {
-      energy: state.energy || 3,
-      sleep: state.sleep || 3,
-      signals: Number.isFinite(state.signals) ? state.signals : 0,
-      acute: 3
-    };
-
-    function readState() {
-      try { return JSON.parse(localStorage.getItem(KEY) || '{}'); }
-      catch { return {}; }
-    }
-
-    function writeState() {
-      localStorage.setItem(KEY, JSON.stringify(state));
-    }
-
-    function makeChoices(targetId, min, max, selected, setter) {
-      const el = document.getElementById(targetId);
-      el.innerHTML = '';
-      for (let i = min; i <= max; i++) {
-        const b = document.createElement('button');
-        b.className = 'choice' + (i === selected ? ' active' : '');
-        b.textContent = i;
-        b.onclick = () => {
-          setter(i);
-          makeChoices(targetId, min, max, i, setter);
-        };
-        el.appendChild(b);
-      }
-    }
-
-    function openBaselineModal() {
-      makeChoices('energyChoices', 1, 5, draft.energy, v => draft.energy = v);
-      makeChoices('sleepChoices', 1, 5, draft.sleep, v => draft.sleep = v);
-      makeChoices('signalChoices', 0, 4, draft.signals, v => draft.signals = v);
-      openSheet('baselineSheet');
-    }
-
-    function openAcuteModal() {
-      makeChoices('acuteChoices', 1, 5, draft.acute, v => draft.acute = v);
-      openSheet('acuteSheet');
-    }
-
-    function openSheet(id) {
-      closeSheets();
-      document.getElementById('backdrop').classList.add('open');
-      requestAnimationFrame(() => document.getElementById(id).classList.add('open'));
-    }
-
-    function closeSheets() {
-      document.getElementById('backdrop').classList.remove('open');
-      document.getElementById('baselineSheet').classList.remove('open');
-      document.getElementById('acuteSheet').classList.remove('open');
-    }
-
-    function saveBaseline() {
-      state.energy = draft.energy;
-      state.sleep = draft.sleep;
-      state.signals = draft.signals;
-      state.baselineAt = Date.now();
-      writeState();
-      renderDashboard();
-      closeSheets();
-    }
-
-    function saveAcute() {
-      state.lastAcute = draft.acute;
-      state.signals = Math.max(Number(state.signals || 0), 1);
-      state.acuteAt = Date.now();
-      writeState();
-      renderDashboard();
-      closeSheets();
-    }
-
-    function scoreFromState() {
-      if (!state.baselineAt) return null;
-      const energy = Number(state.energy || 3);
-      const sleep = Number(state.sleep || 3);
-      const signals = Number(state.signals || 0);
-      const acutePenalty = state.lastAcute ? Number(state.lastAcute) * 2 : 0;
-      const raw = 50 + energy * 6 + sleep * 5 - signals * 4 - acutePenalty;
-      return Math.max(22, Math.min(95, Math.round(raw)));
-    }
-
-    function renderDashboard() {
-      const score = scoreFromState();
-      const fill = document.getElementById('ring-fill-bar');
-      const scoreVal = document.getElementById('score-val');
-      const scoreSub = document.getElementById('score-sub');
-      const energy = document.getElementById('vital-energy');
-      const sleep = document.getElementById('vital-sleep');
-      const signals = document.getElementById('vital-signals');
-      const badge = document.getElementById('climate-badge');
-      const headline = document.getElementById('climate-headline');
-      const desc = document.getElementById('climate-desc');
-
-      energy.textContent = state.baselineAt ? `${state.energy} / 5` : '— / 5';
-      sleep.textContent = state.baselineAt ? `${state.sleep} / 5` : '—';
-      signals.textContent = `${Number(state.signals || 0)} aktiv`;
-
-      if (score === null) {
-        fill.style.strokeDashoffset = '465';
-        scoreVal.textContent = '—';
-        scoreSub.textContent = 'Tippen zum Starten';
-        badge.textContent = 'Biowetter';
-        headline.textContent = 'Bereit für deinen Tag';
-        desc.textContent = 'Erfasse kurz deine Baseline. LUNA ermittelt daraus deinen Stress-Puffer und den besten Hebel für heute.';
-        return;
-      }
-
-      const offset = 465 - (465 * score / 100);
-      fill.style.strokeDashoffset = String(offset);
-      scoreVal.textContent = score;
-      scoreSub.textContent = score >= 75 ? 'stabiler Puffer' : score >= 55 ? 'mittlerer Puffer' : 'heute sanfter planen';
-
-      if (score >= 75) {
-        badge.textContent = 'Biowetter · Stabil';
-        headline.textContent = 'Guter Stress-Puffer';
-        desc.textContent = 'Dein heutiges Profil wirkt belastbar. Nutze schwierige Momente bewusst, ohne zusätzlichen Druck aufzubauen.';
-      } else if (score >= 55) {
-        badge.textContent = 'Biowetter · Sensibel';
-        headline.textContent = 'Heute etwas mehr Reserve lassen';
-        desc.textContent = 'Dein Puffer ist solide, aber nicht riesig. Kleine Pausen und klare Übergänge helfen heute besonders.';
-      } else {
-        badge.textContent = 'Biowetter · Schonmodus';
-        headline.textContent = 'Heute Druck reduzieren';
-        desc.textContent = 'Dein System zeigt wenig Reserve. Fokus auf kurze Unterbrechungen statt auf Perfektion oder harte Ziele.';
-      }
-    }
-
-    document.addEventListener('keydown', e => {
-      if (e.key === 'Escape') closeSheets();
-    });
-
-    renderDashboard();
-  </script>
+    <section class="card status">
+      <div class="status-top"><div><div class="label">Phase 1 · Beobachten</div><div class="status-title">Kontrolle statt Verbot</div></div><div id="scoreBadge" class="score">50/100</div></div>
+      <div class="status-copy">Beobachte heute nur, wann der Autopilot startet. Keine Bewertung, kein perfekter Tag nötig.</div>
+    </section>
+    <section class="actions">
+      <button id="openLog" class="btn orange">+ Zigarette / Widerstand erfassen</button>
+      <button id="openSos" class="btn petrol">⚡ Drang stoppen / SOS</button>
+    </section>
+    <section class="card radar">
+      <div class="radar-head"><div class="label">Tages-Radar</div><div class="radar-title">Heute auf einen Blick</div></div>
+      <div class="radar-grid">
+        <div class="metric"><span>Zigaretten</span><strong id="smokedToday">0</strong></div>
+        <div class="metric"><span>Unterbrechungen</span><strong id="resistedToday">0</strong></div>
+      </div>
+      <div id="feedback" class="feedback">Noch keine Situation erfasst. Beobachte einfach, wann der Autopilot startet.</div>
+    </section>
+  </main>
+  <main id="lab" class="pane"><div class="simple-title">Labor</div><section class="card simple-card"><div class="label">30-Tage-Programm</div><p style="margin-top:8px">Phase 1 ist aktiv: Situationen beobachten, ohne sie zu bewerten.</p></section></main>
+  <main id="patterns" class="pane"><div class="simple-title">Muster</div><section class="card simple-card"><div class="label">Kalibrierung</div><p style="margin-top:8px">Nach mehreren Situationen werden hier deine häufigsten Trigger sichtbar.</p></section></main>
+  <main id="progress" class="pane"><div class="simple-title">Fortschritt</div><section class="card simple-card"><div class="label">Kontrollwert</div><p style="margin-top:8px">Dein Kontrollwert basiert auf dokumentierten Situationen und bewussten Unterbrechungen.</p></section></main>
+  <main id="me" class="pane"><div class="simple-title">Ich</div><section class="card simple-card"><div class="label">Lokale Daten</div><p style="margin-top:8px">Deine Smoke-Lab-Daten werden lokal auf diesem Gerät gespeichert.</p></section></main>
+</div>
+<nav class="bottom-nav" id="nav">
+  <button class="nav active" data-tab="today"><svg viewBox="0 0 24 24"><path d="M3 11.5 12 4l9 7.5"/><path d="M5.5 10v10h13V10"/></svg><span>HEUTE</span></button>
+  <button class="nav" data-tab="lab"><svg viewBox="0 0 24 24"><path d="M9 3h6M10 3v6l-5 9a2 2 0 0 0 1.8 3h10.4A2 2 0 0 0 19 18l-5-9V3"/></svg><span>LABOR</span></button>
+  <button class="nav" data-tab="patterns"><svg viewBox="0 0 24 24"><path d="M5 20v-5M12 20V9M19 20V4"/></svg><span>MUSTER</span></button>
+  <button class="nav" data-tab="progress"><svg viewBox="0 0 24 24"><path d="m4 17 5-6 4 3 7-9"/></svg><span>FORTSCHRITT</span></button>
+  <button class="nav" data-tab="me"><svg viewBox="0 0 24 24"><circle cx="12" cy="7" r="4"/><path d="M4.5 21a7.5 7.5 0 0 1 15 0"/></svg><span>ICH</span></button>
+</nav>
+<div id="backdrop" class="backdrop"></div>
+<section id="sheet" class="sheet" aria-modal="true"></section>
+<div id="toast" class="toast"></div>
+<script>
+const KEY='smokeLab.smoke.v1';
+const PROFILE_KEYS=['smokeLab.profile.v1','smokeLab.v66','smokeLab.v65','smokeLab.v64'];
+const TRIGGERS=['Stress','Kaffee','Gewohnheit','Pause','Nach dem Essen','Gesellschaft'];
+const SOS={Stress:['Druck unterbrechen','Wechsle kurz den Ort. Lockere bewusst Schultern und Kiefer und entscheide erst danach weiter.'],Kaffee:['Ritual trennen','Lass den Kaffee kurz stehen oder trink ihn an einem anderen Platz. Verändere nur das Ritual.'],Gewohnheit:['Autopilot stören','Ändere einen kleinen Teil der Reihenfolge: Ort, Hand oder nächste Handlung.'],Pause:['Pause neu besetzen','Mach die Pause trotzdem. Hol Wasser, steh kurz auf oder beschäftige deine Hände anders.'],'Nach dem Essen':['Übergang verändern','Steh direkt nach dem Essen auf, trink etwas oder geh kurz in einen anderen Raum.'],Gesellschaft:['Sozialen Sog lösen','Bleib einen Moment länger sitzen oder stehen und entscheide bewusst, bevor du mitgehst.']};
+let state=loadState();let draft={type:'smoke',trigger:'Stress',intensity:3};let sosTrigger=null;
+function read(k){try{return JSON.parse(localStorage.getItem(k))}catch{return null}}
+function loadProfile(){for(const k of PROFILE_KEYS){const v=read(k);if(v?.name)return v}return null}
+function loadState(){const saved=read(KEY);if(saved?.events)return saved;const p=loadProfile();return{profile:{name:p?.name||'Du'},events:[]}}
+function save(){localStorage.setItem(KEY,JSON.stringify(state))}
+function dateKey(ts){const d=new Date(ts);return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`}
+function todayEvents(){const k=dateKey(Date.now());return state.events.filter(e=>dateKey(e.timestamp)===k)}
+function score(){const r=state.events.slice(-20);if(!r.length)return 50;const resist=r.filter(e=>e.type==='resist').length;const smoke=r.filter(e=>e.type==='smoke').length;const ratio=resist/Math.max(1,resist+smoke);return Math.max(30,Math.min(92,Math.round(42+ratio*42+Math.min(8,r.length))))}
+function greeting(){const h=new Date().getHours();return h<11?'Guten Morgen':h>=18?'Guten Abend':'Guten Tag'}
+function render(){const name=state.profile?.name||'Du';document.getElementById('greeting').textContent=greeting()+',';document.getElementById('displayName').textContent=name;document.getElementById('avatar').textContent=(name.trim()[0]||'D').toUpperCase();document.getElementById('scoreBadge').textContent=score()+'/100';const t=todayEvents();const smoked=t.filter(e=>e.type==='smoke').length;const resisted=t.filter(e=>e.type==='resist').length;document.getElementById('smokedToday').textContent=smoked;document.getElementById('resistedToday').textContent=resisted;const f=document.getElementById('feedback');if(!t.length){f.textContent='Noch keine Situation erfasst. Beobachte einfach, wann der Autopilot startet.';return}const last=t[t.length-1];f.textContent=last.type==='resist'?`Letzte Situation: ${last.trigger}. Du hast den automatischen Ablauf bewusst unterbrochen.`:`Letzte Situation: ${last.trigger}. Dokumentiert statt bewertet – genau dafür ist das Labor da.`}
+function switchTab(tab){document.querySelectorAll('.pane').forEach(v=>v.classList.toggle('active',v.id===tab));document.querySelectorAll('.nav').forEach(b=>b.classList.toggle('active',b.dataset.tab===tab));window.scrollTo(0,0)}
+function openSheet(html){document.getElementById('sheet').innerHTML=html;document.getElementById('backdrop').classList.add('open');requestAnimationFrame(()=>document.getElementById('sheet').classList.add('open'));document.body.style.overflow='hidden'}
+function closeSheet(){document.getElementById('sheet').classList.remove('open');document.getElementById('backdrop').classList.remove('open');document.body.style.overflowY='auto'}
+function triggerButtons(selected,attr){return TRIGGERS.map(t=>`<button class="trigger ${t===selected?'active':''}" ${attr}="${t}">${t}</button>`).join('')}
+function openLog(){draft={type:'smoke',trigger:'Stress',intensity:3};openSheet(`<div class="handle"></div><div class="sheet-head"><div><div class="label">Situation erfassen</div><div class="sheet-title">Was ist passiert?</div></div><button class="close" data-close>×</button></div><div class="sheet-stack"><div class="seg"><button class="active" data-type="smoke">Geraucht</button><button data-type="resist">Widerstanden</button></div><div><div class="label" style="margin-bottom:8px">Trigger</div><div class="trigger-grid" id="logTriggers">${triggerButtons('Stress','data-trigger')}</div></div><div><div class="intensity-row"><div class="label">Stärke des Drangs</div><b id="intensityLabel" style="color:var(--petrol)">3/5</b></div><input id="intensity" class="range" type="range" min="1" max="5" value="3"><div class="range-labels"><span>leicht</span><span>stark</span></div></div><button class="btn orange" id="saveLog">Situation speichern</button></div>`)}
+function openSos(){sosTrigger=null;openSheet(`<div class="handle"></div><div class="sheet-head"><div><div class="label">Akut-Hilfe</div><div class="sheet-title">Unterbrich den Autopiloten.</div></div><button class="close" data-close>×</button></div><div class="sheet-stack" id="sosBody"><div class="feedback" style="border:0;margin:0;padding:0">Was hat den Drang gerade ausgelöst?</div><div class="trigger-grid">${triggerButtons(null,'data-sos')}</div></div>`)}
+function showSosAction(t){sosTrigger=t;const [title,copy]=SOS[t];document.getElementById('sosBody').innerHTML=`<div><div class="label">${t}</div><div class="sheet-title" style="font-size:18px;margin-top:5px">${title}</div></div><div class="intervention">${copy}</div><button class="btn petrol" id="sosDone">Drang ist gesunken</button><button class="btn soft" id="sosBack">Anderen Trigger wählen</button>`}
+function saveEvent(type,trigger,intensity,source){state.events.push({id:Date.now()+Math.random(),timestamp:Date.now(),type,trigger,intensity,source});save();render()}
+function toast(msg){const el=document.getElementById('toast');el.textContent=msg;el.classList.add('show');clearTimeout(toast.t);toast.t=setTimeout(()=>el.classList.remove('show'),1700)}
+document.getElementById('openLog').onclick=openLog;document.getElementById('openSos').onclick=openSos;document.getElementById('backdrop').onclick=closeSheet;document.getElementById('nav').onclick=e=>{const b=e.target.closest('[data-tab]');if(b)switchTab(b.dataset.tab)};
+document.addEventListener('click',e=>{if(e.target.closest('[data-close]'))return closeSheet();const type=e.target.closest('[data-type]');if(type){draft.type=type.dataset.type;document.querySelectorAll('[data-type]').forEach(b=>b.classList.toggle('active',b===type));return}const tr=e.target.closest('[data-trigger]');if(tr){draft.trigger=tr.dataset.trigger;document.querySelectorAll('[data-trigger]').forEach(b=>b.classList.toggle('active',b===tr));return}const st=e.target.closest('[data-sos]');if(st)return showSosAction(st.dataset.sos);if(e.target.id==='saveLog'){saveEvent(draft.type,draft.trigger,draft.intensity,'log');closeSheet();toast(draft.type==='resist'?'Unterbrechung gespeichert':'Situation gespeichert');return}if(e.target.id==='sosDone'){saveEvent('resist',sosTrigger,3,'sos');closeSheet();toast('Autopilot unterbrochen');return}if(e.target.id==='sosBack')return openSos()});
+document.addEventListener('input',e=>{if(e.target.id==='intensity'){draft.intensity=Number(e.target.value);document.getElementById('intensityLabel').textContent=draft.intensity+'/5'}});render();
+</script>
 </body>
 </html>
