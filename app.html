@@ -4,20 +4,20 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <meta name="theme-color" content="#000000">
-    <title>Smoke Lab — Evidenzbasiertes Neuro-Tool</title>
+    <title>Smoke Lab — Premium Health Edition</title>
     <style>
         :root {
             --bg: #000000;
             --surface: #1C1C1E;
             --surface-elevated: #2C2C2E;
-            --border: rgba(255, 255, 255, 0.1);
+            --border: rgba(255, 255, 255, 0.08);
             --primary: #FFFFFF;
             --muted: #8E8E93;
             --apple-green: #34C759;
-            --apple-green-glow: rgba(52, 199, 89, 0.15);
+            --apple-green-glow: rgba(52, 199, 89, 0.2);
             --apple-orange: #FF9F0A;
-            --radius-card: 20px;
-            --radius-btn: 14px;
+            --radius-card: 22px;
+            --radius-btn: 16px;
         }
 
         * {
@@ -51,17 +51,18 @@
         .view {
             display: none;
             flex-direction: column;
-            padding: 16px 16px 100px 16px;
+            padding: 16px 16px 110px 16px;
             gap: 12px;
-            animation: fadeIn 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+            animation: fadeIn 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
         }
         .view.active { display: flex; }
 
         @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(4px); }
+            from { opacity: 0; transform: translateY(6px); }
             to { opacity: 1; transform: translateY(0); }
         }
 
+        /* Apple Health / Oura Header */
         .app-header {
             display: flex;
             justify-content: space-between;
@@ -82,6 +83,7 @@
             color: var(--muted);
         }
 
+        /* Bento Grid */
         .bento-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -96,28 +98,31 @@
             display: flex;
             flex-direction: column;
             justify-content: space-between;
-            min-height: 105px;
+            min-height: 110px;
+            position: relative;
+            overflow: hidden;
         }
         .bento-card.full { grid-column: span 2; }
 
-        .label-sm { font-size: 11px; text-transform: uppercase; color: var(--muted); font-weight: 750; letter-spacing: 0.6px; }
-        .bento-value { font-size: 28px; font-weight: 850; color: var(--primary); margin-top: 4px; letter-spacing: -0.5px; }
-        .title-hero { font-size: 24px; font-weight: 850; color: var(--primary); letter-spacing: -0.6px; line-height: 1.15; }
+        .label-sm { font-size: 10px; text-transform: uppercase; color: var(--muted); font-weight: 800; letter-spacing: 0.9px; }
+        .bento-value { font-size: 28px; font-weight: 900; color: var(--primary); margin-top: 4px; letter-spacing: -0.8px; }
+        .title-hero { font-size: 24px; font-weight: 900; color: var(--primary); letter-spacing: -0.7px; line-height: 1.15; }
 
+        /* Buttons */
         .btn-green {
             background: var(--apple-green);
             color: #000000;
             border: none;
             border-radius: var(--radius-btn);
-            height: 50px;
+            height: 52px;
             font-size: 15px;
-            font-weight: 800;
+            font-weight: 850;
             width: 100%;
             display: flex;
             align-items: center;
             justify-content: center;
             cursor: pointer;
-            box-shadow: 0 4px 20px var(--apple-green-glow);
+            box-shadow: 0 8px 25px var(--apple-green-glow);
             transition: transform 0.1s ease;
         }
         .btn-green:active { transform: scale(0.98); }
@@ -128,8 +133,8 @@
             border: 1px solid var(--border);
             border-radius: var(--radius-btn);
             height: 50px;
-            font-size: 15px;
-            font-weight: 750;
+            font-size: 14px;
+            font-weight: 800;
             width: 100%;
             display: flex;
             align-items: center;
@@ -146,12 +151,14 @@
             border-radius: 12px;
             border: 1px solid var(--border);
             background: var(--bg);
-            font-size: 15px;
+            font-size: 14px;
             color: var(--primary);
             outline: none;
+            transition: border-color 0.2s ease;
         }
         .lab-input:focus { border-color: var(--apple-green); }
 
+        /* Bottom Nav */
         .bottom-nav {
             position: fixed;
             bottom: 0; left: 50%;
@@ -160,8 +167,8 @@
             max-width: 414px;
             height: 78px;
             background: rgba(28, 28, 30, 0.85);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
+            backdrop-filter: blur(25px);
+            -webkit-backdrop-filter: blur(25px);
             border-top: 1px solid var(--border);
             display: none;
             justify-content: space-around;
@@ -174,21 +181,22 @@
             background: none; border: none;
             color: var(--muted);
             font-size: 10px; text-align: center;
-            flex: 1; font-weight: 750; cursor: pointer;
-            display: flex; flex-direction: column; align-items: center; gap: 4px;
+            flex: 1; font-weight: 800; cursor: pointer;
+            display: flex; flex-direction: column; align-items: center; gap: 3px;
         }
         .nav-item svg { width: 20px; height: 20px; fill: currentColor; }
         .nav-item.active { color: var(--apple-green); }
 
+        /* Sheet Overlays */
         .sheet-overlay {
-            position: fixed; inset: 0; background: rgba(0,0,0,0.75); backdrop-filter: blur(10px);
+            position: fixed; inset: 0; background: rgba(0,0,0,0.8); backdrop-filter: blur(12px);
             z-index: 200; display: none; align-items: flex-end; justify-content: center;
         }
         .sheet-overlay.open { display: flex; }
         .sheet-content {
             width: 100%; max-width: 414px; background: var(--surface);
             border: 1px solid var(--border);
-            border-top-left-radius: 30px; border-top-right-radius: 30px;
+            border-top-left-radius: 32px; border-top-right-radius: 32px;
             padding: 28px 18px 44px 18px;
             display: flex; flex-direction: column; gap: 16px;
             animation: slideUp 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
@@ -210,7 +218,7 @@
             background: var(--bg);
             color: var(--primary);
             font-size: 13px;
-            font-weight: 700;
+            font-weight: 750;
             cursor: pointer;
             text-align: center;
             transition: all 0.15s ease;
@@ -234,7 +242,7 @@
                 <span class="user-badge">NEURO-TOOL</span>
             </header>
 
-            <div class="bento-card full">
+            <div class="bento-card full" style="background: linear-gradient(145deg, #1A2E22 0%, #1C1C1E 100%); border: 1px solid rgba(52,199,89,0.3);">
                 <h1 class="title-hero" style="font-size: 22px;">Pharmakokinetik statt Willenskraft.</h1>
                 <p style="font-size: 13px; color: var(--muted); line-height: 1.4; margin-top: 4px;">Das medizinische Neuro-Tool für High-Performer. Verstehe das Glutamat-Gedächtnis in Echtzeit.</p>
             </div>
@@ -277,20 +285,20 @@
             </header>
 
             <div class="bento-grid">
-                <div class="bento-card full">
+                <div class="bento-card full" style="background: linear-gradient(135deg, #1A2E22 0%, #1C1C1E 100%); border: 1px solid rgba(52,199,89,0.3);">
                     <div style="display: flex; justify-content: space-between; align-items: flex-start;">
                         <div>
-                            <span class="label-sm">Nikotin-Spiegel (Blut)</span>
+                            <span class="label-sm" style="color: var(--apple-green);">Nikotin-Spiegel (Blut)</span>
                             <div class="bento-value" id="nicotineLevel" style="color: var(--apple-green);">100 %</div>
                         </div>
                         <div style="background: var(--surface-elevated); padding: 4px 10px; border-radius: 20px; font-size: 10px; font-weight: 800; color: var(--muted);">
                             t½ = ~2.0h
                         </div>
                     </div>
-                    <div style="width: 100%; height: 4px; background: var(--surface-elevated); border-radius: 2px; margin-top: 8px; overflow: hidden;">
-                        <div id="nicotineBar" style="width: 100%; height: 100%; background: var(--apple-green);"></div>
+                    <div style="width: 100%; height: 5px; background: var(--surface-elevated); border-radius: 3px; margin-top: 10px; overflow: hidden;">
+                        <div id="nicotineBar" style="width: 100%; height: 100%; background: var(--apple-green); box-shadow: 0 0 10px var(--apple-green);"></div>
                     </div>
-                    <p style="font-size: 11px; color: var(--muted); line-height: 1.35; margin-top: 4px;">Das Craving ist zu 100% neuronale Gewohnheit, kein physischer Mangel.</p>
+                    <p style="font-size: 11px; color: var(--muted); line-height: 1.35; margin-top: 6px;">Das Craving ist zu 100% neuronale Gewohnheit, kein physischer Mangel.</p>
                 </div>
 
                 <div class="bento-card">
@@ -405,7 +413,7 @@
             <div class="sheet-content">
                 <div style="display: flex; justify-content: space-between; align-items: center;">
                     <div>
-                        <span class="label-sm" style="color: var(--apple-orange);">Akut-Hilfe</span>
+                        <span class="label-sm" style="color: var(--apple-orange);">Akut-Hilfe · Urge Surfing</span>
                         <h3 style="font-size: 18px; font-weight: 850; margin-top: 2px;">Welle aussitzen (3 Min)</h3>
                     </div>
                     <button onclick="closeModals()" style="background: var(--bg); border: 1px solid var(--border); width: 30px; height: 30px; border-radius: 50%; color: var(--primary); cursor: pointer;">✕</button>
@@ -490,7 +498,7 @@
             clearInterval(sosInterval);
             timeLeft = 180;
             updateTimerDisplay();
-            if (navigator.vibrate) navigator.vibrate(200); // Haptisches Feedback
+            if (navigator.vibrate) navigator.vibrate([200, 100, 200]); // Haptisches Feedback für Entspannung
             sosInterval = setInterval(() => {
                 timeLeft--;
                 updateTimerDisplay();
