@@ -1,625 +1,227 @@
 <!DOCTYPE html>
 <html lang="de">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <meta name="theme-color" content="#F2F2F7">
-    <title>Smoke Lab — Elite Health Edition</title>
-    <style>
-        :root {
-            --bg: #F2F2F7;
-            --card-bg: #FFFFFF;
-            --card-border: rgba(0, 0, 0, 0.06);
-            --primary: #000000;
-            --muted: #8E8E93;
-            --green: #34C759;
-            --green-glow: rgba(52, 199, 89, 0.25);
-            --gold: #FF9F0A;
-            --blue: #007AFF;
-            --red: #FF3B30;
-        }
-
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display", sans-serif;
-            -webkit-font-smoothing: antialiased;
-            -webkit-tap-highlight-color: transparent;
-        }
-
-        body {
-            background-color: var(--bg);
-            color: var(--primary);
-            display: flex;
-            justify-content: center;
-            height: 100vh;
-            height: 100dvh;
-            overflow: hidden;
-            position: fixed;
-            width: 100%;
-        }
-
-        .app-frame {
-            width: 100%;
-            max-width: 414px;
-            height: 100%;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            padding: calc(env(safe-area-inset-top, 16px) + 10px) 16px calc(env(safe-area-inset-bottom, 16px) + 70px) 16px;
-            position: relative;
-        }
-
-        .view {
-            display: none;
-            flex-direction: column;
-            height: 100%;
-            gap: 12px;
-            overflow-y: auto;
-            padding-bottom: 20px;
-            animation: fadeIn 0.25s ease forwards;
-        }
-        .view.active { display: flex; }
-        .view::-webkit-scrollbar { display: none; }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(4px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        /* iOS Header */
-        .header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding-bottom: 4px;
-        }
-        .header-title-group h1 { font-size: 24px; font-weight: 800; letter-spacing: -0.6px; color: var(--primary); }
-        .header-title-group span { font-size: 11px; font-weight: 750; color: var(--green); text-transform: uppercase; letter-spacing: 0.8px; }
-
-        /* Premium Clean Cards */
-        .card {
-            background-color: var(--card-bg);
-            border: 0.5px solid var(--card-border);
-            border-radius: 22px;
-            padding: 18px;
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.03);
-        }
-        .card-hero {
-            background: linear-gradient(135deg, #E8F8EC 0%, #FFFFFF 100%);
-            border: 0.5px solid rgba(52, 199, 89, 0.3);
-            text-align: center;
-            align-items: center;
-        }
-
-        /* Metrics Grid */
-        .grid-2 {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 10px;
-        }
-        .metric-card {
-            background-color: var(--card-bg);
-            border: 0.5px solid var(--card-border);
-            border-radius: 18px;
-            padding: 14px;
-            display: flex;
-            flex-direction: column;
-            gap: 4px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.02);
-        }
-        .metric-num { font-size: 22px; font-weight: 800; letter-spacing: -0.5px; }
-        .metric-title { font-size: 11px; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: 0.5px; }
-
-        /* Buttons */
-        .btn {
-            background-color: #E5E5EA;
-            border: none;
-            color: var(--primary);
-            border-radius: 16px;
-            height: 50px;
-            font-size: 15px;
-            font-weight: 750;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-            cursor: pointer;
-            transition: transform 0.1s ease;
-        }
-        .btn:active { transform: scale(0.97); }
-        .btn-green { background-color: var(--green); color: #FFFFFF; box-shadow: 0 4px 15px var(--green-glow); }
-        .btn-gold { background-color: rgba(255,159,10,0.15); color: #B26500; }
-
-        /* Native Tab Bar */
-        .nav-bar {
-            position: absolute;
-            bottom: 0; left: 0; width: 100%;
-            height: 65px;
-            background: rgba(255, 255, 255, 0.85);
-            backdrop-filter: blur(25px);
-            -webkit-backdrop-filter: blur(25px);
-            border-top: 0.5px solid var(--card-border);
-            display: none;
-            justify-content: space-around;
-            align-items: center;
-            padding-bottom: env(safe-area-inset-bottom, 10px);
-            z-index: 100;
-        }
-        .nav-bar.active { display: flex; }
-        .nav-item {
-            background: none; border: none; color: var(--muted);
-            font-size: 10px; font-weight: 700;
-            display: flex; flex-direction: column; align-items: center; gap: 3px;
-            cursor: pointer;
-        }
-        .nav-item svg { width: 20px; height: 20px; fill: currentColor; }
-        .nav-item.active { color: var(--green); }
-
-        /* Inputs & Sheets */
-        .input-ios {
-            width: 100%;
-            height: 50px;
-            background: #F2F2F7;
-            border: none;
-            border-radius: 14px;
-            padding: 0 16px;
-            font-size: 16px;
-            color: var(--primary);
-            outline: none;
-        }
-        .sheet {
-            position: fixed; inset: 0; background: rgba(0,0,0,0.5); backdrop-filter: blur(15px);
-            z-index: 300; display: none; align-items: flex-end; justify-content: center;
-        }
-        .sheet.open { display: flex; }
-        .sheet-content {
-            width: 100%; max-width: 414px; background: var(--card-bg);
-            border-top-left-radius: 28px; border-top-right-radius: 28px;
-            padding: 24px 20px calc(env(safe-area-inset-bottom, 20px) + 24px) 20px;
-            display: flex; flex-direction: column; gap: 16px;
-            box-shadow: 0 -10px 40px rgba(0,0,0,0.1);
-        }
-
-        /* Trigger Chips */
-        .trigger-chip {
-            background: #F2F2F7;
-            border: 1.5px solid transparent;
-            border-radius: 12px;
-            padding: 10px;
-            font-size: 13px;
-            font-weight: 700;
-            color: var(--muted);
-            text-align: center;
-            cursor: pointer;
-        }
-        .trigger-chip.selected {
-            background: #E8F8EC;
-            color: var(--green);
-            border-color: var(--green);
-        }
-
-        /* Breathing Circle */
-        .breath-container {
-            display: flex; flex-direction: column; align-items: center; justify-content: center; margin: 10px 0;
-        }
-        .breath-circle {
-            width: 120px; height: 120px; border-radius: 50%;
-            background: rgba(52,199,89,0.1);
-            border: 3px solid var(--green);
-            display: grid; place-items: center;
-            font-size: 15px; font-weight: 800; color: var(--green);
-            animation: breatheAnim 8s infinite ease-in-out;
-        }
-        @keyframes breatheAnim {
-            0%, 100% { transform: scale(1); box-shadow: 0 0 15px rgba(52,199,89,0.2); }
-            50% { transform: scale(1.25); background: rgba(255,159,10,0.1); border-color: var(--gold); color: var(--gold); box-shadow: 0 0 25px rgba(255,159,10,0.3); }
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+<meta name="theme-color" content="#F5F2EC">
+<title>Smoke Lab — Behavior Change Lab</title>
+<style>
+:root{
+  --bg:#F5F2EC;--paper:#FFFEFB;--ink:#171717;--muted:#7B7872;--line:rgba(23,23,23,.09);
+  --accent:#3857F6;--accent-soft:#E9EDFF;--ember:#F06C45;--ember-soft:#FFF0EA;--dark:#151515;
+  --ok:#245C46;--ok-soft:#E9F3EE;--radius:24px;--shadow:0 14px 40px rgba(26,22,17,.08)
+}
+*{box-sizing:border-box;margin:0;padding:0;font-family:-apple-system,BlinkMacSystemFont,"SF Pro Text","SF Pro Display",Inter,sans-serif;-webkit-font-smoothing:antialiased;-webkit-tap-highlight-color:transparent}
+html,body{background:var(--bg);color:var(--ink);height:100%;overflow:hidden}
+body{display:flex;justify-content:center}
+button,input{font:inherit}
+button{cursor:pointer}
+.app{width:100%;max-width:430px;height:100dvh;position:relative;background:var(--bg);overflow:hidden}
+.view{display:none;height:100%;padding:calc(env(safe-area-inset-top) + 14px) 18px calc(82px + env(safe-area-inset-bottom));overflow-y:auto;scrollbar-width:none}
+.view::-webkit-scrollbar{display:none}.view.active{display:block;animation:enter .28s ease both}
+@keyframes enter{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:none}}
+.top{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:18px}
+.eyebrow{font-size:11px;font-weight:800;letter-spacing:1.1px;text-transform:uppercase;color:var(--accent)}
+h1{font-size:30px;line-height:1.02;letter-spacing:-1.2px;margin-top:4px}.hello{font-size:12px;font-weight:750;color:var(--muted);padding-top:4px}
+.hero{background:var(--dark);color:#fff;border-radius:30px;padding:24px;box-shadow:var(--shadow);position:relative;overflow:hidden}
+.hero:after{content:"";position:absolute;width:150px;height:150px;border-radius:50%;background:radial-gradient(circle,rgba(56,87,246,.45),rgba(56,87,246,0));right:-45px;top:-55px;pointer-events:none}
+.hero .kicker{font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:1px;color:#AEB9FF}
+.hero h2{font-size:30px;line-height:1.02;letter-spacing:-1px;max-width:290px;margin:10px 0 14px}
+.hero p{font-size:14px;line-height:1.45;color:#BCBCBC;max-width:310px}
+.mission-meta{display:flex;gap:8px;margin-top:18px;flex-wrap:wrap}.pill{border-radius:999px;padding:7px 10px;font-size:11px;font-weight:750;background:rgba(255,255,255,.09);color:#E9E9E9}
+.primary,.secondary,.ghost{width:100%;height:54px;border:0;border-radius:17px;font-weight:800;font-size:15px;display:flex;align-items:center;justify-content:center;gap:8px}
+.primary{background:var(--accent);color:#fff;box-shadow:0 10px 24px rgba(56,87,246,.24)}.secondary{background:var(--paper);color:var(--ink);border:1px solid var(--line)}.ghost{height:46px;background:transparent;border:1px solid var(--line);color:var(--ink)}
+.action-stack{display:grid;gap:10px;margin-top:12px}.crave{background:var(--ember-soft);color:#8B3C25;border:1px solid rgba(240,108,69,.16)}
+.section{margin-top:20px}.section-title{display:flex;justify-content:space-between;align-items:end;margin-bottom:10px}.section-title h3{font-size:18px;letter-spacing:-.4px}.section-title span{font-size:12px;color:var(--muted)}
+.card{background:var(--paper);border:1px solid var(--line);border-radius:22px;padding:17px;box-shadow:0 8px 24px rgba(26,22,17,.035)}
+.progress-row{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px}.metric{background:var(--paper);border:1px solid var(--line);border-radius:19px;padding:14px 12px}.metric strong{display:block;font-size:21px;letter-spacing:-.7px}.metric span{display:block;font-size:10px;color:var(--muted);font-weight:750;text-transform:uppercase;letter-spacing:.55px;margin-top:4px}
+.insight{display:flex;gap:12px;align-items:flex-start}.insight-mark{width:34px;height:34px;border-radius:12px;background:var(--accent-soft);color:var(--accent);display:grid;place-items:center;font-weight:900;flex:0 0 auto}.insight p{font-size:13px;line-height:1.45;color:#4E4A45}.insight b{color:var(--ink)}
+.nav{position:absolute;left:0;right:0;bottom:0;height:calc(70px + env(safe-area-inset-bottom));padding:6px 8px env(safe-area-inset-bottom);display:none;align-items:center;background:rgba(245,242,236,.9);backdrop-filter:blur(22px);-webkit-backdrop-filter:blur(22px);border-top:1px solid var(--line);z-index:80}.nav.active{display:flex}.nav button{flex:1;border:0;background:none;color:#9A968F;font-size:9px;font-weight:800;display:flex;flex-direction:column;align-items:center;gap:4px}.nav svg{width:20px;height:20px;fill:currentColor}.nav button.active{color:var(--ink)}
+.phase-track{display:flex;gap:5px;margin:14px 0 18px}.phase-track i{height:5px;border-radius:999px;flex:1;background:#DDD9D1}.phase-track i.done{background:var(--accent)}.phase-track i.current{background:linear-gradient(90deg,var(--accent) 55%,#DDD9D1 55%)}
+.lab-list{display:grid;gap:9px}.lab-item{display:flex;align-items:center;gap:12px;padding:14px 15px;background:var(--paper);border:1px solid var(--line);border-radius:18px}.lab-num{width:34px;height:34px;border-radius:12px;background:#F0EDE7;display:grid;place-items:center;font-size:12px;font-weight:850}.lab-item.active .lab-num{background:var(--accent);color:#fff}.lab-item .copy{flex:1}.lab-item b{font-size:13px}.lab-item small{display:block;color:var(--muted);margin-top:3px;line-height:1.3}
+.bar{height:8px;background:#ECE8E1;border-radius:999px;overflow:hidden}.bar>span{display:block;height:100%;background:var(--accent);border-radius:999px}.trigger-row{margin:12px 0}.trigger-row .line{display:flex;justify-content:space-between;font-size:12px;margin-bottom:6px}.trigger-row .line span:last-child{color:var(--muted)}
+.history{display:grid;gap:8px}.history-item{padding:13px 0;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;gap:12px}.history-item:last-child{border-bottom:0}.history-item b{font-size:13px}.history-item small{display:block;color:var(--muted);margin-top:3px}.tag{font-size:10px;font-weight:800;padding:6px 8px;border-radius:999px;white-space:nowrap;height:max-content}.tag.ok{background:var(--ok-soft);color:var(--ok)}.tag.smoke{background:#F1EFEB;color:#6C6862}
+.setup{display:flex;min-height:100%;flex-direction:column;justify-content:center;padding-bottom:10px}.setup h1{font-size:38px;max-width:310px}.setup p{color:var(--muted);line-height:1.45;margin:12px 0 28px;max-width:330px}.field{margin-bottom:14px}.field label{display:block;font-size:11px;font-weight:800;letter-spacing:.8px;color:var(--muted);margin-bottom:7px;text-transform:uppercase}.input{width:100%;height:54px;border-radius:16px;border:1px solid var(--line);background:var(--paper);padding:0 16px;font-size:16px;outline:none}.input:focus{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft)}.mode-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}.mode{height:52px;border-radius:16px;border:1px solid var(--line);background:var(--paper);font-weight:800;color:var(--muted)}.mode.selected{background:var(--dark);color:#fff;border-color:var(--dark)}
+.sheet{position:fixed;inset:0;background:rgba(15,15,15,.42);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);display:none;align-items:flex-end;justify-content:center;z-index:200}.sheet.open{display:flex}.sheet-body{width:100%;max-width:430px;max-height:88dvh;overflow-y:auto;background:var(--paper);border-radius:30px 30px 0 0;padding:22px 20px calc(24px + env(safe-area-inset-bottom));box-shadow:0 -18px 50px rgba(0,0,0,.16);animation:sheetUp .3s ease both}@keyframes sheetUp{from{transform:translateY(18px);opacity:0}to{transform:none;opacity:1}}
+.sheet-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:18px}.sheet-head h2{font-size:22px;letter-spacing:-.5px}.close{width:34px;height:34px;border-radius:50%;border:0;background:#F0EDE7;font-size:15px}.step-title{font-size:12px;font-weight:800;letter-spacing:.8px;text-transform:uppercase;color:var(--muted);margin:14px 0 9px}.choice-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}.choice{min-height:48px;border:1px solid var(--line);background:#F8F6F1;border-radius:14px;font-size:13px;font-weight:750;padding:9px}.choice.selected{border-color:var(--accent);background:var(--accent-soft);color:#213CC6}.scale{display:grid;grid-template-columns:repeat(5,1fr);gap:7px}.scale button{height:44px;border-radius:13px;border:1px solid var(--line);background:#F8F6F1;font-weight:850}.scale button.selected{background:var(--dark);color:#fff;border-color:var(--dark)}
+.experiment-box{background:var(--dark);color:white;border-radius:22px;padding:18px;margin:14px 0}.experiment-box small{color:#AEB9FF;font-size:10px;font-weight:800;letter-spacing:.9px;text-transform:uppercase}.experiment-box h3{font-size:22px;line-height:1.05;margin:8px 0}.experiment-box p{font-size:13px;line-height:1.4;color:#C4C4C4}.timer{font-size:56px;font-weight:900;letter-spacing:-2px;text-align:center;margin:16px 0;color:var(--accent)}
+.result-hero{text-align:center;padding:16px 0}.result-hero strong{font-size:42px;letter-spacing:-1.5px}.result-hero span{display:block;color:var(--muted);font-size:12px;margin-top:4px}
+.calibrate{padding:18px;background:var(--accent-soft);border-radius:20px;color:#283D9E}.calibrate strong{font-size:16px}.calibrate p{font-size:12px;line-height:1.4;margin-top:5px}
+.note{font-size:11px;line-height:1.4;color:var(--muted)}
+@media(max-height:720px){.hero{padding:19px}.hero h2{font-size:26px}.section{margin-top:14px}.progress-row{gap:6px}.metric{padding:11px}.view{padding-top:calc(env(safe-area-inset-top) + 8px)}}
+</style>
 </head>
 <body>
-
-    <div class="app-frame">
-        
-        <!-- ONBOARDING -->
-        <div id="view-onboarding" class="view active" style="justify-content: center; gap: 16px;">
-            <div style="text-align: center; margin-bottom: 6px;">
-                <span style="font-size: 11px; font-weight: 800; color: var(--green); letter-spacing: 1px;">SMOKE LAB ELITE</span>
-                <h1 style="font-size: 28px; font-weight: 850; letter-spacing: -0.7px; margin-top: 4px; color: var(--primary);">Dein Programm.</h1>
-            </div>
-
-            <div class="card" style="gap: 14px;">
-                <div>
-                    <span style="font-size: 11px; font-weight: 700; color: var(--muted); display: block; margin-bottom: 6px;">DEIN VORNAME</span>
-                    <input type="text" id="setupName" class="input-ios" placeholder="Daniel">
-                </div>
-                <div class="grid-2">
-                    <div>
-                        <span style="font-size: 11px; font-weight: 700; color: var(--muted); display: block; margin-bottom: 6px;">ZIGARETTEN / TAG</span>
-                        <input type="number" id="setupCigs" class="input-ios" value="15">
-                    </div>
-                    <div>
-                        <span style="font-size: 11px; font-weight: 700; color: var(--muted); display: block; margin-bottom: 6px;">PREIS / SCHACHTEL (€)</span>
-                        <input type="number" id="setupPrice" class="input-ios" value="8.50" step="0.5">
-                    </div>
-                </div>
-                <div>
-                    <span style="font-size: 11px; font-weight: 700; color: var(--muted); display: block; margin-bottom: 6px;">WÄHLE DEINEN WEG</span>
-                    <div class="grid-2">
-                        <button class="btn btn-green" id="modeReduce" onclick="setMode('Reduzieren')" style="height: 44px; font-size: 13px;">Reduzieren</button>
-                        <button class="btn" id="modeQuit" onclick="setMode('Rauchfrei')" style="height: 44px; font-size: 13px;">Rauchfrei</button>
-                    </div>
-                </div>
-            </div>
-
-            <button class="btn btn-green" onclick="completeSetup()" style="height: 54px; font-size: 16px;">Labor starten</button>
-        </div>
-
-        <!-- DASHBOARD -->
-        <div id="view-heute" class="view">
-            <header class="header">
-                <div class="header-title-group">
-                    <span id="headerModeBadge">REDUZIEREN AKTIV</span>
-                    <h1 id="headerName">Dashboard</h1>
-                </div>
-                <div id="userBadge" style="font-size: 12px; font-weight: 700; color: var(--muted); background: var(--card-bg); padding: 6px 12px; border-radius: 20px; border: 0.5px solid var(--card-border);">DANIEL</div>
-            </header>
-
-            <!-- Hero ROI Card -->
-            <div class="card card-hero">
-                <span style="font-size: 11px; font-weight: 800; color: var(--green); text-transform: uppercase; letter-spacing: 1px;" id="heroSubtitle">Zeitgewinn seit letztem Mal</span>
-                <div id="mainStreakMetric" style="font-size: 38px; font-weight: 900; letter-spacing: -1.5px; margin: 4px 0; color: var(--primary);">0 Min</div>
-                <div style="display: flex; gap: 16px; margin-top: 2px; font-size: 13px; font-weight: 750;">
-                    <div>💰 <span id="moneySavedVal">0,00 €</span> gespart</div>
-                    <div>⏳ <span id="lifeSavedVal">0 Min</span> Leben</div>
-                </div>
-            </div>
-
-            <!-- Metrics Grid -->
-            <div class="grid-2">
-                <div class="metric-card">
-                    <span class="metric-title">Heute erfasst</span>
-                    <div id="statLogs" class="metric-num">0</div>
-                </div>
-                <div class="metric-card">
-                    <span class="metric-title">Drang besiegt</span>
-                    <div id="statResisted" class="metric-num" style="color: var(--green);">0</div>
-                </div>
-            </div>
-
-            <!-- Active Trigger Action Engine (USP) -->
-            <div class="card" style="border-left: 4px solid var(--green);">
-                <span style="font-size: 11px; font-weight: 800; color: var(--green); text-transform: uppercase; letter-spacing: 0.8px;">Intelligenter Auslöser-Coach</span>
-                <p id="aiInsightText" style="font-size: 13px; color: var(--primary); line-height: 1.45; font-weight: 500;">
-                    Das System ist bereit. Erfasse deinen nächsten Moment, damit dir der Coach sofort die psychologische Gegenstrategie für deinen Auslöser liefert.
-                </p>
-            </div>
-
-            <!-- Quick Actions -->
-            <div style="display: flex; flex-direction: column; gap: 8px; margin-top: auto;">
-                <button class="btn btn-green" onclick="openSheet('logSheet')">Moment protokollieren</button>
-                <button class="btn btn-gold" onclick="openSheet('sosSheet')">3-Minuten Notfall-SOS ⚡</button>
-            </div>
-        </div>
-
-        <!-- RECOVERY -->
-        <div id="view-recovery" class="view">
-            <header class="header">
-                <div class="header-title-group">
-                    <span>Klinische Meilensteine</span>
-                    <h1>Biologische Recovery</h1>
-                </div>
-            </header>
-
-            <div class="card" id="timelineContainer" style="gap: 14px;">
-                <!-- Generated -->
-            </div>
-        </div>
-
-        <!-- PLAN / MUSTER -->
-        <div id="view-plan" class="view">
-            <header class="header">
-                <div class="header-title-group">
-                    <span>Verhaltensanalyse</span>
-                    <h1>Muster & Strategie</h1>
-                </div>
-            </header>
-
-            <div class="card">
-                <span style="font-size: 11px; font-weight: 800; color: var(--muted); text-transform: uppercase; letter-spacing: 0.8px;">Protokoll-Historie</span>
-                <div id="historyList" style="font-size: 13px; color: var(--muted); line-height: 1.6;">Noch keine Momente erfasst.</div>
-            </div>
-        </div>
-
-        <!-- DATEN / SETTINGS -->
-        <div id="view-daten" class="view">
-            <header class="header">
-                <div class="header-title-group">
-                    <span>Sicherheit</span>
-                    <h1>System & Daten</h1>
-                </div>
-            </header>
-
-            <div class="card">
-                <span style="font-size: 11px; font-weight: 800; color: var(--muted); text-transform: uppercase; letter-spacing: 0.8px;">Lokaler Speicher</span>
-                <p style="font-size: 13px; color: var(--muted); line-height: 1.45;">Alle Daten bleiben zu 100% lokal auf deinem Endgerät verschlüsselt. Keine Cloud, kein Tracking.</p>
-                <button class="btn" onclick="resetApp()" style="color: var(--red); background: rgba(255,59,48,0.1); margin-top: 8px; font-size: 13px;">Labor komplett zurücksetzen</button>
-            </div>
-        </div>
-
-        <!-- NAV BAR -->
-        <nav class="nav-bar" id="navBar">
-            <button class="nav-item active" onclick="switchTab('heute', this)">
-                <svg viewBox="0 0 24 24"><path d="M12 3L4 9v12h5v-7h6v7h5V9z"/></svg>
-                Dashboard
-            </button>
-            <button class="nav-item" onclick="switchTab('recovery', this)">
-                <svg viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
-                Recovery
-            </button>
-            <button class="nav-item" onclick="switchTab('plan', this)">
-                <svg viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2M9 17H7v-7h2zm4 0h-2V7h2zm4 0h-2v-4h2z"/></svg>
-                Muster
-            </button>
-            <button class="nav-item" onclick="switchTab('daten', this)">
-                <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2m0 3c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3m0 14.2c-2.5 0-4.71-1.28-6-3.22.03-1.99 4-3.08 6-3.08 1.99 0 5.97 1.09 6 3.08-1.29 1.94-3.5 3.22-6 3.22"/></svg>
-                System
-            </button>
-        </nav>
-
-        <!-- LOG SHEET (Vollständige Skala, Gründe & Aktive Intervention) -->
-        <div id="logSheet" class="sheet" onclick="closeSheets(event)">
-            <div class="sheet-content" onclick="event.stopPropagation()">
-                <div style="font-size: 18px; font-weight: 800; color: var(--primary);">Moment protokollieren</div>
-                <div>
-                    <span style="font-size: 11px; font-weight: 750; color: var(--muted); display: block; margin-bottom: 6px;">WÄHLE DEINEN HAUPT-AUSLÖSER</span>
-                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
-                        <div class="trigger-chip selected" id="trgStress" onclick="setTrigger('Stress & Druck')">Stress & Druck</div>
-                        <div class="trigger-chip" id="trgCoffee" onclick="setTrigger('Kaffee & Pause')">Kaffee & Pause</div>
-                        <div class="trigger-chip" id="trgRoutine" onclick="setTrigger('Gewohnheit / Auto')">Gewohnheit / Auto</div>
-                        <div class="trigger-chip" id="trgSocial" onclick="setTrigger('Sozial / Feierabend')">Sozial / Feierabend</div>
-                    </div>
-                </div>
-                <div>
-                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px;">
-                        <span style="font-size: 11px; font-weight: 750; color: var(--muted);">DRANG-INTENSITÄT</span>
-                        <span id="intensityVal" style="font-size: 13px; font-weight: 800; color: var(--green);">3 von 5</span>
-                    </div>
-                    <input type="range" id="intensityRange" min="1" max="5" value="3" style="width: 100%; accent-color: var(--green);" oninput="document.getElementById('intensityVal').innerText = this.value + ' von 5'">
-                </div>
-                <div style="display: flex; gap: 8px; margin-top: 4px;">
-                    <button class="btn btn-green" onclick="submitLog('resist')" style="flex:1;">Drang besiegt ✨</button>
-                    <button class="btn" onclick="submitLog('smoke')" style="flex:1; background:#E5E5EA; color:var(--primary);">Geraucht 🚬</button>
-                </div>
-            </div>
-        </div>
-
-        <!-- SOS SHEET -->
-        <div id="sosSheet" class="sheet" onclick="closeSheets(event)">
-            <div class="sheet-content" style="text-align: center;" onclick="event.stopPropagation()">
-                <span style="font-size: 11px; font-weight: 800; color: var(--gold); text-transform: uppercase;">Akut-Regulierung</span>
-                <div class="breath-container">
-                    <div class="breath-circle" id="breathLabel">Atmen</div>
-                </div>
-                <div id="sosTimer" style="font-size: 36px; font-weight: 900; letter-spacing: -1px; margin: 4px 0;">3:00</div>
-                <p style="font-size: 13px; color: var(--muted); line-height: 1.4;">Folge dem Rhythmus. Der neurobiologische Impuls flacht nach 3 Minuten von allein ab.</p>
-                <button class="btn" onclick="closeSheets()" style="background: #E5E5EA; margin-top: 8px;">Schließen</button>
-            </div>
-        </div>
-
+<div class="app">
+  <section id="setupView" class="view active">
+    <div class="setup">
+      <div class="eyebrow">Smoke Lab</div>
+      <h1>Verstehe den Trigger. Unterbrich das Muster.</h1>
+      <p>Kein Rauch-Tagebuch. Smoke Lab gibt dir jeden Tag genau ein kleines Verhaltensexperiment und lernt aus deinen Momenten.</p>
+      <div class="field"><label>Dein Vorname</label><input id="nameInput" class="input" placeholder="Daniel"></div>
+      <div class="field"><label>Aktuell ungefähr Zigaretten pro Tag</label><input id="baselineInput" class="input" type="number" min="0" max="80" value="12"></div>
+      <div class="field"><label>Dein Ansatz</label><div class="mode-grid"><button id="reduceMode" class="mode selected">Schrittweise reduzieren</button><button id="quitMode" class="mode">Rauchfrei werden</button></div></div>
+      <button id="startBtn" class="primary" style="margin-top:10px">Mein Labor starten</button>
     </div>
+  </section>
 
-    <script>
-        let state = {
-            name: localStorage.getItem('sl_name') || '',
-            mode: localStorage.getItem('sl_mode') || 'Reduzieren',
-            cigs: parseFloat(localStorage.getItem('sl_cigs') || 15),
-            price: parseFloat(localStorage.getItem('sl_price') || 8.50),
-            lastSmoke: parseInt(localStorage.getItem('sl_last') || Date.now()),
-            logs: JSON.parse(localStorage.getItem('sl_logs') || '[]')
-        };
+  <section id="todayView" class="view">
+    <div class="top"><div><div class="eyebrow" id="phaseLabel">Phase 1 · Beobachten</div><h1 id="todayTitle">Heute</h1></div><div class="hello" id="helloName">DANIEL</div></div>
+    <div class="hero">
+      <div class="kicker" id="missionKicker">Experiment 01</div>
+      <h2 id="missionTitle">Beobachte heute nur deinen stärksten Moment.</h2>
+      <p id="missionText">Du musst nichts verhindern. Wir wollen zuerst sehen, wann der Autopilot übernimmt.</p>
+      <div class="mission-meta"><span class="pill" id="missionTime">~ 2 Minuten</span><span class="pill" id="missionState">Heute offen</span></div>
+    </div>
+    <div class="action-stack">
+      <button id="missionBtn" class="primary">Experiment starten</button>
+      <button id="craveBtn" class="secondary crave">Ich will gerade rauchen</button>
+    </div>
+    <div class="section">
+      <div class="section-title"><h3>Dein Labor heute</h3><span id="eventCountText">0 Momente</span></div>
+      <div class="progress-row">
+        <div class="metric"><strong id="delayMetric">—</strong><span>Ø Verzögerung</span></div>
+        <div class="metric"><strong id="urgeMetric">—</strong><span>Drang danach</span></div>
+        <div class="metric"><strong id="awareMetric">0</strong><span>Bewusste Momente</span></div>
+      </div>
+    </div>
+    <div class="section"><div class="card insight"><div class="insight-mark">↗</div><p id="homeInsight"><b>Noch keine Daten nötig.</b> Heute geht es nur darum, einen Moment bewusst zu beobachten.</p></div></div>
+  </section>
 
-        let currentTrigger = 'Stress & Druck';
-        let sosInterval = null;
+  <section id="labView" class="view">
+    <div class="top"><div><div class="eyebrow">30 Tage · 5 Phasen</div><h1>Labor</h1></div></div>
+    <div class="card">
+      <div class="section-title" style="margin:0"><h3 id="labPhaseTitle">Beobachten</h3><span id="labDayText">Tag 1</span></div>
+      <p class="note" id="labPhaseText">Muster sichtbar machen, ohne sie zu bewerten.</p>
+      <div class="phase-track"><i id="p1"></i><i id="p2"></i><i id="p3"></i><i id="p4"></i><i id="p5"></i></div>
+      <div class="bar"><span id="journeyBar" style="width:3%"></span></div>
+    </div>
+    <div class="section"><div class="section-title"><h3>Deine nächsten Experimente</h3><span>1 pro Tag</span></div><div class="lab-list" id="labList"></div></div>
+  </section>
 
-        if(state.name) {
-            initApp();
-        }
+  <section id="patternsView" class="view">
+    <div class="top"><div><div class="eyebrow">Muster statt Moral</div><h1>Verstehen</h1></div></div>
+    <div id="calibrationBox" class="calibrate"><strong>Noch nicht belastbar</strong><p id="calibrationText">Noch 8 Momente, bis Smoke Lab ein erstes persönliches Muster zeigt.</p></div>
+    <div id="patternsContent" style="display:none">
+      <div class="card"><div class="section-title" style="margin:0"><h3>Deine Trigger</h3><span id="topTriggerLabel">—</span></div><div id="triggerBars"></div></div>
+      <div class="section"><div class="card insight"><div class="insight-mark">◎</div><p id="patternInsight"></p></div></div>
+    </div>
+    <div class="section"><div class="section-title"><h3>Letzte Momente</h3><span id="historyCount">0</span></div><div class="card history" id="historyList"><span class="note">Noch keine Momente erfasst.</span></div></div>
+  </section>
 
-        function setMode(m) {
-            state.mode = m;
-            document.getElementById('modeReduce').className = m === 'Reduzieren' ? 'btn btn-green' : 'btn';
-            document.getElementById('modeQuit').className = m === 'Rauchfrei' ? 'btn btn-green' : 'btn';
-        }
+  <section id="progressView" class="view">
+    <div class="top"><div><div class="eyebrow">Fortschritt ohne Streak-Druck</div><h1>Fortschritt</h1></div></div>
+    <div class="progress-row">
+      <div class="metric"><strong id="progressDelay">—</strong><span>Ø Delay</span></div>
+      <div class="metric"><strong id="progressChange">—</strong><span>Drang Δ</span></div>
+      <div class="metric"><strong id="progressExperiments">0</strong><span>Experimente</span></div>
+    </div>
+    <div class="section"><div class="card"><div class="section-title" style="margin:0 0 10px"><h3>Was sich verändert</h3><span id="progressSummaryLabel">Kalibrierung</span></div><p id="progressSummary" style="font-size:14px;line-height:1.5;color:#4E4A45">Fortschritt bedeutet hier nicht nur „nicht geraucht“. Wir messen, ob du länger wartest, deinen Drang besser einordnest und automatische Situationen bewusster machst.</p></div></div>
+    <div class="section"><div class="card"><div class="section-title" style="margin:0 0 8px"><h3>Experiment-Historie</h3><span id="experimentCount">0</span></div><div id="experimentHistory" class="history"><span class="note">Noch kein Experiment abgeschlossen.</span></div></div></div>
+  </section>
 
-        function completeSetup() {
-            state.name = document.getElementById('setupName').value.trim() || 'Daniel';
-            state.cigs = parseFloat(document.getElementById('setupCigs').value) || 15;
-            state.price = parseFloat(document.getElementById('setupPrice').value) || 8.50;
-            
-            localStorage.setItem('sl_name', state.name);
-            localStorage.setItem('sl_mode', state.mode);
-            localStorage.setItem('sl_cigs', state.cigs);
-            localStorage.setItem('sl_price', state.price);
+  <section id="meView" class="view">
+    <div class="top"><div><div class="eyebrow">Dein Setup</div><h1>Ich</h1></div></div>
+    <div class="card"><div class="section-title" style="margin:0"><h3 id="profileName">Daniel</h3><span id="profileMode">Reduzieren</span></div><p id="profileBaseline" class="note">Ausgangswert: 12 Zigaretten/Tag</p></div>
+    <div class="section"><div class="card"><h3 style="font-size:16px">Datenschutz</h3><p class="note" style="margin-top:8px">Deine Daten werden lokal in diesem Browser gespeichert. Diese Seite überträgt sie nicht an einen eigenen Server. LocalStorage wird von Smoke Lab nicht zusätzlich verschlüsselt.</p></div></div>
+    <div class="section"><button id="resetBtn" class="ghost" style="color:#A83F34;border-color:#E8C6C0">Smoke Lab zurücksetzen</button></div>
+  </section>
 
-            initApp();
-        }
+  <nav id="nav" class="nav">
+    <button data-view="today" class="active"><svg viewBox="0 0 24 24"><path d="M12 3 3.5 10v10.5h6V14h5v6.5h6V10z"/></svg>Heute</button>
+    <button data-view="lab"><svg viewBox="0 0 24 24"><path d="M9 2h6v2h-1v5.2l4.7 7.8A3.3 3.3 0 0 1 15.9 22H8.1a3.3 3.3 0 0 1-2.8-5L10 9.2V4H9zm2.8 8.3L7 18.1c-.5.8.1 1.9 1.1 1.9h7.8c1 0 1.6-1.1 1.1-1.9l-4.8-7.8V4h-.4z"/></svg>Labor</button>
+    <button data-view="patterns"><svg viewBox="0 0 24 24"><path d="M4 18h3V9H4zm6 0h3V5h-3zm6 0h3v-6h-3z"/></svg>Muster</button>
+    <button data-view="progress"><svg viewBox="0 0 24 24"><path d="m4 17 5-5 3 3 7-8 1.5 1.3-8.5 10-3-3-3.5 3.2z"/></svg>Fortschritt</button>
+    <button data-view="me"><svg viewBox="0 0 24 24"><path d="M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8m-7 8a7 7 0 0 1 14 0z"/></svg>Ich</button>
+  </nav>
 
-        function initApp() {
-            document.getElementById('view-onboarding').classList.remove('active');
-            document.getElementById('navBar').classList.add('active');
-            document.getElementById('headerModeBadge').innerText = state.mode === 'Reduzieren' ? 'REDUZIEREN AKTIV' : 'RAUCHFREI ENTZUG';
-            document.getElementById('userBadge').innerText = state.name.toUpperCase();
-            
-            if(state.mode === 'Rauchfrei') {
-                document.getElementById('heroSubtitle').innerText = 'Reine Entzugszeit';
-            }
-
-            switchTab('heute', document.querySelector('.nav-item'));
-            setInterval(updateEngine, 1000);
-            renderRecovery();
-            renderPlan();
-            updateAiInsight();
-        }
-
-        function switchTab(id, el) {
-            document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
-            document.getElementById('view-' + id).classList.add('active');
-            document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
-            if(el) el.classList.add('active');
-            if(id === 'recovery') renderRecovery();
-            if(id === 'plan') renderPlan();
-        }
-
-        function openSheet(id) {
-            document.getElementById(id).classList.add('open');
-            if(id === 'sosSheet') startSosTimer();
-        }
-
-        function closeSheets(e) {
-            if(!e || e.target.classList.contains('sheet')) {
-                document.querySelectorAll('.sheet').forEach(s => s.classList.remove('open'));
-                clearInterval(sosInterval);
-            }
-        }
-
-        function setTrigger(t) {
-            currentTrigger = t;
-            ['trgStress', 'trgCoffee', 'trgRoutine', 'trgSocial'].forEach(id => {
-                document.getElementById(id).className = 'trigger-chip';
-            });
-            event.target.className = 'trigger-chip selected';
-        }
-
-        function submitLog(type) {
-            let intensity = document.getElementById('intensityRange').value;
-            closeSheets();
-            if(type === 'smoke') {
-                state.lastSmoke = Date.now();
-                localStorage.setItem('sl_last', state.lastSmoke);
-            }
-            state.logs.unshift({ 
-                time: new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}), 
-                type, 
-                trigger: currentTrigger, 
-                intensity 
-            });
-            localStorage.setItem('sl_logs', JSON.stringify(state.logs));
-            updateEngine();
-            renderPlan();
-            updateAiInsight();
-        }
-
-        function updateEngine() {
-            let diffMs = Date.now() - state.lastSmoke;
-            let diffHours = diffMs / 3600000;
-            let diffMins = Math.floor(diffMs / 60000);
-
-            document.getElementById('mainStreakMetric').innerText = diffMins < 60 ? `${diffMins} Min` : `${diffHours.toFixed(1)} Std`;
-
-            let costPerCig = state.price / 20;
-            let expectedCigsSoFar = (diffHours / 24) * state.cigs;
-            let actualCigs = state.logs.filter(l => l.type === 'smoke').length;
-            let savedCigs = Math.max(0, expectedCigsSoFar - actualCigs);
-            let moneySaved = savedCigs * costPerCig;
-            let lifeSavedMins = savedCigs * 11;
-
-            document.getElementById('moneySavedVal').innerText = `${moneySaved.toFixed(2)} €`;
-            document.getElementById('lifeSavedVal').innerText = lifeSavedMins < 60 ? `${Math.floor(lifeSavedMins)} Min` : `${(lifeSavedMins/60).toFixed(1)} Std`;
-
-            document.getElementById('statLogs').innerText = state.logs.length;
-            document.getElementById('statResisted').innerText = state.logs.filter(l => l.type === 'resist').length;
-        }
-
-        // USP: Intelligenter Auslöser-Coach, der je nach gewähltem Trigger eine hochspezifische KVT-Strategie ausgibt!
-        function updateAiInsight() {
-            if(state.logs.length === 0) {
-                document.getElementById('aiInsightText').innerHTML = `<b>Warte auf ersten Auslöser:</b> Sobald du deinen Moment erfasst, errechnet der Coach sofort deine maßgeschneiderte psychologische Gegenstrategie.`;
-                return;
-            }
-            let triggers = {};
-            state.logs.forEach(l => { triggers[l.trigger] = (triggers[l.trigger] || 0) + 1; });
-            let topTrigger = Object.keys(triggers).reduce((a, b) => triggers[a] > triggers[b] ? a : b);
-            
-            let strategy = "Versuche das ritualisierte Verhalten durch einen bewussten Ortswechsel zu durchbrechen.";
-            if(topTrigger === 'Stress & Druck') {
-                strategy = "<b>Strategie:</b> Der Cortisol-Peak täuscht Hunger nach Nikotin vor. Nutze hier sofort das 3-Minuten-SOS für eine bewusste Atempause statt des Griffs zur Zigarette.";
-            } else if(topTrigger === 'Kaffee & Pause') {
-                strategy = "<b>Strategie:</b> Klassische Kopplung (Dopamin-Routine). Tausche den Kaffee für 3 Tage gegen Tee oder trinke ein Glas eiskaltes Wasser, um den Reiz zu entkoppeln.";
-            } else if(topTrigger === 'Gewohnheit / Auto') {
-                strategy = "<b>Strategie:</b> Motorischer Autopilot. Halte einen Kaugummi bereit oder verändere deine Standard-Greifbewegung, um die synaptische Gewohnheit zu blockieren.";
-            } else if(topTrigger === 'Sozial / Feierabend') {
-                strategy = "<b>Strategie:</b> Soziale Konditionierung. Halte die Hände aktiv (z.B. ein Getränk mit beiden Händen halten), um den physischen Platzhalter der Zigarette zu besetzen.";
-            }
-
-            document.getElementById('aiInsightText').innerHTML = `<b>Haupt-Auslöser erkannt ('${topTrigger}'):</b> ${strategy}`;
-        }
-
-        function renderRecovery() {
-            let diffHours = (Date.now() - state.lastSmoke) / 3600000;
-            let milestones = [
-                { h: 2, title: "Herzfrequenz normalisiert", desc: "Der Puls sinkt auf das gesunde Basisniveau ab." },
-                { h: 12, title: "Kohlenmonoxid im Blut sinkt", desc: "Der Sauerstoffgehalt im Blut steigt rapide an." },
-                { h: 48, title: "Geruchs- & Geschmackssinn", desc: "Nervendenenden beginnen sich zu regenerieren." },
-                { h: 72, title: "Vollständig nikotinfrei", desc: "Der Körper hat alle Rest-Metabolite abgebaut." }
-            ];
-
-            let html = milestones.map(m => {
-                let unlocked = diffHours >= m.h;
-                return `<div style="display:flex; justify-content:space-between; align-items:center; opacity: ${unlocked ? 1 : 0.4}">
-                    <div>
-                        <div style="font-size: 14px; font-weight: 750; color: var(--primary);">${m.title} ${unlocked ? '✨' : '🔒'}</div>
-                        <div style="font-size: 11px; color: var(--muted); margin-top:2px;">${m.desc}</div>
-                    </div>
-                    <span style="font-size: 11px; font-weight: 700; color: var(--green); background: rgba(52,199,89,0.1); padding: 4px 8px; border-radius: 8px;">${m.h}h</span>
-                </div>`;
-            }).join('<div style="height:0.5px; background:var(--card-border)"></div>');
-
-            document.getElementById('timelineContainer').innerHTML = html;
-        }
-
-        function renderPlan() {
-            if(state.logs.length === 0) {
-                document.getElementById('historyList').innerText = 'Noch keine Momente erfasst.';
-                return;
-            }
-            let html = state.logs.slice(0, 6).map(l => `<div style="display:flex; justify-content:space-between; padding:8px 0; border-bottom:0.5px solid var(--card-border)"><div><div style="font-weight:700; color:var(--primary);">${l.type==='resist'?'Drang besiegt ✨':'Geraucht 🚬'}</div><div style="font-size:11px; color:var(--muted);">${l.time} · ${l.trigger} (Intensität: ${l.intensity}/5)</div></div></div>`).join('');
-            document.getElementById('historyList').innerHTML = html;
-        }
-
-        function startSosTimer() {
-            let t = 180;
-            let phase = 0;
-            const phases = ["Einatmen (4s)", "Halten (4s)", "Ausatmen (4s)"];
-            
-            clearInterval(sosInterval);
-            if(navigator.vibrate) navigator.vibrate(200);
-
-            sosInterval = setInterval(() => {
-                t--;
-                let m = Math.floor(t / 60);
-                let s = t % 60;
-                document.getElementById('sosTimer').innerText = `${m}:${s < 10 ? '0' : ''}${s}`;
-                
-                if(t % 4 === 0) {
-                    phase = (phase + 1) % phases.length;
-                    document.getElementById('breathLabel').innerText = phases[phase];
-                }
-
-                if(t <= 0) clearInterval(sosInterval);
-            }, 1000);
-        }
-
-        function resetApp() {
-            if(confirm("Labor-Daten wirklich vollständig zurücksetzen?")) {
-                localStorage.clear();
-                location.reload();
-            }
-        }
-    </script>
+  <div id="flowSheet" class="sheet"><div class="sheet-body"><div class="sheet-head"><h2 id="flowTitle">Moment</h2><button id="flowClose" class="close">×</button></div><div id="flowContent"></div></div></div>
+</div>
+<script>
+(()=>{
+"use strict";
+const KEY="smokelab_behavior_v1",CALIBRATION=8;
+const phases=[
+ {name:"Beobachten",days:"1–6",text:"Muster sichtbar machen, ohne sie zu bewerten."},
+ {name:"Unterbrechen",days:"7–12",text:"Kleine Pausen zwischen Trigger und Handlung setzen."},
+ {name:"Entkoppeln",days:"13–18",text:"Automatische Trigger gezielt aus ihrer Routine lösen."},
+ {name:"Ersetzen",days:"19–24",text:"Neue Antworten testen, die im Alltag funktionieren."},
+ {name:"Stabilisieren",days:"25–30",text:"Wirksame Strategien festigen und vereinfachen."}
+];
+const missions=[
+ ["Beobachte einen starken Moment","Heute nichts erzwingen. Erfasse nur Trigger, Intensität und was danach passiert.","Beobachten"],
+ ["Erkenne deinen Autopiloten","Finde eine Zigarette, die eher Routine als echter Drang ist.","Beobachten"],
+ ["Miss deinen Drang zweimal","Bewerte denselben Drang am Anfang und wenige Minuten später noch einmal.","Beobachten"],
+ ["Finde deinen Kontext","Achte heute besonders auf Ort und Situation rund um den stärksten Moment.","Beobachten"],
+ ["Eine bewusste Zigarette","Wenn du rauchst: keine Ablenkung, nur beobachten. Was daran willst du wirklich?","Beobachten"],
+ ["Dein erstes Muster","Nutze heute genau den Trigger, der bisher am häufigsten auftaucht.","Beobachten"],
+ ["3 Minuten Abstand","Beim nächsten Drang: erst drei Minuten warten. Danach darfst du neu entscheiden.","Unterbrechen"],
+ ["Kaffee-Test","Wenn Kaffee ein Trigger ist, trenne Kaffee und Zigarette heute räumlich oder zeitlich.","Unterbrechen"],
+ ["Ortswechsel","Verlasse beim nächsten starken Drang für fünf Minuten den üblichen Rauch-Ort.","Unterbrechen"],
+ ["Hände anders beschäftigen","Teste einen physischen Ersatz für die typische Greifbewegung.","Unterbrechen"],
+ ["Erste Zigarette verschieben","Verschiebe die erste passende Zigarette heute um zehn Minuten.","Unterbrechen"],
+ ["Wähle bewusst","Vor einer Zigarette: entscheide einmal aktiv statt automatisch.","Unterbrechen"],
+ ["Trigger auseinanderbauen","Nimm deinen häufigsten Trigger und ändere heute genau einen Bestandteil davon.","Entkoppeln"],
+ ["Pause ohne Zigarette","Teste eine normale Pause vollständig ohne Rauchroutine.","Entkoppeln"],
+ ["Neue Reihenfolge","Ändere bei einer typischen Rauch-Situation bewusst die Reihenfolge deiner Handlungen.","Entkoppeln"],
+ ["10-Minuten-Test","Verschiebe einen ausgewählten Moment um zehn Minuten und miss den Drang vorher/nachher.","Entkoppeln"],
+ ["Sozialer Test","Wenn andere rauchen: bleib zwei Minuten länger in deiner ursprünglichen Tätigkeit.","Entkoppeln"],
+ ["Ein Trigger weniger automatisch","Wähle einen Trigger, bei dem du heute jedes Mal kurz stoppst.","Entkoppeln"],
+ ["Ersatz finden","Teste für einen Trigger eine konkrete Alternative und bewerte danach, ob sie geholfen hat.","Ersetzen"],
+ ["Mini-Bewegung","Teste zwei Minuten Bewegung als Antwort auf einen mittleren Drang.","Ersetzen"],
+ ["Getränke-Ritual ändern","Verändere Getränk, Ort oder Reihenfolge bei einem gekoppelten Trigger.","Ersetzen"],
+ ["Kurzer Kontakt","Bei Stress: schreibe kurz jemandem oder notiere den Gedanken statt sofort zu rauchen.","Ersetzen"],
+ ["Deine beste Alternative","Wiederhole die Strategie, die bisher den größten Drang-Rückgang erzeugt hat.","Ersetzen"],
+ ["Zwei bewusste Entscheidungen","Mach heute zwei automatische Momente sichtbar, egal wie sie ausgehen.","Ersetzen"],
+ ["Was funktioniert wirklich?","Nutze nur Strategien, die deine Daten bisher tatsächlich stützen.","Stabilisieren"],
+ ["Schwieriger Trigger","Wende deine beste Strategie auf den stärksten Trigger an.","Stabilisieren"],
+ ["Weniger App, mehr Alltag","Versuche einen Moment selbstständig zu unterbrechen und protokolliere erst danach.","Stabilisieren"],
+ ["Plan für Rückschläge","Definiere eine konkrete Reaktion für den nächsten unerwartet starken Drang.","Stabilisieren"],
+ ["Dein persönliches Muster","Fasse deinen häufigsten Trigger und deine beste Antwort in einem Satz zusammen.","Stabilisieren"],
+ ["Abschluss-Experiment","Wiederhole dein wirksamstes Experiment und vergleiche es mit dem Beginn.","Stabilisieren"]
+];
+const triggerNames=["Stress","Kaffee / Pause","Routine","Sozial","Langeweile","Nach dem Essen"];
+let state=load(); let flow={step:0,trigger:null,before:3,after:3,delay:0,outcome:null,timer:null,seconds:0,mission:false}; let tick=null;
+const $=id=>document.getElementById(id);
+function defaults(){return{profile:{name:"",baseline:12,mode:"reduce",started:null},events:[],experiments:[],missionDay:1,missionDoneDate:null,lastSmoke:null}}
+function load(){try{const raw=localStorage.getItem(KEY);if(raw){return Object.assign(defaults(),JSON.parse(raw))}}catch(e){} return defaults()}
+function save(){localStorage.setItem(KEY,JSON.stringify(state))}
+function todayKey(){return new Date().toISOString().slice(0,10)}
+function createId(){return window.crypto&&typeof window.crypto.randomUUID==="function"?window.crypto.randomUUID():Date.now()+"-"+Math.random().toString(16).slice(2)}
+function phaseForDay(day){return Math.min(4,Math.floor((Math.max(1,day)-1)/6))}
+function currentMission(){return missions[Math.min(missions.length-1,Math.max(0,state.missionDay-1))]}
+function showView(name){["today","lab","patterns","progress","me"].forEach(v=>$(v+"View").classList.toggle("active",v===name));document.querySelectorAll(".nav button").forEach(b=>b.classList.toggle("active",b.dataset.view===name));if(name==="lab")renderLab();if(name==="patterns")renderPatterns();if(name==="progress")renderProgress();if(name==="me")renderMe()}
+function boot(){if(!state.profile.name){$("setupView").classList.add("active");return}$("setupView").classList.remove("active");$("nav").classList.add("active");renderAll();showView("today");if(tick)clearInterval(tick);tick=setInterval(()=>renderTodayMetrics(),60000)}
+function renderAll(){renderToday();renderLab();renderPatterns();renderProgress();renderMe()}
+function renderToday(){const p=phaseForDay(state.missionDay),m=currentMission();$("phaseLabel").textContent=`Phase ${p+1} · ${phases[p].name}`;$("helloName").textContent=state.profile.name.toUpperCase();$("missionKicker").textContent=`Experiment ${String(state.missionDay).padStart(2,"0")}`;$("missionTitle").textContent=m[0];$("missionText").textContent=m[1];const done=state.missionDoneDate===todayKey();$("missionState").textContent=done?"Heute abgeschlossen":"Heute offen";$("missionBtn").textContent=done?"Experiment ansehen":"Experiment starten";renderTodayMetrics();updateHomeInsight()}
+function eventsToday(){const t=todayKey();return state.events.filter(e=>(e.date||"").slice(0,10)===t)}
+function avg(arr){return arr.length?arr.reduce((a,b)=>a+b,0)/arr.length:null}
+function renderTodayMetrics(){const ev=eventsToday(),delays=ev.map(e=>Number(e.delay)||0).filter(n=>n>0),afters=ev.map(e=>Number(e.after)).filter(n=>n>0);$("eventCountText").textContent=`${ev.length} ${ev.length===1?"Moment":"Momente"}`;$("awareMetric").textContent=ev.length;$("delayMetric").textContent=delays.length?`${Math.round(avg(delays))}m`:"—";$("urgeMetric").textContent=afters.length?avg(afters).toFixed(1)+"/5":"—"}
+function updateHomeInsight(){if(state.events.length<1){$("homeInsight").innerHTML="<b>Noch keine Daten nötig.</b> Heute geht es nur darum, einen Moment bewusst zu beobachten.";return}const top=getTopTrigger();if(state.events.length<CALIBRATION){$("homeInsight").innerHTML=`<b>${state.events.length}/${CALIBRATION} Momente kalibriert.</b> ${top?top.name+" taucht bisher am häufigsten auf. ":""}Noch keine harte Schlussfolgerung – wir sammeln weiter.`;return}$("homeInsight").innerHTML=`<b>${top.name} ist aktuell dein stärkster Kontext.</b> ${strategyFor(top.name)}`}
+function strategyFor(t){const map={"Stress":"Teste zuerst Abstand statt Widerstand: drei Minuten raus aus der Situation und danach neu bewerten.","Kaffee / Pause":"Trenne Kaffee und Zigarette einmal räumlich oder zeitlich, damit die Kopplung schwächer wird.","Routine":"Ändere bei diesem Moment die Reihenfolge oder den Ort. Kleine Reibung unterbricht Autopilot.","Sozial":"Bleib kurz bei deiner ursprünglichen Tätigkeit, bevor du anderen automatisch folgst.","Langeweile":"Gib dir für drei Minuten eine konkrete Mini-Aufgabe und prüfe danach den Drang erneut.","Nach dem Essen":"Verlasse direkt nach dem Essen den üblichen Rauch-Kontext oder ändere die erste Handlung danach."};return map[t]||"Teste einen kurzen bewussten Abstand und miss den Drang danach erneut."}
+function getTopTrigger(){if(!state.events.length)return null;const counts={};state.events.forEach(e=>counts[e.trigger]=(counts[e.trigger]||0)+1);const name=Object.keys(counts).sort((a,b)=>counts[b]-counts[a])[0];return{name,count:counts[name]}}
+function renderLab(){const p=phaseForDay(state.missionDay);$("labPhaseTitle").textContent=phases[p].name;$("labDayText").textContent=`Tag ${state.missionDay}`;$("labPhaseText").textContent=phases[p].text;$("journeyBar").style.width=Math.min(100,state.missionDay/30*100)+"%";for(let i=1;i<=5;i++){const el=$("p"+i);el.className=i<p+1?"done":i===p+1?"current":""}const list=$("labList");list.innerHTML="";for(let d=state.missionDay;d<=Math.min(30,state.missionDay+4);d++){const item=document.createElement("div");item.className="lab-item"+(d===state.missionDay?" active":"");const num=document.createElement("div");num.className="lab-num";num.textContent=String(d).padStart(2,"0");const copy=document.createElement("div");copy.className="copy";const b=document.createElement("b");b.textContent=missions[d-1][0];const s=document.createElement("small");s.textContent=missions[d-1][2]+" · "+missions[d-1][1];copy.append(b,s);item.append(num,copy);list.append(item)}}
+function renderPatterns(){const n=state.events.length,remain=Math.max(0,CALIBRATION-n);$("calibrationBox").style.display=n<CALIBRATION?"block":"none";$("patternsContent").style.display=n>=CALIBRATION?"block":"none";$("calibrationText").textContent=remain?`Noch ${remain} ${remain===1?"Moment":"Momente"}, bis Smoke Lab ein erstes persönliches Muster zeigt.`:"";if(n>=CALIBRATION){const counts={};state.events.forEach(e=>counts[e.trigger]=(counts[e.trigger]||0)+1);const top=getTopTrigger();$("topTriggerLabel").textContent=top.name;const wrap=$("triggerBars");wrap.innerHTML="";Object.entries(counts).sort((a,b)=>b[1]-a[1]).slice(0,5).forEach(([name,count])=>{const r=document.createElement("div");r.className="trigger-row";const line=document.createElement("div");line.className="line";const a=document.createElement("span");a.textContent=name;const b=document.createElement("span");b.textContent=`${count}×`;line.append(a,b);const bar=document.createElement("div");bar.className="bar";const fill=document.createElement("span");fill.style.width=`${count/top.count*100}%`;bar.append(fill);r.append(line,bar);wrap.append(r)});$("patternInsight").innerHTML=`<b>${top.name}</b> taucht derzeit am häufigsten auf. ${strategyFor(top.name)}`}
+$("historyCount").textContent=String(n);const hist=$("historyList");hist.innerHTML="";if(!n){hist.innerHTML='<span class="note">Noch keine Momente erfasst.</span>'}else state.events.slice(0,8).forEach(e=>{const row=document.createElement("div");row.className="history-item";const left=document.createElement("div");const b=document.createElement("b");b.textContent=e.trigger;const s=document.createElement("small");s.textContent=`${e.time} · Drang ${e.before}/5 → ${e.after}/5${e.delay?` · ${e.delay} Min Abstand`:""}`;left.append(b,s);const tag=document.createElement("span");tag.className="tag "+(e.outcome==="smoked"?"smoke":"ok");tag.textContent=e.outcome==="smoked"?"Geraucht":e.outcome==="delayed"?"Verzögert":"Nicht geraucht";row.append(left,tag);hist.append(row)})}
+function renderProgress(){const ev=state.events,delays=ev.map(e=>Number(e.delay)||0).filter(n=>n>0),changes=ev.map(e=>Number(e.before)-Number(e.after)).filter(n=>Number.isFinite(n));$("progressDelay").textContent=delays.length?`${Math.round(avg(delays))}m`:"—";$("progressChange").textContent=changes.length?(avg(changes)>0?"−":"+")+Math.abs(avg(changes)).toFixed(1):"—";$("progressExperiments").textContent=state.experiments.length;$("experimentCount").textContent=state.experiments.length;$("progressSummaryLabel").textContent=ev.length<CALIBRATION?"Kalibrierung":"Persönliche Daten";if(ev.length>=CALIBRATION){const top=getTopTrigger(),resist=ev.filter(e=>e.outcome!=="smoked").length;$("progressSummary").textContent=`Du hast ${ev.length} bewusste Momente erfasst. ${resist} davon endeten ohne sofortige Zigarette oder mit zusätzlichem Abstand. ${top.name} ist aktuell dein häufigster Trigger.`}const list=$("experimentHistory");list.innerHTML="";if(!state.experiments.length)list.innerHTML='<span class="note">Noch kein Experiment abgeschlossen.</span>';else state.experiments.slice(0,8).forEach(x=>{const row=document.createElement("div");row.className="history-item";const left=document.createElement("div");const b=document.createElement("b");b.textContent=x.title;const s=document.createElement("small");s.textContent=x.date;left.append(b,s);const tag=document.createElement("span");tag.className="tag ok";tag.textContent="Abgeschlossen";row.append(left,tag);list.append(row)})}
+function renderMe(){$("profileName").textContent=state.profile.name;$("profileMode").textContent=state.profile.mode==="quit"?"Rauchfrei":"Reduzieren";$("profileBaseline").textContent=`Ausgangswert: ${state.profile.baseline} Zigaretten/Tag`}
+function openMission(){flow.mission=true;showFlowStart(true)}
+function openCraving(){flow.mission=false;showFlowStart(false)}
+function showSheet(){$("flowSheet").classList.add("open")}
+function closeSheet(){if(flow.timer)clearInterval(flow.timer);$("flowSheet").classList.remove("open")}
+function showFlowStart(isMission){flow={step:1,trigger:null,before:3,after:3,delay:0,outcome:null,timer:null,seconds:0,mission:isMission};$("flowTitle").textContent=isMission?"Heutiges Experiment":"Akuter Moment";$("flowContent").innerHTML=`<div class="step-title">1 · Was ist gerade der Auslöser?</div><div class="choice-grid" id="triggerChoices"></div><div class="step-title">2 · Wie stark ist der Drang?</div><div class="scale" id="beforeScale"></div><button id="flowNext" class="primary" style="margin-top:18px" disabled>Weiter</button>`;const tc=$("triggerChoices");triggerNames.forEach(t=>{const b=document.createElement("button");b.className="choice";b.textContent=t;b.addEventListener("click",()=>{flow.trigger=t;tc.querySelectorAll("button").forEach(x=>x.classList.remove("selected"));b.classList.add("selected");$("flowNext").disabled=false});tc.append(b)});renderScale("beforeScale",v=>flow.before=v,3);$("flowNext").addEventListener("click",showIntervention);showSheet()}
+function renderScale(id,onPick,selected){const el=$(id);el.innerHTML="";[1,2,3,4,5].forEach(v=>{const b=document.createElement("button");b.textContent=v;b.classList.toggle("selected",v===selected);b.addEventListener("click",()=>{onPick(v);el.querySelectorAll("button").forEach(x=>x.classList.remove("selected"));b.classList.add("selected")});el.append(b)})}
+function recommendedDelay(){if(state.missionDay<=6)return 3;if(state.missionDay<=12)return 5;return 10}
+function showIntervention(){const delay=recommendedDelay();flow.delay=delay;$("flowContent").innerHTML=`<div class="experiment-box"><small>Dein Experiment jetzt</small><h3>${delay} Minuten Abstand.</h3><p>${strategyFor(flow.trigger)} Du musst danach nichts beweisen – du entscheidest neu.</p></div><button id="startTimerBtn" class="primary">${delay}-Minuten-Timer starten</button><button id="skipTimerBtn" class="secondary" style="margin-top:9px">Ich entscheide sofort</button>`;$("startTimerBtn").addEventListener("click",()=>startDelay(delay));$("skipTimerBtn").addEventListener("click",()=>showAfter())}
+function startDelay(mins){flow.seconds=mins*60;$("flowContent").innerHTML=`<div class="step-title">Experiment läuft</div><div class="timer" id="delayTimer">${mins}:00</div><div class="card insight"><div class="insight-mark">…</div><p>Beobachte den Drang, ohne ihn wegdrücken zu müssen. Der Timer ist ein Verhaltensexperiment, kein biologischer Grenzwert.</p></div><button id="doneEarly" class="secondary" style="margin-top:14px">Früher auswerten</button>`;$("doneEarly").addEventListener("click",showAfter);flow.timer=setInterval(()=>{flow.seconds--;const m=Math.floor(flow.seconds/60),s=flow.seconds%60;const el=$("delayTimer");if(el)el.textContent=`${m}:${String(s).padStart(2,"0")}`;if(flow.seconds<=0){clearInterval(flow.timer);flow.timer=null;showAfter()}},1000)}
+function showAfter(){if(flow.timer){clearInterval(flow.timer);flow.timer=null}$("flowContent").innerHTML=`<div class="step-title">Wie stark ist der Drang jetzt?</div><div class="scale" id="afterScale"></div><div class="step-title">Was ist passiert?</div><div class="choice-grid"><button class="choice" data-out="not_smoked">Nicht geraucht</button><button class="choice" data-out="delayed">Noch gewartet</button><button class="choice" data-out="smoked">Geraucht</button><button class="choice" data-out="other">Anders gelöst</button></div><button id="saveMoment" class="primary" style="margin-top:18px" disabled>Moment auswerten</button>`;renderScale("afterScale",v=>flow.after=v,3);document.querySelectorAll("[data-out]").forEach(b=>b.addEventListener("click",()=>{flow.outcome=b.dataset.out;b.parentElement.querySelectorAll("button").forEach(x=>x.classList.remove("selected"));b.classList.add("selected");$("saveMoment").disabled=false}));$("saveMoment").addEventListener("click",saveMoment)}
+function saveMoment(){const now=new Date();const completedDelay=flow.delay>0?Math.max(0,Math.round((flow.delay*60-Math.max(0,flow.seconds))/60)):0;const e={id:createId(),date:now.toISOString(),time:now.toLocaleTimeString([], {hour:"2-digit",minute:"2-digit"}),trigger:flow.trigger,before:flow.before,after:flow.after,delay:completedDelay,outcome:flow.outcome};state.events.unshift(e);if(flow.outcome==="smoked")state.lastSmoke=Date.now();if(flow.mission&&state.missionDoneDate!==todayKey()){state.missionDoneDate=todayKey();state.experiments.unshift({id:createId(),date:todayKey(),day:state.missionDay,title:currentMission()[0]});if(state.missionDay<30)state.missionDay++}save();renderAll();showResult(e)}
+function showResult(e){const change=e.before-e.after;let headline=change>0?`−${change} Punkte` : change===0?"Unverändert":`+${Math.abs(change)} Punkte`;$("flowContent").innerHTML=`<div class="result-hero"><strong>${headline}</strong><span>Drang: ${e.before}/5 → ${e.after}/5</span></div><div class="card insight"><div class="insight-mark">✓</div><p><b>Das ist dein Datenpunkt.</b> ${e.delay?`Du hast ${e.delay} Minute${e.delay===1?"":"n"} Abstand geschaffen. `:""}${e.outcome==="smoked"?"Auch ein gerauchter Moment ist nützlich, wenn er bewusst beobachtet wurde.":"Du hast zwischen Trigger und Handlung eine bewusste Entscheidung eingebaut."}</p></div><button id="finishFlow" class="primary" style="margin-top:14px">Fertig</button>`;$("finishFlow").addEventListener("click",closeSheet)}
+$("reduceMode").addEventListener("click",()=>{$("reduceMode").classList.add("selected");$("quitMode").classList.remove("selected")});$("quitMode").addEventListener("click",()=>{$("quitMode").classList.add("selected");$("reduceMode").classList.remove("selected")});
+$("startBtn").addEventListener("click",()=>{state.profile.name=$("nameInput").value.trim()||"Daniel";state.profile.baseline=Math.max(0,Number($("baselineInput").value)||12);state.profile.mode=$("quitMode").classList.contains("selected")?"quit":"reduce";state.profile.started=new Date().toISOString();save();boot()});
+$("missionBtn").addEventListener("click",openMission);$("craveBtn").addEventListener("click",openCraving);$("flowClose").addEventListener("click",closeSheet);$("flowSheet").addEventListener("click",e=>{if(e.target===$("flowSheet"))closeSheet()});document.querySelectorAll(".nav button").forEach(b=>b.addEventListener("click",()=>showView(b.dataset.view)));$("resetBtn").addEventListener("click",()=>{if(confirm("Smoke Lab wirklich vollständig zurücksetzen?")){localStorage.removeItem(KEY);location.reload()}});
+boot();
+})();
+</script>
 </body>
 </html>
