@@ -3,20 +3,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <meta name="theme-color" content="#000000">
+    <meta name="theme-color" content="#F2F2F7">
     <title>Smoke Lab — Elite Health Edition</title>
     <style>
         :root {
-            --bg: #000000;
-            --card-bg: #161618;
-            --card-border: rgba(255, 255, 255, 0.08);
-            --primary: #FFFFFF;
+            --bg: #F2F2F7;
+            --card-bg: #FFFFFF;
+            --card-border: rgba(0, 0, 0, 0.06);
+            --primary: #000000;
             --muted: #8E8E93;
             --green: #34C759;
-            --green-glow: rgba(52, 199, 89, 0.2);
+            --green-glow: rgba(52, 199, 89, 0.25);
             --gold: #FF9F0A;
-            --blue: #0A84FF;
-            --red: #FF453A;
+            --blue: #007AFF;
+            --red: #FF3B30;
         }
 
         * {
@@ -75,10 +75,10 @@
             align-items: center;
             padding-bottom: 4px;
         }
-        .header-title-group h1 { font-size: 24px; font-weight: 800; letter-spacing: -0.6px; }
-        .header-title-group span { font-size: 11px; font-weight: 700; color: var(--green); text-transform: uppercase; letter-spacing: 0.8px; }
+        .header-title-group h1 { font-size: 24px; font-weight: 800; letter-spacing: -0.6px; color: var(--primary); }
+        .header-title-group span { font-size: 11px; font-weight: 750; color: var(--green); text-transform: uppercase; letter-spacing: 0.8px; }
 
-        /* Premium Cards (Inspired by Reference Standards) */
+        /* Premium Clean Cards */
         .card {
             background-color: var(--card-bg);
             border: 0.5px solid var(--card-border);
@@ -87,10 +87,10 @@
             display: flex;
             flex-direction: column;
             gap: 12px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+            box-shadow: 0 4px 20px rgba(0,0,0,0.03);
         }
         .card-hero {
-            background: linear-gradient(145deg, #122818 0%, var(--card-bg) 100%);
+            background: linear-gradient(135deg, #E8F8EC 0%, #FFFFFF 100%);
             border: 0.5px solid rgba(52, 199, 89, 0.3);
             text-align: center;
             align-items: center;
@@ -110,14 +110,15 @@
             display: flex;
             flex-direction: column;
             gap: 4px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.02);
         }
         .metric-num { font-size: 22px; font-weight: 800; letter-spacing: -0.5px; }
         .metric-title { font-size: 11px; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: 0.5px; }
 
         /* Buttons */
         .btn {
-            background-color: rgba(255,255,255,0.08);
-            border: 0.5px solid var(--card-border);
+            background-color: #E5E5EA;
+            border: none;
             color: var(--primary);
             border-radius: 16px;
             height: 50px;
@@ -131,15 +132,15 @@
             transition: transform 0.1s ease;
         }
         .btn:active { transform: scale(0.97); }
-        .btn-green { background-color: var(--green); color: #000000; border: none; box-shadow: 0 4px 20px var(--green-glow); }
-        .btn-gold { background-color: rgba(255,159,10,0.15); color: var(--gold); border-color: rgba(255,159,10,0.3); }
+        .btn-green { background-color: var(--green); color: #FFFFFF; box-shadow: 0 4px 15px var(--green-glow); }
+        .btn-gold { background-color: rgba(255,159,10,0.15); color: #B26500; }
 
         /* Native Tab Bar */
         .nav-bar {
             position: absolute;
             bottom: 0; left: 0; width: 100%;
             height: 65px;
-            background: rgba(22, 22, 24, 0.85);
+            background: rgba(255, 255, 255, 0.85);
             backdrop-filter: blur(25px);
             -webkit-backdrop-filter: blur(25px);
             border-top: 0.5px solid var(--card-border);
@@ -163,7 +164,7 @@
         .input-ios {
             width: 100%;
             height: 50px;
-            background: #2C2C2E;
+            background: #F2F2F7;
             border: none;
             border-radius: 14px;
             padding: 0 16px;
@@ -172,33 +173,51 @@
             outline: none;
         }
         .sheet {
-            position: fixed; inset: 0; background: rgba(0,0,0,0.85); backdrop-filter: blur(20px);
+            position: fixed; inset: 0; background: rgba(0,0,0,0.5); backdrop-filter: blur(15px);
             z-index: 300; display: none; align-items: flex-end; justify-content: center;
         }
         .sheet.open { display: flex; }
         .sheet-content {
             width: 100%; max-width: 414px; background: var(--card-bg);
-            border-top: 0.5px solid var(--card-border);
             border-top-left-radius: 28px; border-top-right-radius: 28px;
             padding: 24px 20px calc(env(safe-area-inset-bottom, 20px) + 24px) 20px;
             display: flex; flex-direction: column; gap: 16px;
+            box-shadow: 0 -10px 40px rgba(0,0,0,0.1);
         }
 
-        /* Breathing Ring for SOS */
+        /* Trigger Chips */
+        .trigger-chip {
+            background: #F2F2F7;
+            border: 1.5px solid transparent;
+            border-radius: 12px;
+            padding: 10px;
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--muted);
+            text-align: center;
+            cursor: pointer;
+        }
+        .trigger-chip.selected {
+            background: #E8F8EC;
+            color: var(--green);
+            border-color: var(--green);
+        }
+
+        /* Breathing Circle */
         .breath-container {
-            display: flex; flex-direction: column; align-items: center; justify-content: center; margin: 15px 0;
+            display: flex; flex-direction: column; align-items: center; justify-content: center; margin: 10px 0;
         }
         .breath-circle {
-            width: 130px; height: 130px; border-radius: 50%;
+            width: 120px; height: 120px; border-radius: 50%;
             background: rgba(52,199,89,0.1);
-            border: 2px solid var(--green);
+            border: 3px solid var(--green);
             display: grid; place-items: center;
-            font-size: 16px; font-weight: 800; color: var(--green);
+            font-size: 15px; font-weight: 800; color: var(--green);
             animation: breatheAnim 8s infinite ease-in-out;
         }
         @keyframes breatheAnim {
             0%, 100% { transform: scale(1); box-shadow: 0 0 15px rgba(52,199,89,0.2); }
-            50% { transform: scale(1.3); background: rgba(255,159,10,0.15); border-color: var(--gold); color: var(--gold); box-shadow: 0 0 30px rgba(255,159,10,0.4); }
+            50% { transform: scale(1.25); background: rgba(255,159,10,0.1); border-color: var(--gold); color: var(--gold); box-shadow: 0 0 25px rgba(255,159,10,0.3); }
         }
     </style>
 </head>
@@ -210,7 +229,7 @@
         <div id="view-onboarding" class="view active" style="justify-content: center; gap: 16px;">
             <div style="text-align: center; margin-bottom: 6px;">
                 <span style="font-size: 11px; font-weight: 800; color: var(--green); letter-spacing: 1px;">SMOKE LAB ELITE</span>
-                <h1 style="font-size: 28px; font-weight: 850; letter-spacing: -0.7px; margin-top: 4px;">Dein Programm.</h1>
+                <h1 style="font-size: 28px; font-weight: 850; letter-spacing: -0.7px; margin-top: 4px; color: var(--primary);">Dein Programm.</h1>
             </div>
 
             <div class="card" style="gap: 14px;">
@@ -240,7 +259,7 @@
             <button class="btn btn-green" onclick="completeSetup()" style="height: 54px; font-size: 16px;">Labor starten</button>
         </div>
 
-        <!-- HEUTE (DASHBOARD) -->
+        <!-- DASHBOARD -->
         <div id="view-heute" class="view">
             <header class="header">
                 <div class="header-title-group">
@@ -250,11 +269,11 @@
                 <div id="userBadge" style="font-size: 12px; font-weight: 700; color: var(--muted); background: var(--card-bg); padding: 6px 12px; border-radius: 20px; border: 0.5px solid var(--card-border);">DANIEL</div>
             </header>
 
-            <!-- Hero Progress Card (Killer Feature 4: Live ROI & Time) -->
+            <!-- Hero ROI Card -->
             <div class="card card-hero">
                 <span style="font-size: 11px; font-weight: 800; color: var(--green); text-transform: uppercase; letter-spacing: 1px;" id="heroSubtitle">Zeitgewinn seit letztem Mal</span>
-                <div id="mainStreakMetric" style="font-size: 42px; font-weight: 900; letter-spacing: -1.5px; margin: 4px 0;">0 Min</div>
-                <div style="display: flex; gap: 16px; margin-top: 4px; font-size: 13px; font-weight: 700;">
+                <div id="mainStreakMetric" style="font-size: 38px; font-weight: 900; letter-spacing: -1.5px; margin: 4px 0; color: var(--primary);">0 Min</div>
+                <div style="display: flex; gap: 16px; margin-top: 2px; font-size: 13px; font-weight: 750;">
                     <div>💰 <span id="moneySavedVal">0,00 €</span> gespart</div>
                     <div>⏳ <span id="lifeSavedVal">0 Min</span> Leben</div>
                 </div>
@@ -272,11 +291,11 @@
                 </div>
             </div>
 
-            <!-- Killer Feature 1: Intelligent Pattern Insights -->
-            <div class="card">
-                <span style="font-size: 11px; font-weight: 800; color: var(--muted); text-transform: uppercase; letter-spacing: 0.8px;">Intelligente Muster-Erkennung</span>
+            <!-- Active Trigger Action Engine (USP) -->
+            <div class="card" style="border-left: 4px solid var(--green);">
+                <span style="font-size: 11px; font-weight: 800; color: var(--green); text-transform: uppercase; letter-spacing: 0.8px;">Intelligenter Auslöser-Coach</span>
                 <p id="aiInsightText" style="font-size: 13px; color: var(--primary); line-height: 1.45; font-weight: 500;">
-                    Dein System kalibriert sich. Erasse deine Momente, damit die App deine Haupt-Trigger (z.B. Kaffee oder Stress) exakt erkennt.
+                    Das System ist bereit. Erfasse deinen nächsten Moment, damit dir der Coach sofort die psychologische Gegenstrategie für deinen Auslöser liefert.
                 </p>
             </div>
 
@@ -287,7 +306,7 @@
             </div>
         </div>
 
-        <!-- RECOVERY (Killer Feature 3: Biologische Zeitleiste) -->
+        <!-- RECOVERY -->
         <div id="view-recovery" class="view">
             <header class="header">
                 <div class="header-title-group">
@@ -297,7 +316,7 @@
             </header>
 
             <div class="card" id="timelineContainer" style="gap: 14px;">
-                <!-- Generated dynamically -->
+                <!-- Generated -->
             </div>
         </div>
 
@@ -328,7 +347,7 @@
             <div class="card">
                 <span style="font-size: 11px; font-weight: 800; color: var(--muted); text-transform: uppercase; letter-spacing: 0.8px;">Lokaler Speicher</span>
                 <p style="font-size: 13px; color: var(--muted); line-height: 1.45;">Alle Daten bleiben zu 100% lokal auf deinem Endgerät verschlüsselt. Keine Cloud, kein Tracking.</p>
-                <button class="btn" onclick="resetApp()" style="color: var(--red); border-color: rgba(255,69,58,0.3); margin-top: 8px; font-size: 13px;">Labor komplett zurücksetzen</button>
+                <button class="btn" onclick="resetApp()" style="color: var(--red); background: rgba(255,59,48,0.1); margin-top: 8px; font-size: 13px;">Labor komplett zurücksetzen</button>
             </div>
         </div>
 
@@ -352,25 +371,34 @@
             </button>
         </nav>
 
-        <!-- LOG SHEET (Mit Situations-Erfassung für Intelligente Muster) -->
+        <!-- LOG SHEET (Vollständige Skala, Gründe & Aktive Intervention) -->
         <div id="logSheet" class="sheet" onclick="closeSheets(event)">
             <div class="sheet-content" onclick="event.stopPropagation()">
-                <div style="font-size: 18px; font-weight: 800;">Moment protokollieren</div>
+                <div style="font-size: 18px; font-weight: 800; color: var(--primary);">Moment protokollieren</div>
                 <div>
-                    <span style="font-size: 11px; font-weight: 700; color: var(--muted); display: block; margin-bottom: 6px;">AUSWÄHLEN: SITUATION</span>
+                    <span style="font-size: 11px; font-weight: 750; color: var(--muted); display: block; margin-bottom: 6px;">WÄHLE DEINEN HAUPT-AUSLÖSER</span>
                     <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
-                        <button class="btn" id="trgStress" onclick="setTrigger('Stress & Druck')" style="background:#2C2C2E; font-size:13px;">Stress & Druck</button>
-                        <button class="btn" id="trgCoffee" onclick="setTrigger('Kaffee & Pause')" style="background:#2C2C2E; font-size:13px;">Kaffee & Pause</button>
+                        <div class="trigger-chip selected" id="trgStress" onclick="setTrigger('Stress & Druck')">Stress & Druck</div>
+                        <div class="trigger-chip" id="trgCoffee" onclick="setTrigger('Kaffee & Pause')">Kaffee & Pause</div>
+                        <div class="trigger-chip" id="trgRoutine" onclick="setTrigger('Gewohnheit / Auto')">Gewohnheit / Auto</div>
+                        <div class="trigger-chip" id="trgSocial" onclick="setTrigger('Sozial / Feierabend')">Sozial / Feierabend</div>
                     </div>
                 </div>
-                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 6px;">
-                    <button class="btn btn-green" onclick="submitLog('resist')">Drang besiegt ✨</button>
-                    <button class="btn" onclick="submitLog('smoke')" style="background: var(--card-bg); border-color: rgba(255,255,255,0.2);">Geraucht 🚬</button>
+                <div>
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px;">
+                        <span style="font-size: 11px; font-weight: 750; color: var(--muted);">DRANG-INTENSITÄT</span>
+                        <span id="intensityVal" style="font-size: 13px; font-weight: 800; color: var(--green);">3 von 5</span>
+                    </div>
+                    <input type="range" id="intensityRange" min="1" max="5" value="3" style="width: 100%; accent-color: var(--green);" oninput="document.getElementById('intensityVal').innerText = this.value + ' von 5'">
+                </div>
+                <div style="display: flex; gap: 8px; margin-top: 4px;">
+                    <button class="btn btn-green" onclick="submitLog('resist')" style="flex:1;">Drang besiegt ✨</button>
+                    <button class="btn" onclick="submitLog('smoke')" style="flex:1; background:#E5E5EA; color:var(--primary);">Geraucht 🚬</button>
                 </div>
             </div>
         </div>
 
-        <!-- SOS SHEET (Killer Feature 2: Interactive Breathing Ring) -->
+        <!-- SOS SHEET -->
         <div id="sosSheet" class="sheet" onclick="closeSheets(event)">
             <div class="sheet-content" style="text-align: center;" onclick="event.stopPropagation()">
                 <span style="font-size: 11px; font-weight: 800; color: var(--gold); text-transform: uppercase;">Akut-Regulierung</span>
@@ -379,7 +407,7 @@
                 </div>
                 <div id="sosTimer" style="font-size: 36px; font-weight: 900; letter-spacing: -1px; margin: 4px 0;">3:00</div>
                 <p style="font-size: 13px; color: var(--muted); line-height: 1.4;">Folge dem Rhythmus. Der neurobiologische Impuls flacht nach 3 Minuten von allein ab.</p>
-                <button class="btn" onclick="closeSheets()" style="background: #2C2C2E; margin-top: 8px;">Beenden</button>
+                <button class="btn" onclick="closeSheets()" style="background: #E5E5EA; margin-top: 8px;">Schließen</button>
             </div>
         </div>
 
@@ -435,6 +463,7 @@
             setInterval(updateEngine, 1000);
             renderRecovery();
             renderPlan();
+            updateAiInsight();
         }
 
         function switchTab(id, el) {
@@ -460,17 +489,25 @@
 
         function setTrigger(t) {
             currentTrigger = t;
-            document.getElementById('trgStress').style.borderColor = t === 'Stress & Druck' ? 'var(--green)' : 'transparent';
-            document.getElementById('trgCoffee').style.borderColor = t === 'Kaffee & Pause' ? 'var(--green)' : 'transparent';
+            ['trgStress', 'trgCoffee', 'trgRoutine', 'trgSocial'].forEach(id => {
+                document.getElementById(id).className = 'trigger-chip';
+            });
+            event.target.className = 'trigger-chip selected';
         }
 
         function submitLog(type) {
+            let intensity = document.getElementById('intensityRange').value;
             closeSheets();
             if(type === 'smoke') {
                 state.lastSmoke = Date.now();
                 localStorage.setItem('sl_last', state.lastSmoke);
             }
-            state.logs.unshift({ time: new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}), type, trigger: currentTrigger });
+            state.logs.unshift({ 
+                time: new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}), 
+                type, 
+                trigger: currentTrigger, 
+                intensity 
+            });
             localStorage.setItem('sl_logs', JSON.stringify(state.logs));
             updateEngine();
             renderPlan();
@@ -484,7 +521,6 @@
 
             document.getElementById('mainStreakMetric').innerText = diffMins < 60 ? `${diffMins} Min` : `${diffHours.toFixed(1)} Std`;
 
-            // Finanz & Life ROI Engine
             let costPerCig = state.price / 20;
             let expectedCigsSoFar = (diffHours / 24) * state.cigs;
             let actualCigs = state.logs.filter(l => l.type === 'smoke').length;
@@ -499,12 +535,28 @@
             document.getElementById('statResisted').innerText = state.logs.filter(l => l.type === 'resist').length;
         }
 
+        // USP: Intelligenter Auslöser-Coach, der je nach gewähltem Trigger eine hochspezifische KVT-Strategie ausgibt!
         function updateAiInsight() {
-            if(state.logs.length === 0) return;
+            if(state.logs.length === 0) {
+                document.getElementById('aiInsightText').innerHTML = `<b>Warte auf ersten Auslöser:</b> Sobald du deinen Moment erfasst, errechnet der Coach sofort deine maßgeschneiderte psychologische Gegenstrategie.`;
+                return;
+            }
             let triggers = {};
             state.logs.forEach(l => { triggers[l.trigger] = (triggers[l.trigger] || 0) + 1; });
             let topTrigger = Object.keys(triggers).reduce((a, b) => triggers[a] > triggers[b] ? a : b);
-            document.getElementById('aiInsightText').innerHTML = `<b>Muster-Erkennung aktiv:</b> Dein Haupt-Auslöser ist aktuell <i>'${topTrigger}'</i>. Versuche hier das ritualisierte Verhalten durch einen bewussten Ortswechsel zu durchbrechen.`;
+            
+            let strategy = "Versuche das ritualisierte Verhalten durch einen bewussten Ortswechsel zu durchbrechen.";
+            if(topTrigger === 'Stress & Druck') {
+                strategy = "<b>Strategie:</b> Der Cortisol-Peak täuscht Hunger nach Nikotin vor. Nutze hier sofort das 3-Minuten-SOS für eine bewusste Atempause statt des Griffs zur Zigarette.";
+            } else if(topTrigger === 'Kaffee & Pause') {
+                strategy = "<b>Strategie:</b> Klassische Kopplung (Dopamin-Routine). Tausche den Kaffee für 3 Tage gegen Tee oder trinke ein Glas eiskaltes Wasser, um den Reiz zu entkoppeln.";
+            } else if(topTrigger === 'Gewohnheit / Auto') {
+                strategy = "<b>Strategie:</b> Motorischer Autopilot. Halte einen Kaugummi bereit oder verändere deine Standard-Greifbewegung, um die synaptische Gewohnheit zu blockieren.";
+            } else if(topTrigger === 'Sozial / Feierabend') {
+                strategy = "<b>Strategie:</b> Soziale Konditionierung. Halte die Hände aktiv (z.B. ein Getränk mit beiden Händen halten), um den physischen Platzhalter der Zigarette zu besetzen.";
+            }
+
+            document.getElementById('aiInsightText').innerHTML = `<b>Haupt-Auslöser erkannt ('${topTrigger}'):</b> ${strategy}`;
         }
 
         function renderRecovery() {
@@ -520,7 +572,7 @@
                 let unlocked = diffHours >= m.h;
                 return `<div style="display:flex; justify-content:space-between; align-items:center; opacity: ${unlocked ? 1 : 0.4}">
                     <div>
-                        <div style="font-size: 14px; font-weight: 750;">${m.title} ${unlocked ? '✨' : '🔒'}</div>
+                        <div style="font-size: 14px; font-weight: 750; color: var(--primary);">${m.title} ${unlocked ? '✨' : '🔒'}</div>
                         <div style="font-size: 11px; color: var(--muted); margin-top:2px;">${m.desc}</div>
                     </div>
                     <span style="font-size: 11px; font-weight: 700; color: var(--green); background: rgba(52,199,89,0.1); padding: 4px 8px; border-radius: 8px;">${m.h}h</span>
@@ -535,13 +587,13 @@
                 document.getElementById('historyList').innerText = 'Noch keine Momente erfasst.';
                 return;
             }
-            let html = state.logs.slice(0, 6).map(l => `<div style="display:flex; justify-content:space-between; padding:6px 0; border-bottom:0.5px solid var(--card-border)"><span>${l.time} · <span style="color:var(--muted)">${l.trigger || 'Alltag'}</span></span><span style="font-weight:700; color:${l.type==='resist'?'var(--green)':'var(--primary)'}">${l.type==='resist'?'Drang besiegt':'Geraucht'}</span></div>`).join('');
+            let html = state.logs.slice(0, 6).map(l => `<div style="display:flex; justify-content:space-between; padding:8px 0; border-bottom:0.5px solid var(--card-border)"><div><div style="font-weight:700; color:var(--primary);">${l.type==='resist'?'Drang besiegt ✨':'Geraucht 🚬'}</div><div style="font-size:11px; color:var(--muted);">${l.time} · ${l.trigger} (Intensität: ${l.intensity}/5)</div></div></div>`).join('');
             document.getElementById('historyList').innerHTML = html;
         }
 
         function startSosTimer() {
             let t = 180;
-            let phase = 0; // 0: Einatmen, 1: Halten, 2: Ausatmen
+            let phase = 0;
             const phases = ["Einatmen (4s)", "Halten (4s)", "Ausatmen (4s)"];
             
             clearInterval(sosInterval);
