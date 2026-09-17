@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <meta name="theme-color" content="#000000">
-    <title>Smoke Lab — Evidenzbasiertes Neuro-Tool</title>
+    <title>Smoke Lab — Apple Health Edition</title>
     <style>
         :root {
             --bg: #000000;
@@ -82,11 +82,11 @@
             color: var(--muted);
         }
 
-        /* Oura Ring Hero Card */
-        .hero-ring-card {
+        /* Hero Card mit Ring */
+        .hero-card {
             background: linear-gradient(145deg, var(--surface) 0%, #111315 100%);
             border-radius: var(--radius-card);
-            padding: 20px;
+            padding: 22px 20px;
             border: 1px solid var(--border);
             display: flex;
             flex-direction: column;
@@ -101,7 +101,7 @@
             height: 140px;
             display: grid;
             place-items: center;
-            margin: 8px 0;
+            margin: 6px 0;
         }
         .ring-container svg {
             width: 140px;
@@ -269,128 +269,123 @@
                 <div class="brand-title">
                     <span style="color: var(--apple-green);">●</span> SMOKE LAB
                 </div>
-                <span class="user-badge">NEURO-TOOL</span>
+                <span class="user-badge">SETUP</span>
             </header>
 
-            <div class="hero-ring-card" style="padding: 20px; align-items: flex-start; background: linear-gradient(145deg, #1A2E22 0%, #1C1C1E 100%); border: 1px solid rgba(52,199,89,0.3);">
-                <h1 class="title-hero" style="font-size: 22px;">Pharmakokinetik statt Willenskraft.</h1>
-                <p style="font-size: 13px; color: var(--muted); line-height: 1.4; margin-top: 4px;">Das medizinische Neuro-Tool für High-Performer. Verstehe das Glutamat-Gedächtnis und steuere dein Gehirn aktiv.</p>
+            <div class="hero-card" style="padding: 20px; align-items: flex-start; background: linear-gradient(145deg, #1A2E22 0%, #1C1C1E 100%); border: 1px solid rgba(52,199,89,0.3);">
+                <h1 class="title-hero" style="font-size: 22px;">Dein persönlicher Weg.</h1>
+                <p style="font-size: 13px; color: var(--muted); line-height: 1.4; margin-top: 4px;">Wähle deinen Ansatz. Smoke Lab passt sich exakt deinem Ziel an – egal ob schrittweise Reduzierung oder kompletter Rauchstopp.</p>
             </div>
 
-            <div class="hero-ring-card" style="padding: 20px; align-items: stretch; gap: 12px;">
+            <div class="hero-card" style="padding: 20px; align-items: stretch; gap: 14px;">
                 <div>
                     <span class="label-sm" style="display:block; margin-bottom:4px;">Dein Vorname</span>
                     <input type="text" id="setupName" class="lab-input" placeholder="z. B. Daniel">
                 </div>
 
-                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
-                    <div>
-                        <span class="label-sm" style="display:block; margin-bottom:4px;">Zigaretten / Tag</span>
-                        <input type="number" id="setupBaseline" class="lab-input" value="10">
-                    </div>
-                    <div>
-                        <span class="label-sm" style="display:block; margin-bottom:4px;">Ø Abstand (Std.)</span>
-                        <input type="number" id="setupInterval" class="lab-input" value="6.5" step="0.5">
+                <div>
+                    <span class="label-sm" style="display:block; margin-bottom:6px;">Wähle deinen Modus</span>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                        <button class="btn-green" id="goalReduce" onclick="setGoal('Reduzieren', this)" style="height: 48px; font-size: 13px;">Schritt für Schritt reduzieren</button>
+                        <button class="btn-surface" id="goalQuit" onclick="setGoal('Rauchfrei', this)" style="height: 48px; font-size: 13px;">Komplett rauchfrei werden</button>
                     </div>
                 </div>
 
-                <div>
-                    <span class="label-sm" style="display:block; margin-bottom:4px;">Dein Ziel</span>
-                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
-                        <button class="btn-green" id="goalReduce" onclick="setGoal('Reduzieren', this)" style="height: 46px; font-size: 13px;">Reduzieren</button>
-                        <button class="btn-surface" id="goalQuit" onclick="setGoal('Rauchfrei', this)" style="height: 46px; font-size: 13px;">Rauchfrei</button>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                    <div>
+                        <span class="label-sm" style="display:block; margin-bottom:4px;">Zigaretten / Tag (Ist)</span>
+                        <input type="number" id="setupBaseline" class="lab-input" value="12">
+                    </div>
+                    <div>
+                        <span class="label-sm" style="display:block; margin-bottom:4px;">Kosten / Schachtel (€)</span>
+                        <input type="number" id="setupPrice" class="lab-input" value="8.50" step="0.5">
                     </div>
                 </div>
             </div>
 
-            <button class="btn-green" onclick="completeOnboarding()" style="margin-top: 4px;">Neuro-Tool starten</button>
+            <button class="btn-green" onclick="completeOnboarding()" style="margin-top: 4px;">Smoke Lab starten</button>
         </div>
 
         <!-- HEUTE VIEW -->
         <div id="view-heute" class="view">
             <header class="app-header">
                 <div class="brand-title">
-                    <span style="color: var(--apple-green);">●</span> <span id="currentGoalLabel">REDUZIEREN</span>
+                    <span style="color: var(--apple-green);">●</span> <span id="headerModeText">REDUZIEREN AKTIV</span>
                 </div>
                 <span class="user-badge" id="greetingUser">DANIEL</span>
             </header>
 
-            <!-- Ring Hero Card -->
-            <div class="hero-ring-card">
+            <!-- Hero Ring -->
+            <div class="hero-card">
                 <div class="ring-container">
                     <svg viewBox="0 0 140 140">
                         <circle class="ring-bg" cx="70" cy="70" r="60"></circle>
                         <circle id="ringProgress" class="ring-progress" cx="70" cy="70" r="60"></circle>
                     </svg>
                     <div class="ring-content">
-                        <span class="label-sm">Nikotin im Blut</span>
-                        <div id="nicotineLevel" style="font-size: 24px; font-weight: 900; color: var(--apple-green); letter-spacing: -0.5px;">100 %</div>
-                        <span style="font-size: 9px; color: var(--muted); font-weight: 700;">t½ = ~2.0h</span>
+                        <span class="label-sm">Fortschritt</span>
+                        <div id="mainMetricVal" style="font-size: 24px; font-weight: 900; color: var(--apple-green); letter-spacing: -0.5px;">0 Min</div>
+                        <span id="mainMetricSub" style="font-size: 9px; color: var(--muted); font-weight: 700;">Seit letztem Mal</span>
                     </div>
                 </div>
-                <p style="font-size: 11px; color: var(--muted); text-align: center; margin-top: 4px; line-height: 1.35;" id="neuroStatusText">Das Craving ist zu 100% neuronale Gewohnheit.</p>
+                <p style="font-size: 12px; color: var(--muted); text-align: center; margin-top: 6px; line-height: 1.4;" id="dynamicCoachTip">
+                    Jedes Mal, wenn du den Drang hinauszögerst, baut dein Körper Routinen ab und gewinnt Kontrolle zurück.
+                </p>
             </div>
 
             <!-- Stat Row -->
             <div class="stat-row">
                 <div class="stat-pill">
-                    <span class="label-sm">Rauchfreies Fenster</span>
-                    <div id="smokeFreeHours" style="font-size: 18px; font-weight: 900; color: var(--apple-green); margin-top: 2px;">0 Min</div>
+                    <span class="label-sm">Heute erfasst</span>
+                    <div id="statTodayCount" style="font-size: 18px; font-weight: 900; color: var(--primary); margin-top: 2px;">0 Momente</div>
                 </div>
                 <div class="stat-pill">
-                    <span class="label-sm">Erfasste Momente</span>
-                    <div id="statSmoked" style="font-size: 18px; font-weight: 900; color: var(--primary); margin-top: 2px;">0</div>
+                    <span class="label-sm">Erfolgreich gekämpft</span>
+                    <div id="statResistedCount" style="font-size: 18px; font-weight: 900; color: var(--apple-green); margin-top: 2px;">0 mal</div>
                 </div>
             </div>
 
-            <!-- Live KVT Coaching Empfehlung (Echter Mehrwert statt nur Logbuch) -->
-            <div class="hero-ring-card" style="align-items: flex-start; padding: 16px; background: linear-gradient(145deg, #1A222B 0%, #1C1C1E 100%); border-color: rgba(0,230,118,0.2);">
-                <span class="label-sm" style="color: var(--apple-green);">KVT-Coach · Nächster Schritt</span>
-                <div id="coachRecommendation" style="font-size: 13px; color: var(--primary); font-weight: 700; margin-top: 4px; line-height: 1.4;">
-                    Lade das Labor mit deinem ersten Moment auf, um personalisierte Verhaltens-Experimente zu starten.
-                </div>
-            </div>
-
-            <!-- Action Card: Micro-Journaling -->
+            <!-- Action: Moment erfassen -->
             <div class="action-card" onclick="openModal('logSheet')">
                 <div>
-                    <span class="label-sm">Micro-Journaling</span>
-                    <div style="font-size: 15px; font-weight: 850; color: var(--primary); margin-top: 2px;">Rauchmoment erfassen</div>
+                    <span class="label-sm">Protokoll & Reflexion</span>
+                    <div style="font-size: 15px; font-weight: 850; color: var(--primary); margin-top: 2px;">Rauchmoment / Drang eintragen</div>
                 </div>
                 <div style="width: 32px; height: 32px; background: var(--surface-elevated); border-radius: 50%; display: grid; place-items: center; font-size: 16px; color: var(--apple-green);">+</div>
             </div>
 
-            <!-- Action Card: SOS -->
+            <!-- Action: Notfall SOS -->
             <div class="action-card" onclick="openModal('sosSheet')" style="background: linear-gradient(135deg, #2C2012 100%, var(--surface) 0%); border-color: rgba(255,159,10,0.3);">
                 <div>
-                    <span class="label-sm" style="color: var(--apple-orange);">Akut-Hilfe · Urge Surfing</span>
-                    <div style="font-size: 15px; font-weight: 850; color: var(--primary); margin-top: 2px;">3-Minuten-Interrupt starten ⚡</div>
+                    <span class="label-sm" style="color: var(--apple-orange);">Akut-Hilfe bei starkem Drang</span>
+                    <div style="font-size: 15px; font-weight: 850; color: var(--primary); margin-top: 2px;">3-Minuten-Notfall-Timer starten ⚡</div>
                 </div>
                 <span style="font-size: 16px;">⚡</span>
             </div>
         </div>
 
-        <!-- MUSTER VIEW (Therapie-Auswertung & Live KVT-Experimente) -->
+        <!-- PLAN & STRATEGIE VIEW -->
         <div id="view-muster" class="view">
             <header class="app-header">
-                <div class="brand-title">MUSTER & THERAPIE</div>
+                <div class="brand-title">STRATEGIE & COACHING</div>
             </header>
 
-            <div class="hero-ring-card" style="align-items: flex-start; padding: 18px;">
-                <span class="label-sm">Wissenschaftliche Auswertung</span>
-                <h3 style="font-size: 16px; font-weight: 850; margin-top: 4px;">Aktives Trigger-Profil</h3>
-                <p style="font-size: 13px; color: var(--muted); line-height: 1.4; margin-top: 6px;" id="patternAnalysisText">Noch keine Daten vorhanden. Zeichne Momente auf, damit das System deine Haupt-Trigger (z.B. Stress vs. Routine) identifiziert.</p>
+            <div class="hero-card" style="align-items: flex-start; padding: 18px; border-color: rgba(52,199,89,0.3);">
+                <span class="label-sm" style="color: var(--apple-green);">Dein aktueller Modus</span>
+                <h3 style="font-size: 16px; font-weight: 850; margin-top: 4px;" id="strategyTitleCard">Schritt für Schritt reduzieren</h3>
+                <p style="font-size: 13px; color: var(--muted); line-height: 1.4; margin-top: 6px;" id="strategyDescCard">Du nimmst den Druck heraus. Ziel ist es, bewusste Abstände zu schaffen, statt krampfhaft durchzuhalten.</p>
             </div>
 
-            <div class="hero-ring-card" style="align-items: flex-start; padding: 18px; border-color: rgba(52,199,89,0.3);">
-                <span class="label-sm" style="color: var(--apple-green);">KVT-Experiment für heute</span>
-                <h3 style="font-size: 16px; font-weight: 850; margin-top: 4px;" id="experimentTitle">Das 10-Minuten-Aufschiebe-Experiment</h3>
-                <p style="font-size: 13px; color: var(--muted); line-height: 1.4; margin-top: 6px;" id="experimentDesc">Wenn der Drang kommt, nimm dir vor, exakt 10 Minuten lang etwas anderes zu tun (z.B. ein Glas kaltes Wasser trinken oder einen kurzen Spaziergang). Beobachte, wie der Peak abflacht.</p>
+            <div class="hero-card" style="align-items: flex-start; padding: 18px;">
+                <span class="label-sm">Deine Haupterkenntnisse</span>
+                <div id="patternAnalysisText" style="font-size: 13px; color: var(--muted); line-height: 1.4; margin-top: 6px;">
+                    Noch keine Momente erfasst. Nutze den Home-Screen, sobald ein Craving auftritt, um deine persönlichen Auslöser zu erkennen.
+                </div>
             </div>
 
-            <div class="hero-ring-card" style="align-items: stretch; padding: 18px; min-height: 100px;">
-                <span class="label-sm">Protokollierte Wellen & Strategien</span>
-                <div id="recentLogsList" style="font-size: 12px; color: var(--muted); margin-top: 8px;">Noch keine Wellen aufgezeichnet.</div>
+            <div class="hero-card" style="align-items: stretch; padding: 18px; min-height: 100px;">
+                <span class="label-sm">Historie</span>
+                <div id="recentLogsList" style="font-size: 12px; color: var(--muted); margin-top: 8px;">Noch keine Einträge vorhanden.</div>
             </div>
         </div>
 
@@ -400,9 +395,9 @@
                 <div class="brand-title">EINSTELLUNGEN</div>
             </header>
 
-            <div class="hero-ring-card" style="align-items: stretch; padding: 20px;">
-                <span class="label-sm">Datenschutz & Speicher</span>
-                <p style="font-size: 13px; color: var(--muted); line-height: 1.4; margin-top: 6px;">Alle Protokolle und KVT-Analysen bleiben zu 100% lokal auf deinem Gerät verschlüsselt.</p>
+            <div class="hero-card" style="align-items: stretch; padding: 20px;">
+                <span class="label-sm">Profil & Datenschutz</span>
+                <p style="font-size: 13px; color: var(--muted); line-height: 1.4; margin-top: 6px;">Deine Daten bleiben zu 100% lokal auf deinem Gerät verschlüsselt gespeichert.</p>
                 <button class="btn-surface" style="margin-top: 14px; color: #FF453A; font-size: 13px;" onclick="resetApp()">Labor komplett zurücksetzen</button>
             </div>
         </div>
@@ -415,7 +410,7 @@
             </button>
             <button class="nav-item" onclick="switchView('muster', this)">
                 <svg viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2M9 17H7v-7h2zm4 0h-2V7h2zm4 0h-2v-4h2z"/></svg>
-                MUSTER
+                PLAN
             </button>
             <button class="nav-item" onclick="switchView('daten', this)">
                 <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2m0 3c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3m0 14.2c-2.5 0-4.71-1.28-6-3.22.03-1.99 4-3.08 6-3.08 1.99 0 5.97 1.09 6 3.08-1.29 1.94-3.5 3.22-6 3.22"/></svg>
@@ -423,34 +418,34 @@
             </button>
         </nav>
 
-        <!-- LOG SHEET -->
+        <!-- LOG SHEET (Glasklare Optionen ohne Kauderwelsch) -->
         <div id="logSheet" class="sheet-overlay" onclick="closeModals(event)">
             <div class="sheet-content">
                 <div style="display: flex; justify-content: space-between; align-items: center;">
                     <div>
-                        <span class="label-sm">Micro-Journaling</span>
-                        <h3 style="font-size: 18px; font-weight: 850; margin-top: 2px;">Kontext & Strategie</h3>
+                        <span class="label-sm">Moment erfassen</span>
+                        <h3 style="font-size: 18px; font-weight: 850; margin-top: 2px;">Was ist gerade passiert?</h3>
                     </div>
                     <button onclick="closeModals()" style="background: var(--bg); border: 1px solid var(--border); width: 30px; height: 30px; border-radius: 50%; color: var(--primary); cursor: pointer;">✕</button>
                 </div>
 
-                <span class="label-sm">Trigger-Kontext</span>
+                <span class="label-sm">Auslöser / Situation</span>
                 <div class="trigger-grid">
-                    <div class="trigger-chip active" onclick="setTrigger('Stress & Cortisol', this)">Stress & Cortisol</div>
-                    <div class="trigger-chip" onclick="setTrigger('Kaffee-Dopamin', this)">Kaffee-Dopamin</div>
-                    <div class="trigger-chip" onclick="setTrigger('Autopilot / Routine', this)">Autopilot / Routine</div>
-                    <div class="trigger-chip" onclick="setTrigger('Soziale Interaktion', this)">Soziale Interaktion</div>
+                    <div class="trigger-chip active" onclick="setTrigger('Stress & Druck', this)">Stress & Druck</div>
+                    <div class="trigger-chip" onclick="setTrigger('Kaffee & Pause', this)">Kaffee & Pause</div>
+                    <div class="trigger-chip" onclick="setTrigger('Gewohnheit / Auto', this)">Gewohnheit / Auto</div>
+                    <div class="trigger-chip" onclick="setTrigger('Sozial / Feierabend', this)">Sozial / Feierabend</div>
                 </div>
 
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 2px;">
-                    <span class="label-sm">Craving-Intensität</span>
-                    <span id="intensityVal" style="font-size: 13px; font-weight: 850; color: var(--apple-green);">3/5</span>
+                    <span class="label-sm">Drang-Intensität</span>
+                    <span id="intensityVal" style="font-size: 13px; font-weight: 850; color: var(--apple-green);">3 von 5</span>
                 </div>
-                <input type="range" id="intensityRange" min="1" max="5" value="3" style="width: 100%; accent-color: var(--apple-green);" oninput="document.getElementById('intensityVal').innerText = this.value + '/5'">
+                <input type="range" id="intensityRange" min="1" max="5" value="3" style="width: 100%; accent-color: var(--apple-green);" oninput="document.getElementById('intensityVal').innerText = this.value + ' von 5'">
 
                 <div style="display: flex; gap: 8px; margin-top: 4px;">
-                    <button class="btn-surface" onclick="saveLogData('smoke')" style="flex: 1; font-size: 13px;">🚬 Nachgegeben</button>
-                    <button class="btn-green" onclick="saveLogData('resist')" style="flex: 1; font-size: 13px;">✨ Welle gesurft</button>
+                    <button class="btn-surface" onclick="saveLogData('smoke')" style="flex: 1; font-size: 13px;">🚬 Geraucht</button>
+                    <button class="btn-green" onclick="saveLogData('resist')" style="flex: 1; font-size: 13px;">✨ Drang besiegt</button>
                 </div>
             </div>
         </div>
@@ -460,21 +455,21 @@
             <div class="sheet-content">
                 <div style="display: flex; justify-content: space-between; align-items: center;">
                     <div>
-                        <span class="label-sm" style="color: var(--apple-orange);">Akut-Hilfe · Urge Surfing</span>
-                        <h3 style="font-size: 18px; font-weight: 850; margin-top: 2px;">Welle aussitzen (3 Min)</h3>
+                        <span class="label-sm" style="color: var(--apple-orange);">Akut-Hilfe</span>
+                        <h3 style="font-size: 18px; font-weight: 850; margin-top: 2px;">3 Minuten innehalten</h3>
                     </div>
                     <button onclick="closeModals()" style="background: var(--bg); border: 1px solid var(--border); width: 30px; height: 30px; border-radius: 50%; color: var(--primary); cursor: pointer;">✕</button>
                 </div>
-                <p style="font-size: 12px; color: var(--muted);" id="sosInstruction">Atme tief aus. Das Glutamat-Gedächtnis verhungert gerade.</p>
+                <p style="font-size: 13px; color: var(--muted);" id="sosInstruction">Atme tief in den Bauch ein und doppelt so lange aus. Konzentriere dich nur auf deinen Atem.</p>
 
                 <div style="text-align: center; margin: 10px 0;">
-                    <div id="sosTimerDisplay" style="font-size: 40px; font-weight: 900; color: var(--apple-orange);">3:00</div>
-                    <span style="font-size: 11px; color: var(--muted);">Die Welle bricht von Natur aus.</span>
+                    <div id="sosTimerDisplay" style="font-size: 42px; font-weight: 900; color: var(--apple-orange);">3:00</div>
+                    <span style="font-size: 11px; color: var(--muted);">Die Intensität lässt nach wenigen Minuten von Natur aus nach.</span>
                 </div>
 
                 <div style="display: flex; gap: 8px;">
-                    <button class="btn-surface" onclick="resolveSos('smoke')" style="flex: 1; font-size: 13px;">Nachgegeben</button>
-                    <button class="btn-green" onclick="resolveSos('resist')" style="flex: 1; font-size: 13px;">Welle überstanden</button>
+                    <button class="btn-surface" onclick="resolveSos('smoke')" style="flex: 1; font-size: 13px;">🚬 Geraucht</button>
+                    <button class="btn-green" onclick="resolveSos('resist')" style="flex: 1; font-size: 13px;">✨ Drang besiegt</button>
                 </div>
             </div>
         </div>
@@ -483,7 +478,7 @@
 
     <script>
         let selectedGoal = 'Reduzieren';
-        let currentTrigger = 'Stress & Cortisol';
+        let currentTrigger = 'Stress & Druck';
         let logs = JSON.parse(localStorage.getItem('smokelab_logs') || '[]');
         let lastSmokeTime = parseInt(localStorage.getItem('smokelab_last_smoke') || Date.now());
         let sosInterval = null;
@@ -491,6 +486,7 @@
 
         if(localStorage.getItem('smokelab_user')) {
             document.getElementById('setupName').value = localStorage.getItem('smokelab_user');
+            selectedGoal = localStorage.getItem('smokelab_goal') || 'Reduzieren';
             completeOnboarding();
         }
 
@@ -505,13 +501,25 @@
         function completeOnboarding() {
             const name = document.getElementById('setupName').value.trim() || 'Daniel';
             localStorage.setItem('smokelab_user', name);
-            document.getElementById('currentGoalLabel').innerText = selectedGoal.toUpperCase();
+            localStorage.setItem('smokelab_goal', selectedGoal);
+
+            document.getElementById('headerModeText').innerText = selectedGoal === 'Reduzieren' ? 'REDUZIEREN AKTIV' : 'RAUCHFREI ENTZUG';
             document.getElementById('greetingUser').innerText = name.toUpperCase();
+            
+            // Strategie-Text anpassen
+            if(selectedGoal === 'Reduzieren') {
+                document.getElementById('strategyTitleCard').innerText = "Schritt für Schritt reduzieren";
+                document.getElementById('strategyDescCard').innerText = "Du nimmst den Druck heraus. Ziel ist es, bewusste Abstände zu schaffen, statt krampfhaft durchzuhalten.";
+            } else {
+                document.getElementById('strategyTitleCard').innerText = "Komplett rauchfrei werden";
+                document.getElementById('strategyDescCard').innerText = "Voller Fokus auf den Entzug. Jede Stunde ohne Zigarette heilt deine Rezeptoren und entzieht der Gewohnheit die Macht.";
+            }
+
             document.getElementById('view-onboarding').classList.remove('active');
             document.getElementById('bottomNav').classList.add('active');
             switchView('heute', document.querySelector('.nav-item'));
             updateDashboard();
-            setInterval(updatePharmacokinetics, 1000);
+            setInterval(updateClock, 1000);
         }
 
         function switchView(viewName, btn) {
@@ -549,9 +557,8 @@
                 timeLeft--;
                 updateTimerDisplay();
                 
-                // Dynamische KVT Atem-Anweisung während des Timers
-                if(timeLeft === 120) document.getElementById('sosInstruction').innerText = "Der Nikotinspiegel sinkt. Konzentriere dich auf deinen Atem (Ausatmen doppelt so lang wie Einatmen).";
-                if(timeLeft === 60) document.getElementById('sosInstruction').innerText = "Gleich geschafft! Das Glutamat verhungert. Der Peak bricht jetzt ab.";
+                if(timeLeft === 120) document.getElementById('sosInstruction').innerText = "Der erste starke Impuls lässt nach. Atme ruhig weiter.";
+                if(timeLeft === 60) document.getElementById('sosInstruction').innerText = "Super gemacht. Die Welle bricht jetzt endgültig ab.";
 
                 if(timeLeft <= 0) {
                     clearInterval(sosInterval);
@@ -573,7 +580,7 @@
                 localStorage.setItem('smokelab_last_smoke', lastSmokeTime);
             }
             const timeStr = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-            logs.unshift({ time: timeStr, trigger: currentTrigger, type: type === 'smoke' ? 'Nachgegeben' : 'Welle gesurft' });
+            logs.unshift({ time: timeStr, trigger: currentTrigger, type: type === 'smoke' ? 'Geraucht' : 'Drang besiegt' });
             localStorage.setItem('smokelab_logs', JSON.stringify(logs));
             updateDashboard();
         }
@@ -586,56 +593,61 @@
                 localStorage.setItem('smokelab_last_smoke', lastSmokeTime);
             }
             const timeStr = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-            logs.unshift({ time: timeStr, trigger: 'SOS Interaktion', type: type === 'smoke' ? 'Nachgegeben' : 'Welle gesurft' });
+            logs.unshift({ time: timeStr, trigger: 'Notfall SOS', type: type === 'smoke' ? 'Geraucht' : 'Drang besiegt' });
             localStorage.setItem('smokelab_logs', JSON.stringify(logs));
             updateDashboard();
         }
 
         function updateDashboard() {
-            let smokedCount = logs.filter(l => l.type === 'Nachgegeben').length;
-            let resistedCount = logs.filter(l => l.type === 'Welle gesurft').length;
-            document.getElementById('statSmoked').innerText = smokedCount;
-            updatePharmacokinetics();
+            let smokedCount = logs.filter(l => l.type === 'Geraucht').length;
+            let resistedCount = logs.filter(l => l.type === 'Drang besiegt').length;
 
-            // Live KVT Coaching Logik auf dem Dashboard
-            let coachEl = document.getElementById('coachRecommendation');
+            document.getElementById('statTodayCount').innerText = logs.length + " Einträge";
+            document.getElementById('statResistedCount').innerText = resistedCount + " mal";
+
+            // Coaching Text dynamisch
+            let coachEl = document.getElementById('dynamicCoachTip');
             if(logs.length === 0) {
-                coachEl.innerHTML = "Lade das Labor mit deinem ersten Moment auf, um personalisierte Verhaltens-Experimente zu starten.";
+                coachEl.innerHTML = selectedGoal === 'Reduzieren' 
+                    ? "<b>Dein Start:</b> Erasse deinen Alltag ganz normal. Die App hilft dir, deine Abstände Schritt für Schritt zu vergrößern." 
+                    : "<b>Dein Start:</b> Der Entzug läuft. Nutze den Notfall-Timer, sobald der Drang unangenehm wird.";
             } else {
                 let lastLog = logs[0];
-                if(lastLog.type === 'Welle gesurft') {
-                    coachEl.innerHTML = "<b>Starke Leistung!</b> Du hast dem Autopiloten widerstanden. Dein Hippocampus hat gelernt, dass das Craving ohne Nikotin vergeht.";
+                if(lastLog.type === 'Drang besiegt') {
+                    coachEl.innerHTML = "<b>Stark geblieben!</b> Du hast den Autopiloten erfolgreich durchbrochen. Dein Gehirn lernt, dass das Gefühl von alleine vergeht.";
                 } else {
-                    coachEl.innerHTML = "<b>Keine Schuld, nur Daten.</b> Analysiere im Reiter 'Muster', warum der Trigger '"+lastLog.trigger+"' so stark war.";
+                    coachEl.innerHTML = "<b>Kein Problem, das gehört dazu.</b> Schau dir unter 'Plan' an, welcher Auslöser am häufigsten auftritt.";
                 }
             }
 
-            // Trigger Profil Auswertung im Muster-Tab
+            // Historie & Muster
             if(logs.length > 0) {
                 let triggers = {};
                 logs.forEach(l => { triggers[l.trigger] = (triggers[l.trigger] || 0) + 1; });
                 let topTrigger = Object.keys(triggers).reduce((a, b) => triggers[a] > triggers[b] ? a : b);
-                document.getElementById('patternAnalysisText').innerHTML = `<b>Haupt-Trigger erkannt:</b> '${topTrigger}' dominiert deine Aufzeichnungen (${triggers[topTrigger]}x). KVT-Strategie: Schaffe hier einen physischen Ortswechsel.`;
+                document.getElementById('patternAnalysisText').innerHTML = `<b>Haupt-Auslöser:</b> '${topTrigger}' taucht am häufigsten auf (${triggers[topTrigger]}x). Versuche hier bewusst die Gewohnheit zu unterbrechen.`;
 
-                let html = logs.slice(0, 5).map(l => `<div style="display:flex; justify-content:space-between; padding:6px 0; border-bottom:1px solid rgba(255,255,255,0.06);"><span>${l.time} · ${l.trigger}</span><span style="color:${l.type === 'Welle gesurft' ? 'var(--apple-green)' : 'var(--muted)'}; font-weight:700;">${l.type}</span></div>`).join('');
+                let html = logs.slice(0, 5).map(l => `<div style="display:flex; justify-content:space-between; padding:6px 0; border-bottom:1px solid rgba(255,255,255,0.06);"><span>${l.time} · ${l.trigger}</span><span style="color:${l.type === 'Drang besiegt' ? 'var(--apple-green)' : 'var(--muted)'}; font-weight:700;">${l.type}</span></div>`).join('');
                 document.getElementById('recentLogsList').innerHTML = html;
             } else {
-                document.getElementById('recentLogsList').innerHTML = 'Noch keine Wellen aufgezeichnet.';
+                document.getElementById('recentLogsList').innerHTML = 'Noch keine Einträge vorhanden.';
             }
+
+            updateClock();
         }
 
-        function updatePharmacokinetics() {
-            let diffHours = (Date.now() - lastSmokeTime) / 3600000;
-            let percent = Math.max(0, 100 * Math.pow(0.5, diffHours / 2.0));
-            
-            document.getElementById('nicotineLevel').innerText = percent.toFixed(0) + ' %';
-            
-            // Ring SVG Berechnung (Gesamtlänge 377 für r=60)
-            let strokeOffset = 377 - (377 * percent) / 100;
+        function updateClock() {
+            let diffMs = Date.now() - lastSmokeTime;
+            let diffMins = Math.floor(diffMs / 60000);
+            let diffHours = (diffMs / 3600000).toFixed(1);
+
+            document.getElementById('mainMetricVal').innerText = diffMins < 60 ? diffMins + ' Min' : diffHours + ' Std';
+            document.getElementById('mainMetricSub').innerText = selectedGoal === 'Reduzieren' ? "Abstand zum letzten Mal" : "Reine Entzugszeit";
+
+            // Ring-Progress Berechnung (max 4 Stunden für Visualisierung)
+            let progressPercent = Math.min(100, (diffMins / 240) * 100);
+            let strokeOffset = 377 - (377 * progressPercent) / 100;
             document.getElementById('ringProgress').style.strokeDashoffset = strokeOffset;
-            
-            let mins = Math.floor(diffHours * 60);
-            document.getElementById('smokeFreeHours').innerText = mins < 60 ? mins + ' Min' : (diffHours).toFixed(1) + ' Std';
         }
 
         function resetApp() {
