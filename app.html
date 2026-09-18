@@ -28,8 +28,17 @@ button{cursor:pointer}
 .avatar{width:38px;height:38px;border-radius:50%;border:0;background:var(--paper);box-shadow:0 6px 18px rgba(40,68,50,.07);display:grid;place-items:center;color:var(--green)}
 .avatar svg{width:19px;height:19px;fill:none;stroke:currentColor;stroke-width:1.8}
 
-.home-body{display:flex;flex-direction:column;gap:9px;flex:1;min-height:0;padding-top:6px}
-.focus-card{position:relative;overflow:hidden;border-radius:28px;padding:20px;background:linear-gradient(145deg,#E4F4E8 0%,#F8FAF6 56%,#F6EFE3 100%);border:1px solid rgba(47,139,88,.12);box-shadow:var(--shadow);flex:0 0 auto;min-height:178px}
+.home-body{display:flex;flex-direction:column;gap:10px;flex:1;min-height:0;padding-top:8px}
+.home-shell{display:flex;flex-direction:column;gap:10px;flex:0 0 auto}
+.home-summary{background:var(--paper);border:1px solid var(--line);border-radius:22px;overflow:hidden;box-shadow:0 10px 24px rgba(30,55,41,.045);flex:0 0 auto}
+.home-summary .coach{border:0;border-radius:0;box-shadow:none;border-bottom:1px solid var(--line);padding:13px 14px}
+.home-summary .stats{gap:0;border:0}
+.home-summary .stat{border:0;border-radius:0;box-shadow:none;padding:12px 14px;min-width:0}
+.home-summary .stat+.stat{border-left:1px solid var(--line)}
+.home-summary .stat b{font-size:20px}
+.home-summary .stat span{font-size:8.5px;line-height:1.15}
+.home-spacer{flex:1;min-height:8px}
+.focus-card{position:relative;overflow:hidden;border-radius:24px;padding:20px;background:linear-gradient(145deg,#E4F4E8 0%,#F8FAF6 56%,#F6EFE3 100%);border:1px solid rgba(47,139,88,.12);box-shadow:var(--shadow);flex:0 0 auto;min-height:178px}
 .focus-card:before{content:"";position:absolute;width:180px;height:180px;border-radius:50%;right:-74px;top:-90px;background:radial-gradient(circle,rgba(245,190,87,.34),rgba(245,190,87,0) 70%)}
 .focus-card:after{content:"";position:absolute;width:180px;height:88px;right:-18px;bottom:-38px;background:linear-gradient(165deg,rgba(47,139,88,.05),rgba(47,139,88,.20));border-radius:55% 55% 0 0/100% 100% 0 0}
 .kicker{font-size:10px;font-weight:850;text-transform:uppercase;letter-spacing:1.1px;color:var(--green)}
@@ -40,11 +49,13 @@ button{cursor:pointer}
 .mini-progress{width:94px;height:7px;border-radius:99px;background:rgba(255,255,255,.92);overflow:hidden}
 .mini-progress span{display:block;height:100%;background:linear-gradient(90deg,var(--green),var(--green-2));border-radius:99px}
 
-.action-main{height:58px;border-radius:19px;border:0;background:linear-gradient(135deg,#2F8B58,#48AA70);color:#fff;font-size:15px;font-weight:850;box-shadow:0 10px 24px rgba(47,139,88,.22);flex:0 0 auto}
+.action-main{height:56px;border-radius:18px;border:0;background:linear-gradient(135deg,#2F8B58,#48AA70);color:#fff;font-size:15px;font-weight:850;box-shadow:0 10px 24px rgba(47,139,88,.22);flex:0 0 auto}
 .action-secondary{height:50px;border-radius:17px;border:1px solid var(--line);background:var(--paper);color:var(--ink);font-size:13px;font-weight:820;flex:0 0 auto}
-.action-row{display:grid;grid-template-columns:1fr 1fr;gap:8px;flex:0 0 auto}
-.action-lite{height:48px;border-radius:16px;border:1px solid var(--line);background:var(--paper);font-size:12px;font-weight:800;color:var(--ink)}
-.action-lite.blue{background:var(--blue-soft);border-color:#DCE7FF;color:#315DAE}
+.action-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;flex:0 0 auto}
+.action-lite{height:54px;border-radius:18px;border:1px solid var(--line);background:var(--paper);font-size:12px;font-weight:820;color:var(--ink);display:flex;align-items:center;justify-content:center;text-align:center;padding:0 12px;box-shadow:0 7px 18px rgba(30,55,41,.035)}
+.action-lite.blue{background:var(--paper);border-color:var(--line);color:var(--ink)}
+.action-lite .action-ico{width:26px;height:26px;border-radius:10px;background:#F4F6F3;display:grid;place-items:center;margin-right:7px;flex:0 0 auto}
+.action-lite.blue .action-ico{background:var(--blue-soft);color:#315DAE}
 
 .coach{background:var(--paper);border:1px solid var(--line);border-radius:20px;padding:12px 13px;display:grid;grid-template-columns:38px 1fr;gap:10px;align-items:center;box-shadow:0 8px 20px rgba(30,55,41,.035);flex:0 0 auto}
 .coach-icon{width:38px;height:38px;border-radius:14px;background:var(--green-soft);display:grid;place-items:center;color:var(--green);font-weight:900}
@@ -101,9 +112,9 @@ button{cursor:pointer}
 .profile-sheet .field{margin-top:9px}.profile-sheet label{display:block;font-size:9.5px;text-transform:uppercase;letter-spacing:.8px;color:var(--muted);font-weight:850;margin-bottom:5px}.input{width:100%;height:47px;border:1px solid var(--line);background:#FAF9F6;border-radius:14px;padding:0 14px;font-size:15px;outline:none}.input:focus{border-color:var(--green);box-shadow:0 0 0 3px var(--green-soft)}
 
 @media(max-height:760px){
- .view{padding-top:calc(env(safe-area-inset-top) + 6px)}.top{min-height:42px}.brand{font-size:23px}.home-body{gap:7px;padding-top:4px}
+ .view{padding-top:calc(env(safe-area-inset-top) + 6px)}.top{min-height:42px}.brand{font-size:23px}.home-body{gap:8px;padding-top:5px}.home-shell{gap:8px}
  .focus-card{min-height:154px;padding:16px 18px}.focus-card h1{font-size:24px}.focus-card p{font-size:11.5px}.focus-meta{left:18px;right:18px;bottom:11px}
- .coach{padding:9px 11px}.coach-icon{width:34px;height:34px}.stat{padding:8px}.action-main{height:52px}.action-lite{height:44px}
+ .coach{padding:9px 11px}.coach-icon{width:34px;height:34px}.home-summary .stat{padding:9px 10px}.action-main{height:50px}.action-lite{height:48px}
  .sheet-head h2{font-size:22px}.sheet-body{max-height:95dvh}
 }
 @media(max-height:680px){
@@ -139,6 +150,7 @@ button{cursor:pointer}
     <button id="profileBtn" class="avatar" aria-label="Profil"><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="3.5"/><path d="M5 20c.5-4 3-6 7-6s6.5 2 7 6"/></svg></button>
   </div>
   <div class="home-body">
+    <div class="home-shell">
     <div class="focus-card">
       <div class="kicker" id="focusKicker">Heute im Fokus</div>
       <h1 id="focusTitle">Beobachte einen starken Rauchmoment.</h1>
@@ -149,20 +161,23 @@ button{cursor:pointer}
     <button id="craveBtn" class="action-main">⚡ Ich will gerade rauchen</button>
 
     <div class="action-row">
-      <button id="smokedBtn" class="action-lite">🚬 Ich habe gerade geraucht</button>
-      <button id="missionBtn" class="action-lite blue">▶ Heutigen Test starten</button>
+      <button id="smokedBtn" class="action-lite"><span class="action-ico">🚬</span><span>Gerade geraucht</span></button>
+      <button id="missionBtn" class="action-lite blue"><span class="action-ico">▶</span><span>Heutiger Test</span></button>
+    </div>
     </div>
 
-    <div class="coach">
-      <div class="coach-icon">↗</div>
-      <div><small>Dein Coach</small><b id="coachTitle">Heute nur beobachten.</b><p id="coachText">Ein bewusster Moment reicht. Danach weiß Smoke Lab ein bisschen mehr über dich.</p></div>
+    <div class="home-summary">
+      <div class="coach">
+        <div class="coach-icon">↗</div>
+        <div><small>Dein Coach</small><b id="coachTitle">Heute nur beobachten.</b><p id="coachText">Ein bewusster Moment reicht. Danach weiß Smoke Lab ein bisschen mehr über dich.</p></div>
+      </div>
+      <div class="stats">
+        <div class="stat"><b id="awareMetric">0</b><span>Momente heute</span></div>
+        <div class="stat"><b id="delayMetric">—</b><span>Ø Abstand</span></div>
+        <div class="stat"><b id="urgeMetric">—</b><span>Drang danach</span></div>
+      </div>
     </div>
-
-    <div class="stats">
-      <div class="stat"><b id="awareMetric">0</b><span>Momente heute</span></div>
-      <div class="stat"><b id="delayMetric">—</b><span>Ø Abstand</span></div>
-      <div class="stat"><b id="urgeMetric">—</b><span>Drang danach</span></div>
-    </div>
+    <div class="home-spacer"></div>
   </div>
 </section>
 
@@ -393,7 +408,7 @@ function renderToday(){
   $("focusTitle").textContent=m[0];$("focusText").textContent=m[1];
   $("focusBadge").textContent=done?"Heute abgeschlossen":"Heute offen";
   $("journeyMini").style.width=Math.min(100,state.missionDay/30*100)+"%";
-  $("missionBtn").textContent=done?"✓ Test abgeschlossen":"▶ Heutigen Test starten";
+  $("missionBtn").innerHTML=done?'<span class="action-ico">✓</span><span>Abgeschlossen</span>':'<span class="action-ico">▶</span><span>Heutiger Test</span>';
   var delays=ev.map(function(e){return Number(e.delay)||0}).filter(function(n){return n>0});
   var afters=ev.map(function(e){return Number(e.after)}).filter(function(n){return n>0});
   $("awareMetric").textContent=ev.length;$("delayMetric").textContent=delays.length?Math.round(avg(delays))+"m":"—";$("urgeMetric").textContent=afters.length?avg(afters).toFixed(1)+"/5":"—";
