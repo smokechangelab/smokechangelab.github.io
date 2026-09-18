@@ -1,5 +1,5 @@
-const CACHE_NAME = "smokelab-rc1-20260918";
-const APP_SHELL = ["./app.html","./manifest.webmanifest","./icon.svg"];
+const CACHE_NAME = "smokelab-rc1-20260918-b";
+const APP_SHELL = ["./app.html","./manifest.webmanifest","./icon.svg","./icon-192.png","./icon-512.png"];
 
 self.addEventListener("install", event => {
   event.waitUntil(
