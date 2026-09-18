@@ -1349,6 +1349,103 @@ html,body,.app{background:var(--bg)}
 }
 .choice,[data-out]{touch-action:manipulation}
 
+
+/* --- v15 adaptive coach: one-screen plan + learned fast path --- */
+#patternsView{
+  overflow:hidden !important;
+}
+#patternsView .panel-head{
+  min-height:72px;
+  align-items:flex-end;
+}
+#patternsView .panel-head h1{
+  font-size:25px;
+  line-height:1.04;
+  max-width:350px;
+}
+.pattern-screen{
+  display:grid !important;
+  grid-template-rows:auto auto auto 1fr;
+  gap:9px !important;
+  padding-top:8px !important;
+  overflow:hidden;
+}
+.pattern-hero{
+  padding:14px 15px;
+  border-radius:18px;
+  background:linear-gradient(145deg,#EAF2ED,#FFFDF9);
+  border:1px solid #D9E5DC;
+}
+.pattern-stage{
+  display:flex;justify-content:space-between;align-items:center;gap:8px;
+  font-size:8px;font-weight:700;text-transform:uppercase;letter-spacing:.7px;color:var(--green)
+}
+.pattern-stage b{color:var(--muted);font-weight:650}
+.pattern-hero h2{font-size:18px;line-height:1.12;letter-spacing:-.35px;margin-top:7px}
+.pattern-hero p{font-size:10.5px;line-height:1.35;color:var(--muted);margin-top:4px}
+.pattern-facts{
+  display:grid;
+  grid-template-columns:1.15fr .8fr 1fr;
+  gap:7px;
+}
+.pattern-facts>div{
+  min-width:0;padding:10px;border-radius:14px;background:#FFFDF9;border:1px solid var(--line)
+}
+.pattern-facts span{
+  display:block;font-size:7.3px;line-height:1.15;text-transform:uppercase;letter-spacing:.55px;color:var(--muted);font-weight:700
+}
+.pattern-facts b{
+  display:block;margin-top:4px;font-size:11.5px;line-height:1.2;word-break:break-word
+}
+.pattern-plan{
+  padding:14px 15px;border-radius:18px;background:var(--ink);color:#fff
+}
+.pattern-plan-label{
+  font-size:8px;text-transform:uppercase;letter-spacing:.75px;color:#9FC4AD;font-weight:700
+}
+.pattern-plan h3{font-size:16px;line-height:1.18;margin-top:5px;letter-spacing:-.2px}
+.pattern-plan p{font-size:10.2px;line-height:1.35;color:#C8D0CB;margin-top:5px}
+.pattern-plan .pattern-action{
+  height:39px;margin-top:10px;background:#fff;color:var(--ink);border-radius:11px
+}
+.pattern-history-mini{
+  min-height:0;
+  padding:10px 13px 8px;
+  border-radius:16px;
+  background:rgba(255,253,249,.72);
+  border:1px solid var(--line);
+  overflow:hidden;
+}
+.pattern-history-mini>div:first-child{
+  display:flex;justify-content:space-between;align-items:center;
+  font-size:9px;color:var(--muted);font-weight:650
+}
+.compact-history{margin-top:3px !important}
+.compact-history .recent-row{padding:6px 0}
+.compact-history .recent-row b{font-size:10.5px}
+.compact-history .recent-row small{font-size:8.5px}
+.compact-history .tag{font-size:7.5px;padding:4px 6px}
+.adaptive-confirm .choice{
+  min-height:58px;
+  font-size:13px;
+}
+#progressView{overflow-y:auto !important}
+@media(max-height:760px){
+  #patternsView .panel-head{min-height:58px}
+  #patternsView .panel-head h1{font-size:22px}
+  .pattern-screen{gap:7px !important;padding-top:5px !important}
+  .pattern-hero{padding:11px 13px}
+  .pattern-hero h2{font-size:16px}
+  .pattern-hero p{font-size:9.5px}
+  .pattern-facts>div{padding:8px}
+  .pattern-facts b{font-size:10.5px}
+  .pattern-plan{padding:11px 13px}
+  .pattern-plan h3{font-size:14px}
+  .pattern-plan p{font-size:9.5px}
+  .pattern-plan .pattern-action{height:35px;margin-top:7px}
+  .pattern-history-mini{padding:8px 11px 6px}
+}
+
 </style>
 </head>
 <body>
@@ -1441,27 +1538,30 @@ html,body,.app{background:var(--bg)}
 </section>
 
 <section id="patternsView" class="view">
-  <div class="panel-head"><div><div class="eyebrow">Deine Muster</div><h1>Was löst Rauchen bei dir aus?</h1></div></div>
-  <div class="panel-body">
-    <div id="calibrationBox" class="calibration"><b id="calibrationTitle">Wir sammeln noch.</b><p id="calibrationText">Noch 8 Momente, bis Smoke Lab ein erstes stabiles Muster zeigt.</p><div class="progressbar"><span id="calibrationBar" style="width:0%"></span></div></div>
-    <div class="pattern-coach card">
-      <div class="pattern-coach-label">Was gerade sinnvoll ist</div>
-      <div id="patternCoachTitle" class="card-title">Noch nichts vorschnell deuten.</div>
-      <p id="patternCoachText" class="muted" style="margin-top:5px">Erfasse erst ein paar echte Rauchmomente. Danach kann Smoke Lab Wiederholungen vorsichtig benennen.</p>
-      <button id="patternCoachBtn" class="pattern-action" type="button">Rauchmoment begleiten</button>
+  <div class="panel-head"><div><div class="eyebrow">Dein persönlicher Plan</div><h1>Was wir jetzt damit machen</h1></div></div>
+  <div class="panel-body pattern-screen">
+    <div class="pattern-hero">
+      <div class="pattern-stage"><span id="patternStage">Phase: Verstehen</span><b id="patternConfidence">0/8 Momente</b></div>
+      <h2 id="patternHeroTitle">Wir lernen deine Rauchmomente kennen.</h2>
+      <p id="patternHeroText">Noch keine vorschnellen Schlüsse. Erst echte Situationen machen die Hilfe persönlicher.</p>
     </div>
-    <div id="patternAnswers" style="display:none">
-      <div class="answer-grid">
-        <div class="answer"><span>Wann?</span><b id="whenAnswer">—</b></div>
-        <div class="answer"><span>Wodurch?</span><b id="triggerAnswer">—</b></div>
-        <div class="answer"><span>Was hilft?</span><b id="helpAnswer">—</b></div>
-        <div class="answer"><span>Ø Drang</span><b id="urgeAnswer">—</b></div>
-      </div>
-      <div class="card" style="margin-top:9px"><div class="card-title">Was du daraus tun kannst</div><p id="patternAdvice" class="muted" style="margin-top:5px">—</p></div>
+
+    <div class="pattern-facts">
+      <div><span>Häufigster Auslöser</span><b id="triggerAnswer">—</b></div>
+      <div><span>Typische Zeit</span><b id="whenAnswer">—</b></div>
+      <div><span>Was bisher hilft</span><b id="helpAnswer">—</b></div>
     </div>
-    <div class="card">
-      <div style="display:flex;justify-content:space-between;align-items:center"><div class="card-title">Letzte Momente</div><span id="historyCount" class="muted">0</span></div>
-      <div id="historyList" class="recent" style="margin-top:6px"><span class="muted">Noch keine Momente erfasst.</span></div>
+
+    <div class="pattern-plan">
+      <div class="pattern-plan-label">Dein nächster Plan</div>
+      <h3 id="patternCoachTitle">Beim nächsten Rauchdrang öffnen.</h3>
+      <p id="patternCoachText">Smoke Lab führt dich dann durch genau einen kleinen Schritt.</p>
+      <button id="patternCoachBtn" class="pattern-action" type="button">Diesen Plan beim nächsten Drang nutzen</button>
+    </div>
+
+    <div class="pattern-history-mini">
+      <div><span>Zuletzt erfasst</span><b id="historyCount">0</b></div>
+      <div id="historyList" class="recent compact-history"><span class="muted">Noch keine Momente.</span></div>
     </div>
   </div>
 </section>
@@ -1585,6 +1685,40 @@ function avg(a){return a.length?a.reduce(function(x,y){return x+y},0)/a.length:n
 function currentMission(){return missions[Math.min(29,Math.max(0,state.missionDay-1))]}
 function eventsToday(){var t=todayKey();return state.events.filter(function(e){return (e.date||"").slice(0,10)===t})}
 function phaseIndex(){return Math.min(4,Math.floor((Math.max(1,state.missionDay)-1)/6))}
+function coachingStage(){
+  var n=state.events.length;
+  if(n<3)return {key:"observe",label:"Verstehen",step:"Wir sammeln echte Rauchmomente."};
+  if(n<CALIBRATION)return {key:"learn",label:"Muster erkennen",step:"Wir prüfen, was sich wiederholt."};
+  if(n<16)return {key:"interrupt",label:"Unterbrechen",step:"Wir unterbrechen deinen häufigsten Autopiloten."};
+  if(n<24)return {key:"replace",label:"Ersetzen",step:"Wir bauen passendere Reaktionen auf."};
+  return {key:"stabilize",label:"Stabilisieren",step:"Wir festigen, was bei dir funktioniert."};
+}
+function triggerStats(name){
+  var rows=state.events.filter(function(e){return (e.trigger||"Keine Ahnung")===name});
+  var measured=rows.filter(function(e){return e.before!=null&&e.after!=null&&Number.isFinite(Number(e.before))&&Number.isFinite(Number(e.after));});
+  var deltas=measured.map(function(e){return Number(e.before)-Number(e.after)});
+  var pauses=rows.map(function(e){return Number(e.delaySeconds)||0}).filter(function(x){return x>0});
+  var success=rows.filter(function(e){return e.outcome==="not_smoked"||e.outcome==="other"||e.outcome==="delayed"}).length;
+  return {n:rows.length,measured:measured.length,delta:deltas.length?avg(deltas):0,pause:pauses.length?avg(pauses):0,success:success};
+}
+function alternateStrategyFor(trigger){
+  var map={
+    "Stress":"Wechsle für zwei Minuten den Ort und beschäftige Hände oder Körper bewusst mit etwas anderem.",
+    "Kaffee / Pause":"Trink den Kaffee diesmal an einem anderen Ort oder ohne deine übliche Rauch-Routine.",
+    "Routine":"Mach zuerst eine andere kurze Handlung und verschiebe die Zigarette danach um fünf Minuten.",
+    "Mit anderen":"Bleib kurz bei deiner Tätigkeit und entscheide erst später, ob du wirklich mitgehst.",
+    "Langeweile":"Starte eine konkrete kurze Tätigkeit, die Hände und Aufmerksamkeit bindet.",
+    "Nach dem Essen":"Steh sofort auf, verlasse den Essbereich und beginne eine feste Folgehandlung.",
+    "Keine Ahnung":"Wechsle kurz Ort und Tätigkeit und bewerte den Drang danach erneut."
+  };
+  return map[trigger]||map["Keine Ahnung"];
+}
+function adaptiveStrategy(trigger,before){
+  if(state.events.length<CALIBRATION)return strategyFor(trigger,before);
+  var s=triggerStats(trigger);
+  if(s.measured>=2&&s.delta<=0.2)return alternateStrategyFor(trigger);
+  return strategyFor(trigger,before);
+}
 function topTrigger(){
   if(!state.events.length)return null;
   var c={};state.events.forEach(function(e){var k=e.trigger||"Keine Ahnung";c[k]=(c[k]||0)+1});
@@ -1647,7 +1781,7 @@ function adaptiveMission(){
   if(best&&best.delta>0.5){
     return ["Wiederhole heute, was dir bereits geholfen hat.","Bei "+best.name+" sank dein Drang bisher am stärksten. Mach heute denselben kleinen Schritt noch einmal."];
   }
-  return ["Heute kümmern wir uns um deinen häufigsten Auslöser: "+top.name+".",strategyFor(top.name,3)];
+  return ["Heute kümmern wir uns um deinen häufigsten Auslöser: "+top.name+".",adaptiveStrategy(top.name,3)];
 }
 function showView(name){
   ["today","plan","patterns","progress"].forEach(function(v){$(v+"View").classList.toggle("active",v===name)});
@@ -1661,32 +1795,33 @@ function boot(){
 }
 function renderAll(){renderToday();renderPlan();renderPatterns();renderProgress();renderProfile()}
 function renderToday(){
-  var ev=eventsToday(),done=state.missionDoneDate===todayKey(),n=state.events.length,cm=coachModel();
-  $("helloLine").textContent="Hallo "+state.profile.name+". Beim nächsten Rauchdrang bin ich da.";
-  $("focusKicker").textContent="Beim nächsten Rauchdrang";
+  var ev=eventsToday(),n=state.events.length,cm=coachModel(),stage=coachingStage(),top=n?topTrigger():null;
+  $("helloLine").textContent="Hallo "+state.profile.name+". "+stage.step;
+  $("focusKicker").textContent="Phase · "+stage.label;
 
   if(n<3){
-    $("focusTitle").textContent="Öffne Smoke Lab, bevor du rauchst.";
-    $("focusText").textContent="Zwei kurze Fragen. Danach bekommst du genau einen konkreten Vorschlag für diesen Moment.";
+    $("focusTitle").textContent="Öffne Smoke Lab beim nächsten Rauchdrang.";
+    $("focusText").textContent="Wir erfassen kurz Auslöser und Drang. Danach bekommst du eine konkrete Hilfe für genau diesen Moment.";
+    $("craveBtn").textContent="Ich will gerade rauchen";
   }else if(n<CALIBRATION){
-    var top=topTrigger();
-    $("focusTitle").textContent="Achte heute besonders auf „"+top.name+"“.";
-    $("focusText").textContent="Dieser Auslöser taucht bisher öfter auf. Öffne Smoke Lab beim nächsten Mal, bevor du automatisch reagierst.";
+    $("focusTitle").textContent=top.name+" fällt bisher häufiger auf.";
+    $("focusText").textContent="Noch kein festes Muster. Beim nächsten ähnlichen Moment schauen wir gezielt, was passiert.";
+    $("craveBtn").textContent="Nächsten Rauchmoment begleiten";
   }else{
-    var top2=topTrigger();
-    $("focusTitle").textContent="Heute kümmern wir uns um „"+top2.name+"“.";
-    $("focusText").textContent=strategyFor(top2.name,4);
+    var s=triggerStats(top.name);
+    $("focusTitle").textContent="Dein Plan für „"+top.name+"“.";
+    $("focusText").textContent=adaptiveStrategy(top.name,4);
+    $("craveBtn").textContent="Plan beim nächsten Drang nutzen";
   }
 
   $("coachTitle").textContent=cm.title;
   $("coachText").textContent=cm.meaning;
   if($("coachNext"))$("coachNext").textContent=cm.next;
-  $("focusBadge").textContent=done?"Heute begleitet":"Bereit für den nächsten Moment";
+  $("focusBadge").textContent=n<CALIBRATION?n+"/8 Momente":"Plan aktiv";
   $("journeyMini").style.width=Math.min(100,n/CALIBRATION*100)+"%";
-  $("missionBtn").textContent=done?"Abgeschlossen":"Mein Fokus";
 
   var delays=ev.map(function(e){return Number(e.delay)||0}).filter(function(x){return x>0});
-  var afters=ev.map(function(e){return Number(e.after)}).filter(function(x){return x>0});
+  var afters=ev.map(function(e){return e.after!=null?Number(e.after):null}).filter(Number.isFinite);
   $("awareMetric").textContent=ev.length;
   $("delayMetric").textContent=delays.length?Math.round(avg(delays))+"m":"—";
   $("urgeMetric").textContent=afters.length?avg(afters).toFixed(1)+"/5":"—";
@@ -1698,41 +1833,38 @@ function renderPlan(){
   else{var best=bestStrategyTrigger();$("tomorrowText").textContent=best&&best.delta>0?"Wir wiederholen, was deinen Drang bisher am stärksten gesenkt hat.":"Wir üben beim häufigsten Auslöser einen neuen kleinen Abstand."}
 }
 function coachModel(){
-  var n=state.events.length;
-  if(n===0){
-    return {
-      title:"Noch keine Daten über dein Muster.",
-      meaning:"Das ist okay. Erst ein paar echte Rauchmomente zeigen, was bei dir wirklich wiederkehrt.",
-      next:"Beim nächsten Rauchdrang vor der Zigarette öffnen."
-    };
-  }
-  if(n<3){
-    return {
-      title:"Ich lerne gerade deine typischen Situationen kennen.",
-      meaning:"Mit "+n+" Moment"+(n===1?"":"en")+" ist es noch zu früh für ein festes Muster.",
-      next:"Beim nächsten Drang wieder kurz Auslöser und Stärke erfassen."
-    };
-  }
-  var top=topTrigger();
-  if(n<CALIBRATION){
-    return {
-      title:"Etwas fällt auf: "+top.name+".",
-      meaning:top.count+" deiner "+n+" bisherigen Momente passen dazu. Noch kein stabiles Muster, aber etwas, das sich zu beobachten lohnt.",
-      next:"Beim nächsten „"+top.name+"“-Moment die App vor der Zigarette öffnen."
-    };
-  }
-  var best=bestStrategyTrigger();
-  if(best&&best.delta>0.5){
-    return {
-      title:"Dein häufigster Auslöser: "+top.name+".",
-      meaning:"Bei "+best.name+" sank dein Drang bisher im Mittel um "+best.delta.toFixed(1)+" Punkte, wenn du einen bewussten Abstand eingebaut hast.",
-      next:strategyFor(top.name,4)
-    };
-  }
+  var n=state.events.length,stage=coachingStage();
+  if(n===0)return {
+    title:"Ich kenne dein Muster noch nicht.",
+    meaning:"Ein paar echte Rauchmomente reichen, damit wir statt Vermutungen mit deinen eigenen Situationen arbeiten.",
+    next:"Beim nächsten Drang vor der Zigarette öffnen."
+  };
+  if(n<3)return {
+    title:"Wir sammeln gerade echte Situationen.",
+    meaning:"Mit "+n+" Moment"+(n===1?"":"en")+" ist es noch zu früh für ein persönliches Muster.",
+    next:"Noch einmal Auslöser und Drang erfassen."
+  };
+  var top=topTrigger(),s=triggerStats(top.name);
+  if(n<CALIBRATION)return {
+    title:"Etwas fällt auf: "+top.name+".",
+    meaning:top.count+" von "+n+" Momenten passen dazu. Das ist eine Spur, noch kein stabiles Muster.",
+    next:"Beim nächsten „"+top.name+"“-Moment vor der Zigarette öffnen."
+  };
+  var action=adaptiveStrategy(top.name,4);
+  if(stage.key==="interrupt")return {
+    title:"Wir arbeiten jetzt gezielt an "+top.name+".",
+    meaning:"Dieser Auslöser kommt bei dir am häufigsten vor. Jetzt geht es nicht mehr nur ums Beobachten, sondern ums Unterbrechen.",
+    next:action
+  };
+  if(stage.key==="replace")return {
+    title:"Wir bauen eine neue Reaktion für "+top.name+" auf.",
+    meaning:s.delta>0.5?"Kurzer Abstand hat deinen Drang in gemessenen Momenten bereits verändert. Jetzt stabilisieren wir eine passende Alternative.":"Der Auslöser ist klar. Die beste Reaktion ist noch nicht zuverlässig – deshalb vergleichen wir konkrete Alternativen.",
+    next:action
+  };
   return {
-    title:"Dein häufigster Auslöser: "+top.name+".",
-    meaning:"Das Muster ist inzwischen deutlich. Welche Reaktion dir am zuverlässigsten hilft, lernen wir noch weiter.",
-    next:strategyFor(top.name,4)
+    title:"Jetzt festigen wir, was bei dir funktioniert.",
+    meaning:s.delta>0.5?"Bei "+top.name+" zeigt sich ein wiederholbarer Effekt. Jetzt soll daraus eine Alltagreaktion werden.":"Wir haben genug Kontext. Jetzt geht es darum, passende Reaktionen zuverlässig im Alltag einzusetzen.",
+    next:action
   };
 }
 function timeBucket(dateStr){
@@ -1740,56 +1872,52 @@ function timeBucket(dateStr){
   if(h<10)return "morgens";if(h<14)return "mittags";if(h<18)return "nachmittags";if(h<22)return "abends";return "spät abends";
 }
 function renderPatterns(){
-  var n=state.events.length,remain=Math.max(0,CALIBRATION-n),top=n?topTrigger():null;
+  var n=state.events.length,stage=coachingStage(),top=n?topTrigger():null;
   $("historyCount").textContent=String(n);
-  $("calibrationBox").style.display=n<CALIBRATION?"block":"none";
-  $("patternAnswers").style.display=n>=CALIBRATION?"block":"none";
-  $("calibrationBar").style.width=Math.min(100,n/CALIBRATION*100)+"%";
+  $("patternStage").textContent="Phase: "+stage.label;
+  $("patternConfidence").textContent=n<CALIBRATION?n+"/8 Momente":"Muster aktiv";
 
-  if(n===0){
-    $("calibrationTitle").textContent="Noch keine Rauchmomente.";
-    $("calibrationText").textContent="Sobald du Smoke Lab in echten Situationen nutzt, suchen wir nach Wiederholungen – nicht nach einzelnen Zufällen.";
-    $("patternCoachTitle").textContent="Noch nichts vorschnell deuten.";
-    $("patternCoachText").textContent="Beim nächsten Rauchdrang kurz die App öffnen. Ein echter Moment ist hilfreicher als eine Vermutung.";
-  }else if(n<3){
-    $("calibrationTitle").textContent="Erste Situationen gesammelt.";
-    $("calibrationText").textContent="Noch "+remain+" Momente bis zur stabileren Auswertung. Mit "+n+" Moment"+(n===1?"":"en")+" wäre ein persönliches Muster noch zu früh.";
-    $("patternCoachTitle").textContent="Weiter beobachten – ohne Urteil.";
-    $("patternCoachText").textContent="Aktuell fällt noch nichts belastbar auf. Beim nächsten Moment erfassen wir wieder nur Auslöser und Verlauf.";
-  }else if(n<CALIBRATION){
-    $("calibrationTitle").textContent="Eine Spur wird sichtbar.";
-    $("calibrationText").textContent="Noch "+remain+" "+(remain===1?"Moment":"Momente")+" bis zur stabileren Auswertung.";
-    $("patternCoachTitle").textContent=top.name+" taucht bisher am häufigsten auf.";
-    $("patternCoachText").textContent=top.count+" von "+n+" erfassten Momenten passen dazu. Das ist noch kein festes Muster – beim nächsten ähnlichen Moment schauen wir gezielt hin.";
+  if(!n){
+    $("patternHeroTitle").textContent="Wir lernen deine Rauchmomente kennen.";
+    $("patternHeroText").textContent="Noch keine vorschnellen Schlüsse. Erst echte Situationen machen die Hilfe persönlicher.";
+    $("triggerAnswer").textContent="—";$("whenAnswer").textContent="—";$("helpAnswer").textContent="Noch offen";
+    $("patternCoachTitle").textContent="Beim nächsten Rauchdrang öffnen.";
+    $("patternCoachText").textContent="Smoke Lab führt dich durch genau einen kleinen Schritt.";
   }else{
-    var times={},best=bestStrategyTrigger();
-    var measuredBefore=state.events.filter(function(e){return e.before!=null}).map(function(e){return Number(e.before)}).filter(Number.isFinite);
+    var times={},best=bestStrategyTrigger(),s=triggerStats(top.name);
     state.events.forEach(function(e){var k=timeBucket(e.date);times[k]=(times[k]||0)+1});
     var when=Object.keys(times).sort(function(a,b){return times[b]-times[a]})[0]||"—";
-    $("whenAnswer").textContent=when;
     $("triggerAnswer").textContent=top.name;
-    $("helpAnswer").textContent=best&&best.delta>0.5?"Kurzer Abstand":"Noch nicht eindeutig";
-    $("urgeAnswer").textContent=measuredBefore.length?avg(measuredBefore).toFixed(1)+"/5":"—";
-    $("patternAdvice").textContent=strategyFor(top.name,4);
-    $("patternCoachTitle").textContent="Dein häufigster Auslöser ist "+top.name+".";
-    $("patternCoachText").textContent=best&&best.delta>0.5
-      ?"Bei gemessenen Momenten zeigt sich außerdem ein erster Hinweis, dass bewusster Abstand helfen kann."
-      :"Der Auslöser ist klarer als die beste Reaktion. Deshalb schauen wir weiterhin kleine, konkrete Unterbrechungen.";
+    $("whenAnswer").textContent=when;
+    $("helpAnswer").textContent=best&&best.delta>0.5?"Kurzer Abstand":"Noch nicht klar";
+
+    if(n<CALIBRATION){
+      $("patternHeroTitle").textContent=top.name+" ist bisher die stärkste Spur.";
+      $("patternHeroText").textContent=top.count+" von "+n+" Momenten passen dazu. Noch kein festes Muster – wir prüfen weiter.";
+      $("patternCoachTitle").textContent="Beim nächsten „"+top.name+"“-Moment gezielt hinschauen.";
+      $("patternCoachText").textContent="Öffne Smoke Lab vor der Zigarette. Wir vergleichen Drang und Reaktion.";
+    }else{
+      $("patternHeroTitle").textContent="Dein aktuelles Muster: "+top.name+".";
+      $("patternHeroText").textContent="Am häufigsten "+when+". "+(s.measured?"Der Drang wurde dabei "+s.measured+"× vorher/nachher gemessen.":"Der Drang wurde dabei noch nicht oft genug vorher/nachher gemessen.");
+      $("patternCoachTitle").textContent=adaptiveStrategy(top.name,4);
+      $("patternCoachText").textContent=s.delta>0.5
+        ?"Kurzer Abstand zeigt bei dir erste wiederholte Wirkung. Beim nächsten ähnlichen Moment nutzen wir das gezielt."
+        :"Der Auslöser ist klarer als die beste Reaktion. Beim nächsten Moment vergleichen wir eine konkrete Alternative.";
+    }
   }
 
   var hist=$("historyList");hist.innerHTML="";
-  if(!n){hist.innerHTML='<span class="muted">Noch keine Momente erfasst.</span>';return}
-  state.events.slice(0,5).forEach(function(e){
+  if(!n){hist.innerHTML='<span class="muted">Noch keine Momente.</span>';return}
+  state.events.slice(0,2).forEach(function(e){
     var row=document.createElement("div");row.className="recent-row";
     var left=document.createElement("div"),b=document.createElement("b"),s=document.createElement("small");
     b.textContent=e.trigger||"Unklar";
     var detail=e.time||"";
-    if(e.before!=null&&e.after!=null)detail+=" · Drang "+e.before+"/5 → "+e.after+"/5";
+    if(e.before!=null&&e.after!=null)detail+=" · "+e.before+"/5 → "+e.after+"/5";
     else detail+=" · schnell erfasst";
-    if(e.delay)detail+=" · "+e.delay+"m Abstand";
     s.textContent=detail;left.append(b,s);
     var tag=document.createElement("span");tag.className="tag"+(e.outcome==="smoked"?" smoke":"");
-    tag.textContent=e.outcome==="smoked"?"Geraucht":e.outcome==="delayed"?"Gewartet":e.outcome==="not_smoked"?"Nicht geraucht":"Anders gelöst";
+    tag.textContent=e.outcome==="smoked"?"Geraucht":e.outcome==="not_smoked"?"Nicht geraucht":e.outcome==="delayed"?"Gewartet":"Anders";
     row.append(left,tag);hist.append(row);
   });
 }
@@ -1886,17 +2014,31 @@ function renderTriggerButtons(containerId,nextId,onPick){
   });
 }
 function openCrave(){
-  flow={mode:"crave",trigger:null,before:3,after:3,outcome:null,delay:0,seconds:0,timer:null,mission:state.missionDoneDate!==todayKey(),startedAt:null,waitedSeconds:0};
-  $("flowTitle").textContent="Ich helfe dir jetzt";$("flowSubtitle").textContent="Eine Frage nach der anderen. Du musst nichts vorbereiten.";
+  flow={mode:"crave",trigger:null,before:3,after:3,outcome:null,delay:0,seconds:0,timer:null,mission:state.missionDoneDate!==todayKey(),startedAt:null,waitedSeconds:0,strategyUsed:null};
+  $("flowTitle").textContent="Ich helfe dir jetzt";
+  $("flowSubtitle").textContent="Eine Frage nach der anderen. Du musst nichts vorbereiten.";
+
+  if(state.events.length>=CALIBRATION){
+    var top=topTrigger();
+    $("flowContent").innerHTML='<div class="question">Ist es wieder „'+top.name+'“?</div><div class="helper">Das ist aktuell dein häufigster Auslöser. Wenn ja, springen wir direkt zu deinem Plan.</div><div class="choice-grid adaptive-confirm"><button id="sameTrigger" class="choice">Ja, genau</button><button id="otherTrigger" class="choice">Nein, etwas anderes</button></div>';
+    $("sameTrigger").addEventListener("click",function(){flow.trigger=top.name;showUrgeBefore()});
+    $("otherTrigger").addEventListener("click",showTriggerPicker);
+  }else{
+    showTriggerPicker();
+  }
+  showSheet();
+}
+function showTriggerPicker(){
   $("flowContent").innerHTML='<div class="flow-intro"><div class="flow-watermark"><svg viewBox="0 0 64 64"><path d="M10 34c10-12 18-12 28-2 7 7 11 6 16 0"/><path d="M13 43c8-7 15-7 22-1"/><circle cx="17" cy="19" r="5"/></svg></div><div class="question">Was hat den Rauchdrang gerade ausgelöst?</div><div class="helper">Tippe auf das, was gerade am ehesten passt.</div></div><div class="choice-grid" id="triggerChoices"></div><div class="flow-footer"><button id="toUrge" class="cta" disabled>Weiter</button></div>';
-  renderTriggerButtons("triggerChoices","toUrge");$("toUrge").addEventListener("click",showUrgeBefore);showSheet();
+  renderTriggerButtons("triggerChoices","toUrge");
+  $("toUrge").addEventListener("click",showUrgeBefore);
 }
 function showUrgeBefore(){
   $("flowContent").innerHTML='<div class="question">Wie stark ist der Drang?</div><div class="helper">Nur dein Gefühl gerade – ohne richtig oder falsch.</div><div class="scale" id="beforeScale"></div><div class="flow-footer"><button id="toCoach" class="cta">Weiter</button></div>';
   renderScale("beforeScale",function(v){flow.before=v},3);$("toCoach").addEventListener("click",showCoachIntervention);
 }
 function showCoachIntervention(){
-  var d=recommendedDelay(flow.trigger,flow.before);flow.delay=d;var action=strategyFor(flow.trigger,flow.before);
+  var d=recommendedDelay(flow.trigger,flow.before);flow.delay=d;var action=adaptiveStrategy(flow.trigger,flow.before);flow.strategyUsed=action;
   $("flowContent").innerHTML='<div class="intervention"><small>Ein konkreter Schritt für jetzt</small><h3>'+d+' Minuten Abstand.</h3><p>'+action+'</p><div class="why-step"><span>Warum dieser Schritt?</span>'+rationaleFor(flow.trigger)+'</div></div><button id="startTimer" class="cta">'+d+' Minuten ausprobieren</button><button id="skipTimer" class="secondary">Ohne Pause weiter</button>';
   $("startTimer").addEventListener("click",function(){startDelay(d)});$("skipTimer").addEventListener("click",showAfter);
 }
@@ -1904,7 +2046,7 @@ function startDelay(mins){
   flow.seconds=mins*60;
   flow.startedAt=Date.now();
   flow.waitedSeconds=0;
-  $("flowContent").innerHTML='<div class="question">Nur kurz Abstand. Mehr nicht.</div><div class="helper">Du musst nichts schaffen oder beweisen. Nach der Pause entscheidest du neu.</div><div class="timer" id="timerVal">'+mins+':00</div><div class="card"><div class="card-title">Währenddessen</div><p class="muted" style="margin-top:4px">'+strategyFor(flow.trigger,flow.before)+'</p></div><button id="earlyBtn" class="secondary">Jetzt schon auswerten</button>';
+  $("flowContent").innerHTML='<div class="question">Nur kurz Abstand. Mehr nicht.</div><div class="helper">Du musst nichts schaffen oder beweisen. Nach der Pause entscheidest du neu.</div><div class="timer" id="timerVal">'+mins+':00</div><div class="card"><div class="card-title">Währenddessen</div><p class="muted" style="margin-top:4px">'+(flow.strategyUsed||adaptiveStrategy(flow.trigger,flow.before))+'</p></div><button id="earlyBtn" class="secondary">Jetzt schon auswerten</button>';
   $("earlyBtn").addEventListener("click",showAfter);
   flow.timer=setInterval(function(){flow.seconds--;var m=Math.floor(flow.seconds/60),s=flow.seconds%60,el=$("timerVal");if(el)el.textContent=m+":"+String(s).padStart(2,"0");if(flow.seconds<=0){clearInterval(flow.timer);flow.timer=null;showAfter()}},1000);
 }
@@ -1965,7 +2107,7 @@ function saveMoment(){
   var now=new Date();
   var waitedSeconds=Math.max(0,Number(flow.waitedSeconds)||0);
   var elapsed=Math.floor(waitedSeconds/60);
-  var e={id:createId(),date:now.toISOString(),time:now.toLocaleTimeString([], {hour:"2-digit",minute:"2-digit"}),trigger:flow.trigger||"Keine Ahnung",before:flow.before,after:flow.after,delay:elapsed,delaySeconds:waitedSeconds,outcome:flow.outcome};
+  var e={id:createId(),date:now.toISOString(),time:now.toLocaleTimeString([], {hour:"2-digit",minute:"2-digit"}),trigger:flow.trigger||"Keine Ahnung",before:flow.before,after:flow.after,delay:elapsed,delaySeconds:waitedSeconds,outcome:flow.outcome,strategyUsed:flow.strategyUsed||null};
   state.events.unshift(e);if(flow.outcome==="smoked")state.lastSmoke=Date.now();
   if(flow.mission&&state.missionDoneDate!==todayKey()){state.missionDoneDate=todayKey();state.experiments.unshift({id:createId(),date:todayKey(),day:state.missionDay,title:adaptiveMission()[0]});if(state.missionDay<30)state.missionDay++}
   save();
@@ -1973,40 +2115,47 @@ function saveMoment(){
   showResult(e);
 }
 function showResult(e){
-  var change=e.before-e.after;
+  var change=Number(e.before)-Number(e.after),wait=e.delaySeconds||0;
   var headline=change>0?"−"+change+" Punkte":change===0?"Unverändert":"+"+Math.abs(change)+" Punkte";
-  var title="",insight="",next="",wait=e.delaySeconds||0;
+  var title="",insight="",next="",learned="";
 
   if(e.outcome==="smoked"){
     if(wait>=60){
-      title="Du hast einen echten Abstand geschaffen.";
-      insight="Du hast danach geraucht, aber erst nach "+e.delay+" Minute"+(e.delay===1?"":"n")+". Genau diese tatsächlich gemessene Pause wird gespeichert.";
+      title="Du hast vor der Zigarette echten Abstand geschaffen.";
+      insight="Die Pause betrug tatsächlich "+e.delay+" Minute"+(e.delay===1?"":"n")+".";
     }else if(wait>0){
-      title="Der Moment war nicht ganz automatisch.";
-      insight="Du hast "+wait+" Sekunden gewartet und danach geraucht. Auch kurze echte Pausen werden erfasst.";
+      title="Du hast den Autopiloten kurz unterbrochen.";
+      insight="Du hast "+wait+" Sekunden gewartet und danach geraucht.";
     }else{
-      title="Diesmal hast du direkt geraucht.";
-      insight="Du hast diesmal direkt geraucht. Deshalb wird keine Wartezeit angerechnet. Der Auslöser hilft trotzdem dabei, dein Muster besser zu erkennen.";
+      title="Diesmal ging es direkt zur Zigarette.";
+      insight="Es wird deshalb keine Wartezeit angerechnet.";
     }
-    next="Beim nächsten ähnlichen Moment öffnest du Smoke Lab wieder vor der Zigarette.";
-  }else if(change>0){
-    title="Dein Drang ist tatsächlich gesunken.";
-    insight="Von "+e.before+"/5 auf "+e.after+"/5, ohne dass du sofort reagieren musstest. Das ist ein konkretes Ergebnis aus genau diesem Moment.";
-    next="Wenn dieser Auslöser wiederkommt, können wir dieselbe Reaktion erneut prüfen.";
+  }else if(e.outcome==="not_smoked"){
+    title="Du hast diesen Moment ohne Zigarette beendet.";
+    insight="Wichtig ist nicht Perfektion, sondern was in genau dieser Situation funktioniert hat.";
   }else if(e.outcome==="delayed"){
-    title="Du hast Zeit zwischen Drang und Entscheidung gebracht.";
-    insight="Der Drang wurde nicht kleiner, aber der Ablauf war weniger automatisch. Auch das kann für dein Muster relevant sein.";
-    next="Beim nächsten Mal prüfen wir, ob eine andere Reaktion besser zu diesem Auslöser passt.";
+    title="Du hast die Entscheidung verschoben.";
+    insight="Damit lag zwischen Drang und Reaktion echter Abstand.";
   }else{
-    title="Du hast anders reagiert als automatisch zu rauchen.";
-    insight="Der Drang hat sich nicht klar verändert. Smoke Lab speichert den Moment trotzdem, damit sich mit mehreren Situationen ein Muster zeigen kann.";
-    next="Beim nächsten ähnlichen Auslöser vergleichen wir, ob dieselbe Reaktion erneut hilfreich ist.";
+    title="Du hast anders auf den Drang reagiert.";
+    insight="Diese Alternative wird mit ähnlichen Momenten vergleichbar.";
+  }
+
+  if(change>0)learned="Dein Drang sank von "+e.before+"/5 auf "+e.after+"/5.";
+  else if(change===0)learned="Dein Drang blieb bei "+e.after+"/5.";
+  else learned="Dein Drang stieg von "+e.before+"/5 auf "+e.after+"/5.";
+
+  var same=state.events.filter(function(x){return x.trigger===e.trigger&&x.id!==e.id});
+  if(same.length>=2&&change<=0){
+    next="Beim nächsten „"+e.trigger+"“-Moment probieren wir eine andere Unterbrechung.";
+  }else{
+    next="Beim nächsten „"+e.trigger+"“-Moment vergleichen wir, ob derselbe Schritt wieder hilft.";
   }
 
   $("flowContent").innerHTML=
     '<div class="result"><b>'+headline+'</b><span>Drang '+e.before+'/5 → '+e.after+'/5</span></div>'+
-    '<div class="result-insight"><div class="label">Was dieser Moment gezeigt hat</div><h3>'+title+'</h3><p>'+insight+'</p><div class="result-next"><b>Nächstes Mal:</b> '+next+'</div></div>'+
-    '<button id="finishBtn" class="cta">Zurück zu Heute</button>';
+    '<div class="result-insight"><div class="label">Heute gelernt</div><h3>'+title+'</h3><p>'+insight+' '+learned+'</p><div class="result-next"><b>Nächstes Mal:</b> '+next+'</div></div>'+
+    '<button id="finishBtn" class="cta">Zurück zu deinem Plan</button>';
   $("finishBtn").addEventListener("click",function(){closeFlow();showView("today")});
 }
 $("reduceMode").addEventListener("click",function(){$("reduceMode").classList.add("selected");$("quitMode").classList.remove("selected")});
