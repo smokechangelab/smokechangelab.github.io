@@ -1231,13 +1231,95 @@ html,body,.app{background:var(--bg)}
   .pattern-action{height:38px;margin-top:8px}
 }
 
+
+/* --- v13 onboarding brand + reliable bottom actions --- */
+.setup-wrap{
+  display:flex;
+  flex:1;
+  flex-direction:column;
+  justify-content:center;
+  gap:14px;
+}
+.morrow-brand{
+  display:flex;
+  align-items:center;
+  gap:11px;
+  margin-bottom:4px;
+}
+.morrow-logo{
+  width:44px;
+  height:44px;
+  border-radius:13px;
+  background:#171A18;
+  color:#fff;
+  display:grid;
+  place-items:center;
+  font-size:22px;
+  font-weight:750;
+  letter-spacing:-1px;
+  box-shadow:0 8px 20px rgba(23,26,24,.10);
+}
+.morrow-brand-copy{
+  display:flex;
+  flex-direction:column;
+  gap:1px;
+}
+.morrow-brand-copy span{
+  font-size:9px;
+  line-height:1;
+  letter-spacing:1.15px;
+  text-transform:uppercase;
+  color:var(--muted);
+  font-weight:700;
+}
+.morrow-brand-copy b{
+  font-size:17px;
+  line-height:1.15;
+  letter-spacing:-.35px;
+  color:var(--ink);
+  font-weight:700;
+}
+.flow-footer{
+  margin-top:10px;
+  width:100%;
+}
+.flow-footer .cta{
+  width:100%;
+}
+.cta:disabled{
+  opacity:1 !important;
+  background:#B8BAB7 !important;
+  color:#F8F8F6 !important;
+  box-shadow:none !important;
+  cursor:default;
+}
+.cta:not(:disabled){
+  background:var(--ink) !important;
+  color:#fff !important;
+}
+#smokeTriggers + .flow-footer{
+  margin-top:14px;
+}
+@media(max-height:760px){
+  .morrow-logo{width:40px;height:40px;border-radius:12px;font-size:20px}
+  .morrow-brand-copy b{font-size:16px}
+  .setup-wrap{gap:11px}
+}
+
 </style>
 </head>
 <body>
 <div class="app">
 
 <section id="setupView" class="view active">
-  <div style="display:flex;flex:1;flex-direction:column;justify-content:center;gap:14px">
+  <div class="setup-wrap">
+    <div class="morrow-brand">
+      <div class="morrow-logo" aria-hidden="true">M</div>
+      <div class="morrow-brand-copy">
+        <span>Morrow Tools</span>
+        <b>Smoke Lab</b>
+      </div>
+    </div>
     <div>
       <div class="eyebrow">Smoke Lab</div>
       <h1 style="font-size:37px;line-height:1.02;letter-spacing:-1.5px;margin-top:5px">Verstehe, wann du automatisch rauchst.<br>Und was dir wirklich hilft.</h1>
@@ -1758,11 +1840,11 @@ function renderTriggerButtons(containerId,nextId,onPick){
 function openCrave(){
   flow={mode:"crave",trigger:null,before:3,after:3,outcome:null,delay:0,seconds:0,timer:null,mission:state.missionDoneDate!==todayKey(),startedAt:null,waitedSeconds:0};
   $("flowTitle").textContent="Ich helfe dir jetzt";$("flowSubtitle").textContent="Eine Frage nach der anderen. Du musst nichts vorbereiten.";
-  $("flowContent").innerHTML='<div class="flow-intro"><div class="flow-watermark"><svg viewBox="0 0 64 64"><path d="M10 34c10-12 18-12 28-2 7 7 11 6 16 0"/><path d="M13 43c8-7 15-7 22-1"/><circle cx="17" cy="19" r="5"/></svg></div><div class="question">Was hat den Rauchdrang gerade ausgelöst?</div><div class="helper">Tippe auf das, was gerade am ehesten passt.</div></div><div class="choice-grid" id="triggerChoices"></div><button id="toUrge" class="cta" disabled>Weiter</button>';
+  $("flowContent").innerHTML='<div class="flow-intro"><div class="flow-watermark"><svg viewBox="0 0 64 64"><path d="M10 34c10-12 18-12 28-2 7 7 11 6 16 0"/><path d="M13 43c8-7 15-7 22-1"/><circle cx="17" cy="19" r="5"/></svg></div><div class="question">Was hat den Rauchdrang gerade ausgelöst?</div><div class="helper">Tippe auf das, was gerade am ehesten passt.</div></div><div class="choice-grid" id="triggerChoices"></div><div class="flow-footer"><button id="toUrge" class="cta" disabled>Weiter</button></div>';
   renderTriggerButtons("triggerChoices","toUrge");$("toUrge").addEventListener("click",showUrgeBefore);showSheet();
 }
 function showUrgeBefore(){
-  $("flowContent").innerHTML='<div class="question">Wie stark ist der Drang?</div><div class="helper">Nur dein Gefühl gerade – ohne richtig oder falsch.</div><div class="scale" id="beforeScale"></div><button id="toCoach" class="cta">Weiter</button>';
+  $("flowContent").innerHTML='<div class="question">Wie stark ist der Drang?</div><div class="helper">Nur dein Gefühl gerade – ohne richtig oder falsch.</div><div class="scale" id="beforeScale"></div><div class="flow-footer"><button id="toCoach" class="cta">Weiter</button></div>';
   renderScale("beforeScale",function(v){flow.before=v},3);$("toCoach").addEventListener("click",showCoachIntervention);
 }
 function showCoachIntervention(){
@@ -1784,7 +1866,7 @@ function showAfter(){
     flow.startedAt=null;
   }
   if(flow.timer)clearInterval(flow.timer);flow.timer=null;
-  $("flowContent").innerHTML='<div class="question">Wie stark ist der Drang jetzt?</div><div class="helper">Was hat sich verändert?</div><div class="scale" id="afterScale"></div><div class="question" style="margin-top:2px">Was ist passiert?</div><div class="choice-grid" id="outcomes"><button class="choice" data-out="not_smoked">Nicht geraucht</button><button class="choice" data-out="delayed">Noch gewartet</button><button class="choice" data-out="smoked">Geraucht</button><button class="choice" data-out="other">Anders gelöst</button></div><button id="saveMoment" class="cta" disabled>Moment auswerten</button>';
+  $("flowContent").innerHTML='<div class="question">Wie stark ist der Drang jetzt?</div><div class="helper">Was hat sich verändert?</div><div class="scale" id="afterScale"></div><div class="question" style="margin-top:2px">Was ist passiert?</div><div class="choice-grid" id="outcomes"><button class="choice" data-out="not_smoked">Nicht geraucht</button><button class="choice" data-out="delayed">Noch gewartet</button><button class="choice" data-out="smoked">Geraucht</button><button class="choice" data-out="other">Anders gelöst</button></div><div class="flow-footer"><button id="saveMoment" class="cta" disabled>Moment auswerten</button></div>';
   renderScale("afterScale",function(v){flow.after=v},3);
   document.querySelectorAll("#outcomes [data-out]").forEach(function(b){b.addEventListener("click",function(){flow.outcome=b.dataset.out;b.parentElement.querySelectorAll("button").forEach(function(x){x.classList.remove("selected")});b.classList.add("selected");$("saveMoment").disabled=false})});
   $("saveMoment").addEventListener("click",saveMoment);
@@ -1792,8 +1874,10 @@ function showAfter(){
 function openJustSmoked(){
   flow={mode:"smoked",trigger:null,before:3,after:3,outcome:"smoked",delay:0,seconds:0,timer:null,mission:false,startedAt:null,waitedSeconds:0,saved:false};
   $("flowTitle").textContent="Gerade geraucht";$("flowSubtitle").textContent="Kurz festhalten, damit Smoke Lab daraus lernen kann.";
-  $("flowContent").innerHTML='<div class="question">Was war direkt davor?</div><div class="helper">Tippe auf den Auslöser – der Moment wird direkt gespeichert.</div><div class="choice-grid" id="smokeTriggers"></div>';
-  renderTriggerButtons("smokeTriggers",null,function(){setTimeout(saveDirectSmoke,120)});showSheet();
+  $("flowContent").innerHTML='<div class="question">Was war direkt davor?</div><div class="helper">Wähle den Auslöser aus. Danach kannst du den Moment speichern.</div><div class="choice-grid" id="smokeTriggers"></div><div class="flow-footer"><button id="saveSmoke" class="cta" disabled>Moment speichern</button></div>';
+  renderTriggerButtons("smokeTriggers","saveSmoke");
+  $("saveSmoke").addEventListener("click",saveDirectSmoke);
+  showSheet();
 }
 function saveDirectSmoke(){
   if(flow.saved)return;
