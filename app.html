@@ -4,6 +4,10 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
 <meta name="theme-color" content="#F4F6F3">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
+<meta name="smokelab-build" content="20260918-2035">
 <title>Smoke Lab — Elite Health Edition</title>
 <style>
 :root{
@@ -2341,6 +2345,32 @@ button{font-weight:650 !important}
 <script>
 (function(){
 "use strict";
+var SMOKELAB_BUILD="20260918-2035";
+function ensureFreshBuild(){
+  try{
+    var url=location.pathname+"?check="+Date.now();
+    fetch(url,{cache:"no-store",headers:{"Cache-Control":"no-cache"}})
+      .then(function(r){return r.text()})
+      .then(function(html){
+        var m=html.match(/name=["']smokelab-build["']\s+content=["']([^"']+)["']/i);
+        if(m&&m[1]&&m[1]!==SMOKELAB_BUILD){
+          location.replace(location.pathname+"?v="+encodeURIComponent(m[1]));
+        }
+      })
+      .catch(function(){});
+  }catch(e){}
+}
+window.addEventListener("pageshow",function(e){
+  if(e.persisted)ensureFreshBuild();
+});
+document.addEventListener("visibilitychange",function(){
+  if(document.visibilityState==="visible")ensureFreshBuild();
+});
+setInterval(ensureFreshBuild,60000);
+ensureFreshBuild();
+if(!location.search){
+  try{history.replaceState(null,"",location.pathname+"?v="+encodeURIComponent(SMOKELAB_BUILD)+location.hash)}catch(e){}
+}
 var KEY="smokelab_v3",PREV_KEYS=["smokelab_v2","smokelab_behavior_v1"],CALIBRATION=8;
 
 var missions=[
