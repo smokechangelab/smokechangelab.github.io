@@ -1306,6 +1306,49 @@ html,body,.app{background:var(--bg)}
   .setup-wrap{gap:11px}
 }
 
+
+/* --- v14 mobile sheet reliability --- */
+.sheet-body{
+  overflow-y:auto !important;
+  -webkit-overflow-scrolling:touch !important;
+  overscroll-behavior:contain;
+}
+.flow{
+  min-height:0;
+  padding-bottom:2px;
+}
+.flow-footer{
+  position:sticky;
+  bottom:0;
+  z-index:12;
+  margin-top:12px;
+  padding-top:10px;
+  padding-bottom:2px;
+  background:linear-gradient(180deg,rgba(255,253,249,0),#FFFDF9 28%,#FFFDF9 100%);
+}
+#smokeTriggers{
+  gap:6px !important;
+}
+#smokeTriggers .choice.trg{
+  min-height:50px !important;
+}
+@media(max-height:760px){
+  .sheet-body{max-height:96dvh !important}
+  #smokeTriggers .choice.trg{min-height:44px !important}
+  .flow-footer{margin-top:8px;padding-top:8px}
+}
+
+
+.cta.ready,.cta:not(:disabled){
+  background:var(--ink) !important;
+  color:#fff !important;
+  pointer-events:auto !important;
+}
+.cta:disabled{
+  pointer-events:none !important;
+}
+.choice,[data-out]{touch-action:manipulation}
+
 </style>
 </head>
 <body>
@@ -1831,7 +1874,12 @@ function renderTriggerButtons(containerId,nextId,onPick){
       flow.trigger=t;
       tc.querySelectorAll("button").forEach(function(x){x.classList.remove("selected")});
       b.classList.add("selected");
-      if(nextId&&$(nextId))$(nextId).disabled=false;
+      if(nextId&&$(nextId)){
+        var next=$(nextId);
+        next.disabled=false;
+        next.removeAttribute("disabled");
+        next.classList.add("ready");
+      }
       if(onPick)onPick(t,b);
     });
     tc.append(b);
@@ -1868,15 +1916,29 @@ function showAfter(){
   if(flow.timer)clearInterval(flow.timer);flow.timer=null;
   $("flowContent").innerHTML='<div class="question">Wie stark ist der Drang jetzt?</div><div class="helper">Was hat sich verändert?</div><div class="scale" id="afterScale"></div><div class="question" style="margin-top:2px">Was ist passiert?</div><div class="choice-grid" id="outcomes"><button class="choice" data-out="not_smoked">Nicht geraucht</button><button class="choice" data-out="delayed">Noch gewartet</button><button class="choice" data-out="smoked">Geraucht</button><button class="choice" data-out="other">Anders gelöst</button></div><div class="flow-footer"><button id="saveMoment" class="cta" disabled>Moment auswerten</button></div>';
   renderScale("afterScale",function(v){flow.after=v},3);
-  document.querySelectorAll("#outcomes [data-out]").forEach(function(b){b.addEventListener("click",function(){flow.outcome=b.dataset.out;b.parentElement.querySelectorAll("button").forEach(function(x){x.classList.remove("selected")});b.classList.add("selected");$("saveMoment").disabled=false})});
-  $("saveMoment").addEventListener("click",saveMoment);
+  var outcomes=$("outcomes");
+  outcomes.addEventListener("click",function(e){
+    var b=e.target.closest("[data-out]");
+    if(!b)return;
+    flow.outcome=b.dataset.out;
+    outcomes.querySelectorAll("[data-out]").forEach(function(x){x.classList.remove("selected")});
+    b.classList.add("selected");
+    $("saveMoment").disabled=false;
+  });
+  $("saveMoment").addEventListener("click",function(){
+    if(!flow.outcome)return;
+    saveMoment();
+  });
 }
 function openJustSmoked(){
   flow={mode:"smoked",trigger:null,before:3,after:3,outcome:"smoked",delay:0,seconds:0,timer:null,mission:false,startedAt:null,waitedSeconds:0,saved:false};
   $("flowTitle").textContent="Gerade geraucht";$("flowSubtitle").textContent="Kurz festhalten, damit Smoke Lab daraus lernen kann.";
   $("flowContent").innerHTML='<div class="question">Was war direkt davor?</div><div class="helper">Wähle den Auslöser aus. Danach kannst du den Moment speichern.</div><div class="choice-grid" id="smokeTriggers"></div><div class="flow-footer"><button id="saveSmoke" class="cta" disabled>Moment speichern</button></div>';
   renderTriggerButtons("smokeTriggers","saveSmoke");
-  $("saveSmoke").addEventListener("click",saveDirectSmoke);
+  $("saveSmoke").addEventListener("click",function(){
+    if(!flow.trigger)return;
+    saveDirectSmoke();
+  });
   showSheet();
 }
 function saveDirectSmoke(){
