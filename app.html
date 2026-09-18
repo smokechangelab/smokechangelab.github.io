@@ -7,7 +7,7 @@
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
-<meta name="smokelab-build" content="20260918-2035">
+<meta name="smokelab-build" content="20260918-2045">
 <title>Smoke Lab — Elite Health Edition</title>
 <style>
 :root{
@@ -3248,5 +3248,55 @@ startLanguageObserver();
 applyLanguage(document.body);
 })();
 </script>
+
+<script>
+(function(){
+  var currentBuild=(document.querySelector('meta[name="smokelab-build"]')||{}).content||"";
+
+  async function checkForFreshBuild(){
+    try{
+      var res=await fetch(location.pathname+"?buildcheck="+Date.now(),{cache:"no-store",headers:{"Cache-Control":"no-cache"}});
+      if(!res.ok)return;
+      var html=await res.text();
+      var m=html.match(/<meta name="smokelab-build" content="([^"]+)">/);
+      if(m&&m[1]&&m[1]!==currentBuild){
+        location.reload();
+      }
+    }catch(e){}
+  }
+
+  if("serviceWorker" in navigator){
+    window.addEventListener("load",async function(){
+      try{
+        var reg=await navigator.serviceWorker.register("./sw.js",{updateViaCache:"none"});
+        await reg.update();
+        if(reg.waiting)reg.waiting.postMessage({type:"SKIP_WAITING"});
+        reg.addEventListener("updatefound",function(){
+          var worker=reg.installing;
+          if(!worker)return;
+          worker.addEventListener("statechange",function(){
+            if(worker.state==="installed"&&navigator.serviceWorker.controller){
+              worker.postMessage({type:"SKIP_WAITING"});
+            }
+          });
+        });
+        var reloaded=false;
+        navigator.serviceWorker.addEventListener("controllerchange",function(){
+          if(reloaded)return;
+          reloaded=true;
+          location.reload();
+        });
+      }catch(e){console.error("Smoke Lab service worker",e)}
+    });
+  }
+
+  window.addEventListener("focus",checkForFreshBuild);
+  document.addEventListener("visibilitychange",function(){
+    if(!document.hidden)checkForFreshBuild();
+  });
+  setInterval(checkForFreshBuild,5*60*1000);
+})();
+</script>
+
 </body>
 </html>
