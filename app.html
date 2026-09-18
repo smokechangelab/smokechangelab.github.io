@@ -2103,6 +2103,49 @@ button{font-weight:650 !important}
   .goal-next{margin-top:7px;padding-top:7px}
 }
 
+
+/* --- v19 settings language switch + progress bottom breathing room --- */
+#progressView{
+  padding-bottom:calc(108px + env(safe-area-inset-bottom)) !important;
+}
+#progressView .panel-body{
+  padding-bottom:28px !important;
+}
+#stepHistoryCard{
+  margin-bottom:18px !important;
+}
+.language-field{
+  margin-top:12px !important;
+}
+.language-switch{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:4px;
+  padding:4px;
+  background:#ECE9E3;
+  border-radius:13px;
+}
+.language-option{
+  height:38px;
+  border:0;
+  border-radius:10px;
+  background:transparent;
+  color:#777D78;
+  font-size:11px;
+  font-weight:680 !important;
+}
+.language-option.selected{
+  background:#FFFDF9;
+  color:var(--ink);
+  box-shadow:0 2px 8px rgba(35,41,36,.06);
+}
+@media(max-height:760px){
+  #progressView{
+    padding-bottom:calc(102px + env(safe-area-inset-bottom)) !important;
+  }
+  #progressView .panel-body{padding-bottom:22px !important}
+}
+
 </style>
 </head>
 <body>
@@ -2282,6 +2325,13 @@ button{font-weight:650 !important}
     <div class="field"><label>Ansatz</label><div id="profileMode" class="input" style="display:flex;align-items:center">—</div></div>
     <div class="field"><label>Ausgangswert</label><div id="profileBaseline" class="input" style="display:flex;align-items:center">—</div></div>
     <div class="field"><label>Aktuelles Ziel</label><div id="profileGoal" class="input profile-goal" style="display:flex;align-items:center">—</div></div>
+    <div class="field language-field">
+      <label>Sprache / Language</label>
+      <div class="language-switch" role="group" aria-label="Sprache wählen">
+        <button id="langDe" type="button" class="language-option">DE</button>
+        <button id="langEn" type="button" class="language-option">EN</button>
+      </div>
+    </div>
     <div class="card" style="margin-top:10px"><div class="card-title">Datenschutz</div><p class="muted" style="margin-top:5px">Deine Daten werden lokal in diesem Browser gespeichert. Smoke Lab überträgt sie nicht an einen eigenen Server und verschlüsselt LocalStorage nicht zusätzlich.</p></div>
     <button id="resetBtn" class="secondary" style="width:100%;margin-top:10px;color:var(--red)">Smoke Lab zurücksetzen</button>
   </div>
@@ -2331,7 +2381,7 @@ var flow={mode:"crave",trigger:null,before:3,after:3,outcome:null,delay:0,second
 var tick=null;
 
 function $(id){return document.getElementById(id)}
-function defaults(){return{profile:{name:"",baseline:12,mode:"reduce",started:null},events:[],experiments:[],missionDay:1,missionDoneDate:null,lastSmoke:null}}
+function defaults(){return{profile:{name:"",baseline:12,mode:"reduce",started:null,language:"de"},events:[],experiments:[],missionDay:1,missionDoneDate:null,lastSmoke:null}}
 function load(){
   try{var raw=localStorage.getItem(KEY);if(raw)return Object.assign(defaults(),JSON.parse(raw))}catch(e){}
   for(var i=0;i<PREV_KEYS.length;i++){
@@ -2353,6 +2403,165 @@ function load(){
   return defaults();
 }
 var state=load();
+
+var UI_TRANSLATIONS={
+  "Smoke Lab starten":"Start Smoke Lab",
+  "Wie darf ich dich nennen?":"What should I call you?",
+  "Wie viel rauchst du ungefähr pro Tag?":"About how many cigarettes do you smoke per day?",
+  "Was möchtest du gerade?":"What do you want right now?",
+  "Weniger automatisch rauchen":"Smoke less automatically",
+  "Ganz aufhören":"Quit completely",
+  "Deine Entwicklung":"Your progress",
+  "Was schon anders läuft":"What is already changing",
+  "Dein Ziel":"Your goal",
+  "Nächster Meilenstein":"Next milestone",
+  "Dein Weg":"Your path",
+  "Verstehen":"Understand",
+  "Muster":"Patterns",
+  "Unterbrechen":"Interrupt",
+  "Ersetzen":"Replace",
+  "Stabilisieren":"Stabilize",
+  "Ø Abstand":"Avg. pause",
+  "Drang verändert":"Urge change",
+  "bewusste Schritte":"conscious steps",
+  "Was sich bei dir verändert":"What is changing for you",
+  "Bewusste Momente":"Conscious moments",
+  "Dein persönlicher Plan":"Your personal plan",
+  "Was wir jetzt damit machen":"What we do with it now",
+  "Häufigster Auslöser":"Most frequent trigger",
+  "Typische Zeit":"Typical time",
+  "Was bisher hilft":"What has helped so far",
+  "Dein nächster Plan":"Your next plan",
+  "Diesen Plan beim nächsten Drang nutzen":"Use this plan for the next urge",
+  "Zuletzt erfasst":"Recently captured",
+  "Heute":"Today",
+  "Fortschritt":"Progress",
+  "Dein Coach":"Your coach",
+  "Nächster Schritt":"Next step",
+  "Momente heute":"moments today",
+  "Ø echte Pause":"avg. real pause",
+  "Drang danach":"urge after",
+  "Ich will gerade rauchen":"I want to smoke right now",
+  "Ich habe geraucht":"I smoked",
+  "Ich helfe dir jetzt":"I’m here with you now",
+  "Eine Frage nach der anderen. Du musst nichts vorbereiten.":"One question at a time. You don’t need to prepare anything.",
+  "Was hat den Rauchdrang gerade ausgelöst?":"What triggered the urge to smoke just now?",
+  "Tippe auf das, was gerade am ehesten passt.":"Choose what fits best right now.",
+  "Stress":"Stress",
+  "Kaffee / Pause":"Coffee / break",
+  "Routine":"Routine",
+  "Mit anderen":"With others",
+  "Langeweile":"Boredom",
+  "Nach dem Essen":"After eating",
+  "Keine Ahnung":"Not sure",
+  "Weiter":"Continue",
+  "Wie stark ist der Drang?":"How strong is the urge?",
+  "Nur dein Gefühl gerade – ohne richtig oder falsch.":"Just how it feels right now — there is no right or wrong.",
+  "Ein konkreter Schritt für jetzt":"One concrete step for now",
+  "Das hat bei dir schon geholfen":"This has helped you before",
+  "Heute probieren wir etwas Neues":"Today we’ll try something new",
+  "Wir wechseln heute bewusst den Plan":"Today we’re deliberately changing the plan",
+  "Minuten Abstand.":"minutes of space.",
+  "Warum dieser Schritt?":"Why this step?",
+  "Minuten ausprobieren":"Try for minutes",
+  "Ohne Pause weiter":"Continue without a pause",
+  "Nur kurz Abstand. Mehr nicht.":"Just create a little space. Nothing more.",
+  "Du musst nichts schaffen oder beweisen. Nach der Pause entscheidest du neu.":"You don’t have to achieve or prove anything. After the pause, decide again.",
+  "Währenddessen":"While you wait",
+  "Jetzt schon auswerten":"Review now",
+  "Wie stark ist der Drang jetzt?":"How strong is the urge now?",
+  "Was hat sich verändert?":"What changed?",
+  "Was ist passiert?":"What happened?",
+  "Nicht geraucht":"Didn’t smoke",
+  "Noch gewartet":"Waited longer",
+  "Geraucht":"Smoked",
+  "Anders gelöst":"Handled it differently",
+  "Moment auswerten":"Review moment",
+  "Gerade geraucht":"Just smoked",
+  "Kurz festhalten, damit Smoke Lab daraus lernen kann.":"Capture it briefly so Smoke Lab can learn from it.",
+  "Was war direkt davor?":"What happened right before?",
+  "Wähle den Auslöser aus. Danach kannst du den Moment speichern.":"Choose the trigger. Then you can save the moment.",
+  "Moment speichern":"Save moment",
+  "Zurück zu deinem Plan":"Back to your plan",
+  "Gespeichert.":"Saved.",
+  "Ein Moment – kein Urteil.":"One moment — no judgment.",
+  "Was wir daraus machen":"What we do with it",
+  "Heute gelernt":"Learned today",
+  "Dein nächster Plan:":"Your next plan:",
+  "Dein Smoke Lab":"Your Smoke Lab",
+  "Profil & Datenschutz":"Profile & privacy",
+  "Name":"Name",
+  "Ansatz":"Approach",
+  "Ausgangswert":"Baseline",
+  "Aktuelles Ziel":"Current goal",
+  "Datenschutz":"Privacy",
+  "Smoke Lab zurücksetzen":"Reset Smoke Lab",
+  "morgens":"morning",
+  "mittags":"midday",
+  "nachmittags":"afternoon",
+  "abends":"evening",
+  "spät abends":"late evening",
+  "Noch keine klare Wirkung":"No clear effect yet",
+  "Kurzer Abstand":"Short pause",
+  "Muster aktiv":"Pattern active",
+  "schnell erfasst":"quick capture"
+};
+var UI_TRANSLATIONS_REV={};
+Object.keys(UI_TRANSLATIONS).forEach(function(k){UI_TRANSLATIONS_REV[UI_TRANSLATIONS[k]]=k});
+var langTranslating=false,langObserver=null;
+
+function uiLang(){return state&&state.profile&&state.profile.language==="en"?"en":"de"}
+function translateDynamicText(txt,to){
+  if(!txt)return txt;
+  var map=to==="en"?UI_TRANSLATIONS:UI_TRANSLATIONS_REV;
+  var trimmed=txt.trim(),lead=txt.slice(0,txt.indexOf(trimmed)),tail=txt.slice(txt.indexOf(trimmed)+trimmed.length);
+  if(map[trimmed])return lead+map[trimmed]+tail;
+
+  if(to==="en"){
+    var m;
+    if((m=trimmed.match(/^Hallo (.+)\. /))) return lead+trimmed.replace(/^Hallo (.+)\. /,"Hi $1. ")+tail;
+    if((m=trimmed.match(/^(\d+)\/8 Momente$/))) return lead+m[1]+"/8 moments"+tail;
+    if((m=trimmed.match(/^Phase: (.+)$/))) return lead+"Phase: "+translateDynamicText(m[1],"en").trim()+tail;
+    if((m=trimmed.match(/^Phase · (.+)$/))) return lead+"Phase · "+translateDynamicText(m[1],"en").trim()+tail;
+    if((m=trimmed.match(/^Ist es wieder „(.+)“\?$/))) return lead+"Is it “"+translateDynamicText(m[1],"en").trim()+"” again?"+tail;
+    if((m=trimmed.match(/^Dein aktuelles Muster: (.+)\.$/))) return lead+"Your current pattern: "+translateDynamicText(m[1],"en").trim()+"."+tail;
+    if((m=trimmed.match(/^Dein Plan für „(.+)“\.$/))) return lead+"Your plan for “"+translateDynamicText(m[1],"en").trim()+"”."+tail;
+    if((m=trimmed.match(/^Heute arbeiten wir an „(.+)“\.$/))) return lead+"Today we’re working on “"+translateDynamicText(m[1],"en").trim()+"”."+tail;
+    if((m=trimmed.match(/^Eine Strategie finden, die bei dir zweimal funktioniert · (.+)$/))) return lead+"Find a strategy that works for you twice · "+(m[1]==="im Aufbau"?"in progress":m[1])+tail;
+  }else{
+    var m2;
+    if((m2=trimmed.match(/^Hi (.+)\. /))) return lead+trimmed.replace(/^Hi (.+)\. /,"Hallo $1. ")+tail;
+    if((m2=trimmed.match(/^(\d+)\/8 moments$/))) return lead+m2[1]+"/8 Momente"+tail;
+    if((m2=trimmed.match(/^Is it “(.+)” again\?$/))) return lead+"Ist es wieder „"+translateDynamicText(m2[1],"de").trim()+"“?"+tail;
+  }
+  return txt;
+}
+function applyLanguage(root){
+  if(langTranslating)return;
+  langTranslating=true;
+  try{
+    var to=uiLang(),walker=document.createTreeWalker(root||document.body,NodeFilter.SHOW_TEXT);
+    var nodes=[],n;
+    while(n=walker.nextNode())nodes.push(n);
+    nodes.forEach(function(node){
+      if(node.parentElement&&["SCRIPT","STYLE"].indexOf(node.parentElement.tagName)>=0)return;
+      var translated=translateDynamicText(node.nodeValue,to);
+      if(translated!==node.nodeValue)node.nodeValue=translated;
+    });
+    document.documentElement.lang=to;
+    if($("langDe"))$("langDe").classList.toggle("selected",to==="de");
+    if($("langEn"))$("langEn").classList.toggle("selected",to==="en");
+  }finally{langTranslating=false}
+}
+function startLanguageObserver(){
+  if(langObserver)return;
+  langObserver=new MutationObserver(function(){
+    if(langTranslating)return;
+    requestAnimationFrame(function(){applyLanguage(document.body)});
+  });
+  langObserver.observe(document.body,{subtree:true,childList:true,characterData:true});
+}
+
 function save(){localStorage.setItem(KEY,JSON.stringify(state))}
 function todayKey(){return new Date().toISOString().slice(0,10)}
 function createId(){return window.crypto&&typeof window.crypto.randomUUID==="function"?window.crypto.randomUUID():Date.now()+"-"+Math.random().toString(16).slice(2)}
@@ -2791,7 +3000,7 @@ function renderProfile(){
   var m=milestoneState();
   if($("profileGoal"))$("profileGoal").textContent=m.next;
 }
-function openProfile(){$("profileSheet").classList.add("open");renderProfile()}
+function openProfile(){$("profileSheet").classList.add("open");renderProfile();applyLanguage($("profileSheet"))}
 function closeProfile(){$("profileSheet").classList.remove("open")}
 function showSheet(){$("flowSheet").classList.add("open")}
 function closeFlow(){if(flow.timer)clearInterval(flow.timer);flow.timer=null;$("flowSheet").classList.remove("open")}
@@ -2998,11 +3207,15 @@ $("reduceMode").addEventListener("click",function(){$("reduceMode").classList.ad
 $("quitMode").addEventListener("click",function(){$("quitMode").classList.add("selected");$("reduceMode").classList.remove("selected")});
 $("startBtn").addEventListener("click",function(){state.profile.name=$("nameInput").value.trim()||"Daniel";state.profile.baseline=Math.max(0,Number($("baselineInput").value)||12);state.profile.mode=$("quitMode").classList.contains("selected")?"quit":"reduce";state.profile.started=new Date().toISOString();save();boot()});
 $("craveBtn").addEventListener("click",openCrave);$("patternCoachBtn").addEventListener("click",function(){showView("today");openCrave()});$("smokedBtn").addEventListener("click",openJustSmoked);$("missionBtn").addEventListener("click",openMission);
-$("profileBtn").addEventListener("click",openProfile);$("profileClose").addEventListener("click",closeProfile);$("profileSheet").addEventListener("click",function(e){if(e.target===$("profileSheet"))closeProfile()});
+$("profileBtn").addEventListener("click",openProfile);$("profileClose").addEventListener("click",closeProfile);
+$("langDe").addEventListener("click",function(){state.profile.language="de";save();renderAll();applyLanguage(document.body)});
+$("langEn").addEventListener("click",function(){state.profile.language="en";save();renderAll();applyLanguage(document.body)});$("profileSheet").addEventListener("click",function(e){if(e.target===$("profileSheet"))closeProfile()});
 $("flowClose").addEventListener("click",closeFlow);$("flowSheet").addEventListener("click",function(e){if(e.target===$("flowSheet"))closeFlow()});
 document.querySelectorAll(".nav button").forEach(function(b){b.addEventListener("click",function(){showView(b.dataset.view)})});
 $("resetBtn").addEventListener("click",function(){if(confirm("Smoke Lab wirklich vollständig zurücksetzen?")){localStorage.removeItem(KEY);PREV_KEYS.forEach(function(k){localStorage.removeItem(k)});location.reload()}});
 boot();
+startLanguageObserver();
+applyLanguage(document.body);
 })();
 </script>
 </body>
