@@ -14,7 +14,7 @@
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
-<meta name="smokelab-build" content="20260918-RC1">
+<meta name="smokelab-build" content="20260918-RC1.1">
 <title>Smoke Lab — Elite Health Edition</title>
 <style>
 :root{
@@ -2176,6 +2176,13 @@ button{font-weight:650 !important}
 .system-notice.error{background:#6E2D2A}
 .system-notice.show{opacity:1;transform:translate(-50%,0)}
 
+
+.health-note{
+  background:linear-gradient(145deg,#F7F3EC,#FFFDF9) !important;
+}
+.health-note .card-title{font-size:12.5px !important}
+.health-note .muted{font-size:9.7px !important;line-height:1.42 !important}
+
 </style>
 </head>
 <body>
@@ -2363,6 +2370,7 @@ button{font-weight:650 !important}
       </div>
     </div>
     <div class="card" style="margin-top:10px"><div class="card-title">Datenschutz</div><p class="muted" style="margin-top:5px">Deine Daten werden lokal in diesem Browser gespeichert. Smoke Lab überträgt sie nicht an einen eigenen Server und verschlüsselt LocalStorage nicht zusätzlich.</p></div>
+    <div class="card health-note" style="margin-top:10px"><div class="card-title">Wichtiger Hinweis</div><p class="muted" style="margin-top:5px">Smoke Lab ist ein interaktiver Begleiter zur Unterstützung bei Rauchgewohnheiten und Rauchdrang. Es stellt keine medizinische Beratung, Diagnose oder Behandlung dar und ersetzt keine professionelle medizinische Unterstützung. Bei gesundheitlichen Beschwerden, starker Nikotinabhängigkeit oder Fragen zu Entzug oder Medikamenten wende dich an medizinisches Fachpersonal.</p></div>
     <div class="release-info"><span>Release</span><b>RC1 · 2026.09.18</b></div>
     <button id="resetBtn" class="secondary" style="width:100%;margin-top:10px;color:var(--red)">Smoke Lab zurücksetzen</button>
   </div>
@@ -2643,7 +2651,9 @@ var UI_TRANSLATIONS={
   "Anders":"Different",
   "Rauchmoment":"Smoking moment",
   "Deine Daten werden lokal in diesem Browser gespeichert. Smoke Lab überträgt sie nicht an einen eigenen Server und verschlüsselt LocalStorage nicht zusätzlich.":"Your data is stored locally in this browser. Smoke Lab does not send it to its own server and does not add extra encryption to LocalStorage.",
-  "Release":"Release"
+  "Release":"Release",
+  "Wichtiger Hinweis":"Important note",
+  "Smoke Lab ist ein interaktiver Begleiter zur Unterstützung bei Rauchgewohnheiten und Rauchdrang. Es stellt keine medizinische Beratung, Diagnose oder Behandlung dar und ersetzt keine professionelle medizinische Unterstützung. Bei gesundheitlichen Beschwerden, starker Nikotinabhängigkeit oder Fragen zu Entzug oder Medikamenten wende dich an medizinisches Fachpersonal.":"Smoke Lab is an interactive companion designed to support awareness of smoking habits and urges. It does not provide medical advice, diagnosis or treatment and does not replace professional medical support. If you have health concerns, strong nicotine dependence, or questions about withdrawal or medication, contact a qualified healthcare professional."
 ,
   "Verlass die Situation für zwei Minuten. Kein Problemlösen, nur Abstand.":"Leave the situation for two minutes. Don’t solve anything — just create space.",
   "Mach einen kurzen Ortswechsel und entscheide danach neu.":"Change location briefly, then decide again.",
