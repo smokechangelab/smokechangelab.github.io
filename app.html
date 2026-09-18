@@ -367,6 +367,413 @@ html,body,.app{background:var(--bg)}
   .home-summary .coach p{display:none}
 }
 
+
+/* --- v5: mature editorial health UI --- */
+:root{
+  --bg:#F6F6F3;
+  --paper:#FFFFFF;
+  --ink:#151816;
+  --muted:#737873;
+  --line:#E7E8E4;
+  --green:#247A50;
+  --green-2:#247A50;
+  --green-soft:#EDF5F0;
+  --blue:#315FCE;
+  --blue-soft:#EEF2FB;
+  --amber:#A96B1F;
+  --amber-soft:#F8F2E9;
+  --red:#B74843;
+  --dark:#171A18;
+  --shadow:0 6px 24px rgba(24,32,27,.045)
+}
+
+*{
+  font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif !important;
+  font-variation-settings:normal;
+  text-rendering:optimizeLegibility;
+}
+body{letter-spacing:0}
+button,input{font-family:inherit !important}
+
+.view{
+  padding-left:20px;
+  padding-right:20px;
+}
+
+/* Header: intentional alignment instead of everything centered */
+.top{
+  display:grid;
+  grid-template-columns:minmax(0,1fr) 40px;
+  gap:14px;
+  align-items:center;
+  min-height:56px;
+}
+.top:before{display:none}
+.top>div{
+  grid-column:1;
+  text-align:left;
+}
+.top>.avatar{
+  grid-column:2;
+  justify-self:end;
+}
+.brand{
+  font-size:25px;
+  font-weight:700;
+  letter-spacing:-.45px;
+  line-height:1.08;
+  color:var(--ink);
+}
+.sub{
+  margin-top:3px;
+  font-size:12px;
+  line-height:1.3;
+  color:var(--muted);
+  font-weight:400;
+}
+.avatar{
+  width:38px;height:38px;
+  border:1px solid var(--line);
+  background:var(--paper);
+  box-shadow:none;
+  color:var(--ink);
+}
+.avatar svg{width:18px;height:18px;stroke-width:1.6}
+
+/* One disciplined content axis */
+.home-body{gap:12px;padding-top:8px}
+.home-shell{gap:10px}
+.focus-card{
+  min-height:180px;
+  border-radius:20px;
+  padding:20px;
+  background:var(--paper);
+  border:1px solid var(--line);
+  box-shadow:var(--shadow);
+  align-items:flex-start;
+  text-align:left;
+}
+.focus-card:before{
+  display:block;
+  width:4px;height:46px;
+  left:0;right:auto;top:22px;
+  border-radius:0 4px 4px 0;
+  background:var(--green);
+}
+.focus-card:after{display:none}
+.kicker{
+  width:auto;
+  text-align:left;
+  font-size:10px;
+  font-weight:700;
+  letter-spacing:.9px;
+  color:var(--green);
+}
+.focus-card h1{
+  max-width:325px;
+  margin:10px 0 0;
+  text-align:left;
+  font-size:25px;
+  line-height:1.1;
+  font-weight:700;
+  letter-spacing:-.55px;
+}
+.focus-card p{
+  max-width:330px;
+  margin:8px 0 0;
+  text-align:left;
+  color:var(--muted);
+  font-size:12.5px;
+  line-height:1.45;
+  font-weight:400;
+}
+.focus-meta{
+  left:20px;right:20px;bottom:16px;
+  grid-template-columns:auto 1fr;
+  gap:14px;
+}
+.focus-meta .badge{
+  grid-column:1;
+  justify-self:start;
+  border:0;
+  background:var(--green-soft);
+  color:var(--green);
+  padding:6px 9px;
+  font-size:10px;
+  font-weight:600;
+}
+.focus-meta .mini-progress{
+  grid-column:2;
+  justify-self:stretch;
+  width:auto;
+  height:4px;
+  background:#EBECE8;
+}
+.focus-meta .mini-progress span{background:var(--green)}
+
+/* Buttons: quieter, less toy-like */
+.action-main{
+  height:54px;
+  border-radius:14px;
+  background:var(--ink);
+  color:#fff;
+  box-shadow:none;
+  font-size:14px;
+  font-weight:650;
+  letter-spacing:-.1px;
+}
+.action-row{gap:10px}
+.action-lite{
+  height:50px;
+  border-radius:14px;
+  border:1px solid var(--line);
+  background:var(--paper);
+  box-shadow:none;
+  font-size:12.5px;
+  font-weight:600;
+  color:var(--ink);
+  padding:0 12px;
+}
+.action-lite.blue{
+  background:var(--paper);
+  color:var(--ink);
+  border-color:var(--line);
+}
+.action-ico{display:none !important}
+
+/* Coach becomes a restrained information panel */
+.home-summary{
+  border-radius:18px;
+  border:1px solid var(--line);
+  box-shadow:none;
+  overflow:hidden;
+}
+.home-summary .coach{
+  display:grid;
+  grid-template-columns:28px 1fr;
+  align-items:start;
+  gap:10px;
+  text-align:left;
+  padding:15px 16px;
+}
+.home-summary .coach-icon{
+  width:28px;height:28px;
+  border-radius:50%;
+  background:var(--green-soft);
+  position:relative;
+}
+.home-summary .coach-icon:after{
+  content:"";
+  position:absolute;
+  width:8px;height:8px;
+  border-radius:50%;
+  background:var(--green);
+  inset:0;
+  margin:auto;
+}
+.home-summary .coach small,
+.home-summary .coach b,
+.home-summary .coach p{text-align:left}
+.home-summary .coach small{
+  font-size:9px;
+  font-weight:700;
+  letter-spacing:.8px;
+}
+.home-summary .coach b{
+  font-size:13px;
+  font-weight:650;
+  letter-spacing:-.15px;
+}
+.home-summary .coach p{
+  font-size:11px;
+  line-height:1.4;
+  color:var(--muted);
+}
+.home-summary .stats{
+  border-top:1px solid var(--line);
+}
+.home-summary .stat{
+  min-height:60px;
+  padding:11px 8px;
+}
+.home-summary .stat+.stat{border-left:1px solid var(--line)}
+.home-summary .stat b{
+  font-size:17px;
+  font-weight:650;
+  letter-spacing:-.25px;
+}
+.home-summary .stat span{
+  margin-top:4px;
+  font-size:8px;
+  font-weight:600;
+  letter-spacing:.5px;
+  color:var(--muted);
+}
+
+/* Secondary screens: calmer hierarchy */
+.panel-head{
+  min-height:62px;
+  justify-content:flex-start;
+  align-items:flex-end;
+  text-align:left;
+}
+.panel-head>div,
+.panel-head h1,
+.eyebrow{text-align:left}
+.panel-head h1{
+  font-size:26px;
+  font-weight:700;
+  letter-spacing:-.5px;
+}
+.eyebrow{
+  font-size:9px;
+  font-weight:700;
+  letter-spacing:.9px;
+}
+.card{
+  border-radius:18px;
+  padding:16px;
+  border:1px solid var(--line);
+  box-shadow:none;
+}
+.card-title{
+  font-size:14px;
+  font-weight:650;
+  letter-spacing:-.15px;
+}
+.muted{font-size:11.5px;color:var(--muted)}
+.plan-card{
+  background:var(--ink);
+  border:0;
+  box-shadow:none;
+  text-align:left;
+  align-items:flex-start;
+}
+.plan-card .eyebrow{color:#A9D4BC}
+.plan-card .muted{color:#C8CCC9}
+.next-card{
+  grid-template-columns:32px 1fr;
+  text-align:left;
+}
+.next-card .num{grid-column:1}
+.next-card>div:last-child{grid-column:2}
+.num{
+  width:32px;height:32px;
+  border-radius:10px;
+  font-weight:600;
+}
+.answer,.progress-card{
+  border-radius:14px;
+  text-align:left;
+}
+.answer span,.progress-card span{font-weight:600}
+.answer b,.progress-card b{font-weight:650}
+
+/* Bottom sheets: clinical, not playful */
+.sheet{background:rgba(20,24,21,.28)}
+.sheet-body{
+  border-radius:24px 24px 0 0;
+  box-shadow:0 -12px 32px rgba(0,0,0,.10);
+}
+.sheet-head{
+  grid-template-columns:1fr 36px;
+  text-align:left;
+}
+.sheet-head:before{display:none}
+.sheet-title{
+  grid-column:1;
+  justify-content:flex-start;
+  text-align:left;
+}
+.sheet-head .close{grid-column:2}
+.sheet-head h2{
+  font-size:21px;
+  font-weight:700;
+  letter-spacing:-.35px;
+}
+.sheet-sub{font-size:10.5px}
+.sheet-icon{display:none}
+.flow{text-align:left}
+.question{
+  text-align:left;
+  font-size:17px;
+  font-weight:650;
+  letter-spacing:-.2px;
+}
+.helper{text-align:left;font-size:10.5px}
+.choice{
+  border-radius:12px;
+  background:#F5F5F2;
+  border:1px solid transparent;
+  font-weight:600;
+}
+.choice.selected{
+  background:var(--green-soft);
+  color:var(--green);
+  border-color:#CFE3D6;
+}
+.scale button{
+  border-radius:12px;
+  background:#F5F5F2;
+  font-weight:650;
+}
+.scale button.selected{
+  background:var(--ink);
+  box-shadow:none;
+}
+.cta{
+  border-radius:13px;
+  background:var(--ink);
+  box-shadow:none;
+  font-weight:650;
+}
+.secondary{
+  border-radius:13px;
+  background:#F1F1EE;
+  font-weight:600;
+}
+.intervention{
+  border-radius:16px;
+  background:var(--ink);
+  box-shadow:none;
+  text-align:left;
+}
+.intervention small{font-weight:600;color:#AFC7B8}
+.intervention h3{
+  font-size:20px;
+  font-weight:700;
+  letter-spacing:-.35px;
+}
+.intervention p{font-size:11.5px;color:#CCD0CD}
+.result b{font-weight:700}
+.input{
+  border-radius:12px;
+  background:#F5F5F2;
+  border:1px solid transparent;
+}
+
+/* Navigation */
+.nav{
+  background:rgba(250,250,248,.94);
+  border-top:1px solid var(--line);
+  backdrop-filter:blur(22px);
+  -webkit-backdrop-filter:blur(22px);
+}
+.nav button{
+  font-size:9px;
+  font-weight:600;
+  color:#8B8F8B;
+}
+.nav svg{width:20px;height:20px}
+.nav button.active{color:var(--ink)}
+
+@media(max-height:760px){
+  .focus-card{min-height:158px;padding:16px}
+  .focus-card h1{font-size:22px}
+  .focus-card p{font-size:11.5px}
+  .home-summary .coach{padding:11px 12px}
+}
+
 </style>
 </head>
 <body>
@@ -404,17 +811,17 @@ html,body,.app{background:var(--bg)}
       <div class="focus-meta"><span class="badge" id="focusBadge">Heute offen</span><div class="mini-progress"><span id="journeyMini" style="width:3%"></span></div></div>
     </div>
 
-    <button id="craveBtn" class="action-main">⚡ Ich will gerade rauchen</button>
+    <button id="craveBtn" class="action-main">Ich will gerade rauchen</button>
 
     <div class="action-row">
-      <button id="smokedBtn" class="action-lite"><span class="action-ico">🚬</span><span>Ich habe geraucht</span></button>
+      <button id="smokedBtn" class="action-lite"><span>Ich habe geraucht</span></button>
       <button id="missionBtn" class="action-lite blue"><span class="action-ico">▶</span><span>Meine Aufgabe</span></button>
     </div>
     </div>
 
     <div class="home-summary">
       <div class="coach">
-        <div class="coach-icon">↗</div>
+        <div class="coach-icon"></div>
         <div><small>Dein Coach</small><b id="coachTitle">Heute nur beobachten.</b><p id="coachText">Beim nächsten Rauchdrang einfach auf den grünen Button tippen. Smoke Lab führt dich dann durch.</p></div>
       </div>
       <div class="stats">
@@ -654,7 +1061,7 @@ function renderToday(){
   $("focusTitle").textContent=m[0];$("focusText").textContent=m[1];
   $("focusBadge").textContent=done?"Heute abgeschlossen":"Heute offen";
   $("journeyMini").style.width=Math.min(100,state.missionDay/30*100)+"%";
-  $("missionBtn").innerHTML=done?'<span class="action-ico">✓</span><span>Abgeschlossen</span>':'<span class="action-ico">▶</span><span>Heutige Aufgabe</span>';
+  $("missionBtn").innerHTML=done?'<span>Abgeschlossen</span>':'<span>Heutige Aufgabe</span>';
   var delays=ev.map(function(e){return Number(e.delay)||0}).filter(function(n){return n>0});
   var afters=ev.map(function(e){return Number(e.after)}).filter(function(n){return n>0});
   $("awareMetric").textContent=ev.length;$("delayMetric").textContent=delays.length?Math.round(avg(delays))+"m":"—";$("urgeMetric").textContent=afters.length?avg(afters).toFixed(1)+"/5":"—";
