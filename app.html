@@ -2028,6 +2028,81 @@ button{font-weight:650 !important}
   .home-summary .coach p{display:none !important}
 }
 
+
+/* --- v18 product completion: goal steering + lapse escalation --- */
+.goal-card{
+  padding:14px 15px;
+  border-radius:18px;
+  background:#FFFDF9;
+  border:1px solid rgba(56,64,58,.09);
+}
+.goal-label{
+  font-size:8px;
+  text-transform:uppercase;
+  letter-spacing:.8px;
+  color:var(--muted);
+  font-weight:700;
+}
+.goal-row{
+  display:flex;
+  align-items:flex-start;
+  justify-content:space-between;
+  gap:10px;
+  margin-top:4px;
+}
+.goal-row h3{
+  font-size:16px;
+  line-height:1.15;
+  letter-spacing:-.25px;
+}
+.goal-row span{
+  flex:0 0 auto;
+  border-radius:999px;
+  padding:5px 7px;
+  background:var(--green-soft);
+  color:var(--green);
+  font-size:8px;
+  font-weight:700;
+}
+.goal-card>p{
+  margin-top:6px;
+  color:var(--muted);
+  font-size:9.8px;
+  line-height:1.38;
+}
+.goal-next{
+  margin-top:10px;
+  padding-top:9px;
+  border-top:1px solid var(--line);
+}
+.goal-next span{
+  display:block;
+  font-size:7.5px;
+  text-transform:uppercase;
+  letter-spacing:.7px;
+  color:#929791;
+  font-weight:700;
+}
+.goal-next b{
+  display:block;
+  margin-top:3px;
+  font-size:10.7px;
+  line-height:1.35;
+  color:var(--ink);
+}
+.profile-goal{
+  min-height:47px;
+  height:auto !important;
+  padding-top:10px !important;
+  padding-bottom:10px !important;
+  line-height:1.3;
+}
+@media(max-height:760px){
+  .goal-card{padding:11px 12px}
+  .goal-card>p{font-size:9px}
+  .goal-next{margin-top:7px;padding-top:7px}
+}
+
 </style>
 </head>
 <body>
@@ -2151,6 +2226,12 @@ button{font-weight:650 !important}
 <section id="progressView" class="view">
   <div class="panel-head"><div><div class="eyebrow">Deine Entwicklung</div><h1>Was schon anders läuft</h1></div></div>
   <div class="panel-body">
+    <div class="goal-card">
+      <div class="goal-label">Dein Ziel</div>
+      <div class="goal-row"><h3 id="goalTitle">Weniger automatisch rauchen</h3><span id="goalProgress">Start</span></div>
+      <p id="goalText">Smoke Lab misst nicht einfach Zigaretten, sondern ob du automatische Rauchmomente früher erkennst und unterbrechen kannst.</p>
+      <div class="goal-next"><span>Nächster Meilenstein</span><b id="goalNext">3 echte Rauchmomente begleiten</b></div>
+    </div>
     <div class="journey-card">
       <div class="journey-head"><span>Dein Weg</span><b id="journeyStageLabel">Verstehen</b></div>
       <div class="journey-track">
@@ -2200,6 +2281,7 @@ button{font-weight:650 !important}
     <div class="field"><label>Name</label><div id="profileName" class="input" style="display:flex;align-items:center">—</div></div>
     <div class="field"><label>Ansatz</label><div id="profileMode" class="input" style="display:flex;align-items:center">—</div></div>
     <div class="field"><label>Ausgangswert</label><div id="profileBaseline" class="input" style="display:flex;align-items:center">—</div></div>
+    <div class="field"><label>Aktuelles Ziel</label><div id="profileGoal" class="input profile-goal" style="display:flex;align-items:center">—</div></div>
     <div class="card" style="margin-top:10px"><div class="card-title">Datenschutz</div><p class="muted" style="margin-top:5px">Deine Daten werden lokal in diesem Browser gespeichert. Smoke Lab überträgt sie nicht an einen eigenen Server und verschlüsselt LocalStorage nicht zusätzlich.</p></div>
     <button id="resetBtn" class="secondary" style="width:100%;margin-top:10px;color:var(--red)">Smoke Lab zurücksetzen</button>
   </div>
@@ -2307,7 +2389,43 @@ function alternateStrategyFor(trigger){
   return map[trigger]||map["Keine Ahnung"];
 }
 function adaptiveStrategy(trigger,before){
-  return learnedStrategy(trigger,before).text;
+  return escalatedStrategy(trigger,before).text;
+}
+function lapseSignal(trigger){
+  var rows=state.events.filter(function(e){return (e.trigger||"Keine Ahnung")===trigger}).slice(0,5);
+  var lapses=rows.filter(function(e){
+    return e.outcome==="smoked"&&((Number(e.delaySeconds)||0)===0);
+  }).length;
+  return {recent:rows.length,lapses:lapses,escalate:rows.length>=3&&lapses>=3};
+}
+function milestoneState(){
+  var n=state.events.length,top=n?topTrigger():null,interrupted=state.events.filter(function(e){
+    return (e.delaySeconds||0)>0||e.outcome==="not_smoked"||e.outcome==="delayed"||e.outcome==="other";
+  }).length;
+  var repeatedHelpful=false;
+  if(top){
+    var candidates=strategyCandidates(top.name,4);
+    repeatedHelpful=candidates.some(function(s){
+      var p=strategyPerformance(top.name,s);
+      return p.n>=2&&p.delta>0.4;
+    });
+  }
+  if(n<3)return {label:"Start",next:"3 echte Rauchmomente begleiten",progress:n+"/3"};
+  if(n<CALIBRATION)return {label:"Verstehen",next:"8 Rauchmomente für ein stabileres Muster",progress:n+"/8"};
+  if(interrupted<3)return {label:"Unterbrechen",next:"3 automatische Momente bewusst unterbrechen",progress:interrupted+"/3"};
+  if(!repeatedHelpful)return {label:"Ersetzen",next:"Eine hilfreiche Reaktion zweimal bestätigen",progress:"im Aufbau"};
+  return {label:"Stabilisieren",next:"Hilfreiche Reaktion in mehreren Alltagssituationen wiederholen",progress:"aktiv"};
+}
+function goalTitle(){
+  return state.profile.mode==="quit"?"Ganz aufhören":"Weniger automatisch rauchen";
+}
+function escalatedStrategy(trigger,before){
+  var learned=learnedStrategy(trigger,before),signal=lapseSignal(trigger);
+  if(!signal.escalate)return learned;
+  var candidates=strategyCandidates(trigger,before);
+  var currentIndex=Math.max(0,candidates.indexOf(learned.text));
+  var next=candidates[(currentIndex+1)%candidates.length]||alternateStrategyFor(trigger);
+  return {text:next,reason:"lapse_escalation",stats:learned.stats||null};
 }
 function stageIndex(key){
   return {observe:0,learn:1,interrupt:2,replace:3,stabilize:4}[key]||0;
@@ -2442,7 +2560,27 @@ function showView(name){
   document.querySelectorAll(".nav button").forEach(function(b){b.classList.toggle("active",b.dataset.view===name)});
   renderAll();
 }
+function runQaCheck(){
+  var required=[
+    "setupView","todayView","patternsView","progressView","nav",
+    "craveBtn","smokedBtn","profileBtn","flowSheet","flowContent","flowClose",
+    "coachTitle","coachText","coachNext","focusTitle","focusText","focusBadge",
+    "patternCoachBtn","patternCoachTitle","patternCoachText",
+    "journeyStageLabel","journeyStageText","goalTitle","goalNext",
+    "progressSummary","progressStory","resetBtn"
+  ];
+  var missing=required.filter(function(id){return !$(id)});
+  if(missing.length){
+    console.error("Smoke Lab QA: missing DOM targets",missing);
+    return false;
+  }
+  var criticalFns=[openCrave,openJustSmoked,saveMoment,renderToday,renderPatterns,renderProgress];
+  var badFns=criticalFns.some(function(fn){return typeof fn!=="function"});
+  if(badFns)console.error("Smoke Lab QA: critical function missing");
+  return !missing.length&&!badFns;
+}
 function boot(){
+  runQaCheck();
   if(!state.profile.name){$("setupView").classList.add("active");return}
   $("setupView").classList.remove("active");$("nav").classList.add("active");showView("today");
   if(tick)clearInterval(tick);tick=setInterval(renderToday,60000);
@@ -2499,11 +2637,17 @@ function coachModel(){
     next:"Noch einmal Auslöser und Drang erfassen."
   };
 
-  var top=topTrigger(),learned=learnedStrategy(top.name,4),s=triggerStats(top.name);
+  var top=topTrigger(),learned=escalatedStrategy(top.name,4),signal=lapseSignal(top.name);
   if(n<CALIBRATION)return {
     title:"Etwas fällt auf: "+top.name+".",
     meaning:top.count+" von "+n+" Momenten passen dazu. Wir prüfen weiter, bevor wir daraus einen festen Plan machen.",
     next:"Beim nächsten „"+top.name+"“-Moment vor der Zigarette öffnen."
+  };
+
+  if(signal.escalate)return {
+    title:"Der bisherige Plan greift bei „"+top.name+"“ noch nicht genug.",
+    meaning:"In den letzten ähnlichen Momenten ging es mehrfach direkt zur Zigarette. Deshalb wechseln wir bewusst die Strategie statt einfach dasselbe zu wiederholen.",
+    next:learned.text
   };
 
   var continuity="";
@@ -2590,6 +2734,13 @@ function renderProgress(){
   var interrupted=ev.filter(function(e){return (e.delaySeconds||0)>0||e.outcome==="not_smoked"||e.outcome==="delayed"||e.outcome==="other"}).length;
   var top=ev.length?topTrigger():null;
 
+  var milestone=milestoneState();
+  $("goalTitle").textContent=goalTitle();
+  $("goalProgress").textContent=milestone.label;
+  $("goalText").textContent=state.profile.mode==="quit"
+    ?"Dein Ziel bleibt: ganz aufhören. Smoke Lab steuert dorthin über konkrete Zwischenziele, ohne so zu tun, als würde die App jede Zigarette automatisch kennen."
+    :"Dein Ziel bleibt: weniger automatisch rauchen. Smoke Lab steuert über konkrete Zwischenziele zu mehr bewussten Entscheidungen.";
+  $("goalNext").textContent=milestone.next+(milestone.progress?" · "+milestone.progress:"");
   $("journeyStageLabel").textContent=stage.label;
   var stageText={
     observe:"Wir verstehen zuerst echte Rauchmomente.",
@@ -2633,7 +2784,13 @@ function renderProgress(){
     row.append(left,tag);list.append(row);
   });
 }
-function renderProfile(){$("profileName").textContent=state.profile.name;$("profileMode").textContent=state.profile.mode==="quit"?"Ganz aufhören":"Weniger automatisch rauchen";$("profileBaseline").textContent=state.profile.baseline+" Zigaretten/Tag"}
+function renderProfile(){
+  $("profileName").textContent=state.profile.name;
+  $("profileMode").textContent=state.profile.mode==="quit"?"Ganz aufhören":"Weniger automatisch rauchen";
+  $("profileBaseline").textContent=state.profile.baseline+" Zigaretten/Tag";
+  var m=milestoneState();
+  if($("profileGoal"))$("profileGoal").textContent=m.next;
+}
 function openProfile(){$("profileSheet").classList.add("open");renderProfile()}
 function closeProfile(){$("profileSheet").classList.remove("open")}
 function showSheet(){$("flowSheet").classList.add("open")}
@@ -2701,8 +2858,8 @@ function showUrgeBefore(){
 }
 function showCoachIntervention(){
   var d=recommendedDelay(flow.trigger,flow.before);flow.delay=d;
-  var learned=learnedStrategy(flow.trigger,flow.before),action=learned.text;flow.strategyUsed=action;
-  var label=learned.reason==="repeat"?"Das hat bei dir schon geholfen":learned.reason==="explore"?"Heute probieren wir etwas Neues":"Ein konkreter Schritt für jetzt";
+  var learned=escalatedStrategy(flow.trigger,flow.before),action=learned.text;flow.strategyUsed=action;
+  var label=learned.reason==="lapse_escalation"?"Wir wechseln heute bewusst den Plan":learned.reason==="repeat"?"Das hat bei dir schon geholfen":learned.reason==="explore"?"Heute probieren wir etwas Neues":"Ein konkreter Schritt für jetzt";
   $("flowContent").innerHTML='<div class="intervention"><small>'+label+'</small><h3>'+d+' Minuten Abstand.</h3><p>'+action+'</p><div class="why-step"><span>Warum dieser Schritt?</span>'+rationaleFor(flow.trigger)+'</div></div><button id="startTimer" class="cta">'+d+' Minuten ausprobieren</button><button id="skipTimer" class="secondary">Ohne Pause weiter</button>';
   $("startTimer").addEventListener("click",function(){startDelay(d)});$("skipTimer").addEventListener("click",showAfter);
 }
@@ -2757,14 +2914,16 @@ function saveDirectSmoke(){
   var same=state.events.filter(function(x){return x.trigger===flow.trigger}).length;
   var stage=coachingStage();
   var title=same>=3?flow.trigger+" ist ein wiederkehrender Auslöser.":flow.trigger+" war direkt davor.";
+  var signal=lapseSignal(flow.trigger);
   var next=state.events.length>=CALIBRATION
     ? adaptiveStrategy(flow.trigger,4)
     : "Beim nächsten ähnlichen Moment öffne Smoke Lab möglichst vor der Zigarette.";
+  if(signal.escalate)title="Der bisherige Plan reicht bei „"+flow.trigger+"“ noch nicht.";
 
   $("flowContent").innerHTML=
     '<div class="result"><b>Gespeichert.</b><span>Ein Moment – kein Urteil.</span></div>'+
     '<div class="result-insight"><div class="label">Was wir daraus machen</div><h3>'+title+'</h3>'+
-    '<p>'+(state.profile.mode==="quit"?"Dein Ziel aufzuhören bleibt bestehen. Dieser Moment ändert den Plan nicht – er zeigt uns nur, wo wir weiterarbeiten.":"Dieser Moment hilft uns zu erkennen, wo Rauchen noch automatisch passiert.")+'</p>'+
+    '<p>'+(signal.escalate?"Mehrere ähnliche Momente gingen zuletzt direkt zur Zigarette. Deshalb ändern wir den nächsten Schritt. ":(state.profile.mode==="quit"?"Dein Ziel aufzuhören bleibt bestehen. Dieser Moment ändert dein Ziel nicht – er zeigt uns nur, wo wir weiterarbeiten.":"Dieser Moment hilft uns zu erkennen, wo Rauchen noch automatisch passiert."))+'</p>'+
     '<div class="result-next"><b>Nächstes Mal:</b> '+next+'</div></div>'+
     '<button id="finishDirect" class="cta">Zurück zu deinem Plan</button>';
   $("finishDirect").addEventListener("click",function(){closeFlow();showView("today")});
@@ -2814,10 +2973,12 @@ function showResult(e){
   else if(change===0)learnedText="Dein Drang blieb bei "+e.after+"/5.";
   else learnedText="Dein Drang stieg von "+e.before+"/5 auf "+e.after+"/5.";
 
-  var nextLearned=learnedStrategy(e.trigger,e.before);
+  var nextLearned=escalatedStrategy(e.trigger,e.before);
   var sameStrategy=strategyPerformance(e.trigger,e.strategyUsed||"");
   var decision="";
-  if(e.strategyUsed&&sameStrategy.n>=2&&sameStrategy.delta>0.4){
+  if(lapseSignal(e.trigger).escalate){
+    decision="Mehrere ähnliche Momente gingen zuletzt direkt zur Zigarette. Wir wechseln deshalb bewusst die Strategie.";
+  }else if(e.strategyUsed&&sameStrategy.n>=2&&sameStrategy.delta>0.4){
     decision="Diese Reaktion hat bei „"+e.trigger+"“ inzwischen mehrfach geholfen. Wir behalten sie vorerst bei.";
   }else if(e.strategyUsed&&sameStrategy.n>=2&&sameStrategy.delta<=0.2){
     decision="Diese Reaktion zeigt bei „"+e.trigger+"“ bisher wenig Wirkung. Beim nächsten Mal wechseln wir bewusst die Strategie.";
