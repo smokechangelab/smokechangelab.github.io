@@ -4,10 +4,16 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
 <meta name="theme-color" content="#F4F6F3">
+<meta name="application-name" content="Smoke Lab">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Smoke Lab">
+<link rel="manifest" href="./manifest.webmanifest">
+<link rel="icon" href="./icon.svg" type="image/svg+xml">
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
-<meta name="smokelab-build" content="20260918-2045">
+<meta name="smokelab-build" content="20260918-RC1">
 <title>Smoke Lab — Elite Health Edition</title>
 <style>
 :root{
@@ -2150,6 +2156,25 @@ button{font-weight:650 !important}
   #progressView .panel-body{padding-bottom:22px !important}
 }
 
+
+/* --- RC1 technical hardening --- */
+.release-info{
+  display:flex;align-items:center;justify-content:space-between;
+  margin-top:10px;padding:10px 12px;border-radius:12px;
+  background:#F4F1EB;color:var(--muted);font-size:9px
+}
+.release-info span{font-weight:700;text-transform:uppercase;letter-spacing:.7px}
+.release-info b{font-weight:650;color:var(--ink)}
+.system-notice{
+  position:fixed;left:50%;bottom:calc(84px + env(safe-area-inset-bottom));
+  transform:translate(-50%,12px);max-width:min(360px,calc(100vw - 32px));
+  padding:10px 13px;border-radius:12px;background:#1B211D;color:#fff;
+  font-size:10.5px;line-height:1.35;z-index:9999;opacity:0;pointer-events:none;
+  transition:opacity .18s ease,transform .18s ease;box-shadow:0 10px 28px rgba(0,0,0,.16)
+}
+.system-notice.error{background:#6E2D2A}
+.system-notice.show{opacity:1;transform:translate(-50%,0)}
+
 </style>
 </head>
 <body>
@@ -2337,6 +2362,7 @@ button{font-weight:650 !important}
       </div>
     </div>
     <div class="card" style="margin-top:10px"><div class="card-title">Datenschutz</div><p class="muted" style="margin-top:5px">Deine Daten werden lokal in diesem Browser gespeichert. Smoke Lab überträgt sie nicht an einen eigenen Server und verschlüsselt LocalStorage nicht zusätzlich.</p></div>
+    <div class="release-info"><span>Release</span><b>RC1 · 2026.09.18</b></div>
     <button id="resetBtn" class="secondary" style="width:100%;margin-top:10px;color:var(--red)">Smoke Lab zurücksetzen</button>
   </div>
 </div>
@@ -2411,21 +2437,48 @@ var flow={mode:"crave",trigger:null,before:3,after:3,outcome:null,delay:0,second
 var tick=null;
 
 function $(id){return document.getElementById(id)}
+function showSystemNotice(message,type){
+  var n=$("systemNotice");
+  if(!n){
+    n=document.createElement("div");n.id="systemNotice";n.className="system-notice";n.setAttribute("role","status");n.setAttribute("aria-live","polite");document.body.appendChild(n);
+  }
+  n.textContent=message;n.classList.toggle("error",type==="error");n.classList.add("show");
+  clearTimeout(n._timer);n._timer=setTimeout(function(){n.classList.remove("show")},4500);
+}
+window.addEventListener("error",function(e){
+  console.error("Smoke Lab runtime error",e.error||e.message);
+});
+window.addEventListener("unhandledrejection",function(e){
+  console.error("Smoke Lab rejected promise",e.reason);
+});
 function defaults(){return{profile:{name:"",baseline:12,mode:"reduce",started:null,language:"de"},events:[],experiments:[],missionDay:1,missionDoneDate:null,lastSmoke:null}}
+function sanitizeState(input){
+  var d=defaults(),o=input&&typeof input==="object"?input:{};
+  d.profile=Object.assign({},d.profile,o.profile&&typeof o.profile==="object"?o.profile:{});
+  d.profile.name=typeof d.profile.name==="string"?d.profile.name.slice(0,80):"";
+  d.profile.baseline=Math.max(0,Math.min(80,Number(d.profile.baseline)||12));
+  d.profile.mode=d.profile.mode==="quit"?"quit":"reduce";
+  d.profile.language=d.profile.language==="en"?"en":"de";
+  d.events=Array.isArray(o.events)?o.events.filter(function(e){return e&&typeof e==="object"}).slice(0,2000):[];
+  d.experiments=Array.isArray(o.experiments)?o.experiments.filter(function(e){return e&&typeof e==="object"}).slice(0,500):[];
+  d.missionDay=Math.max(1,Math.min(30,Number(o.missionDay)||1));
+  d.missionDoneDate=typeof o.missionDoneDate==="string"?o.missionDoneDate:null;
+  d.lastSmoke=Number.isFinite(Number(o.lastSmoke))?Number(o.lastSmoke):null;
+  return d;
+}
 function load(){
-  try{var raw=localStorage.getItem(KEY);if(raw)return Object.assign(defaults(),JSON.parse(raw))}catch(e){}
+  try{
+    var raw=localStorage.getItem(KEY);
+    if(raw)return sanitizeState(JSON.parse(raw));
+  }catch(e){
+    try{localStorage.setItem(KEY+"_corrupt_backup",localStorage.getItem(KEY)||"")}catch(_e){}
+  }
   for(var i=0;i<PREV_KEYS.length;i++){
     try{
       var old=localStorage.getItem(PREV_KEYS[i]);
       if(old){
-        var o=JSON.parse(old),d=defaults();
-        if(o.profile)d.profile=Object.assign(d.profile,o.profile);
-        if(Array.isArray(o.events))d.events=o.events;
-        if(Array.isArray(o.experiments))d.experiments=o.experiments;
-        if(o.missionDay)d.missionDay=o.missionDay;
-        if(o.missionDoneDate)d.missionDoneDate=o.missionDoneDate;
-        if(o.lastSmoke)d.lastSmoke=o.lastSmoke;
-        localStorage.setItem(KEY,JSON.stringify(d));
+        var d=sanitizeState(JSON.parse(old));
+        try{localStorage.setItem(KEY,JSON.stringify(d))}catch(_e2){}
         return d;
       }
     }catch(e){}
@@ -2534,7 +2587,86 @@ var UI_TRANSLATIONS={
   "Noch keine klare Wirkung":"No clear effect yet",
   "Kurzer Abstand":"Short pause",
   "Muster aktiv":"Pattern active",
-  "schnell erfasst":"quick capture"
+  "schnell erfasst":"quick capture",
+  "Verstehe, wann du automatisch rauchst.":"Understand when you smoke automatically.",
+  "Und was dir wirklich hilft.":"And what actually helps you.",
+  "Öffne Smoke Lab genau dann, wenn der Rauchdrang kommt. Du bekommst eine kleine konkrete Hilfe für diesen Moment – und mit der Zeit erkennt die App deine persönlichen Auslöser.":"Open Smoke Lab when the urge hits. You’ll get one small, concrete step for that moment — and over time the app learns your personal triggers.",
+  "Beim nächsten Rauchdrang bin ich da.":"I’ll be here for your next urge.",
+  "Beim nächsten Rauchdrang":"For your next urge",
+  "Öffne Smoke Lab, bevor du rauchst.":"Open Smoke Lab before you smoke.",
+  "Zwei kurze Fragen. Danach bekommst du genau einen konkreten nächsten Schritt.":"Two quick questions. Then you’ll get one concrete next step.",
+  "Bereit für den nächsten Moment":"Ready for the next moment",
+  "Ich kenne dein Muster noch nicht.":"I don’t know your pattern yet.",
+  "Beim nächsten Rauchdrang öffnest du die App vor der Zigarette. Danach kann Smoke Lab gezielter helfen.":"Next time the urge hits, open the app before the cigarette. Then Smoke Lab can guide you more specifically.",
+  "Beim nächsten Drang vor der Zigarette öffnen.":"Open before the cigarette when the next urge hits.",
+  "Phase":"Phase",
+  "Phase: Verstehen":"Phase: Understand",
+  "Phase: Muster erkennen":"Phase: Learn patterns",
+  "Phase: Unterbrechen":"Phase: Interrupt",
+  "Phase: Ersetzen":"Phase: Replace",
+  "Phase: Stabilisieren":"Phase: Stabilize",
+  "Muster erkennen":"Learn patterns",
+  "Wir sammeln echte Rauchmomente.":"We’re collecting real smoking moments.",
+  "Wir prüfen, was sich wiederholt.":"We’re checking what repeats.",
+  "Wir unterbrechen deinen häufigsten Autopiloten.":"We’re interrupting your most common autopilot pattern.",
+  "Wir bauen passendere Reaktionen auf.":"We’re building responses that fit you better.",
+  "Wir festigen, was bei dir funktioniert.":"We’re reinforcing what works for you.",
+  "Wir verstehen zuerst echte Rauchmomente.":"First, we understand real smoking moments.",
+  "Wir prüfen, welche Auslöser sich wiederholen.":"We check which triggers keep repeating.",
+  "Wir unterbrechen gezielt deinen häufigsten Autopiloten.":"We deliberately interrupt your most common autopilot pattern.",
+  "Wir vergleichen Alternativen und behalten, was bei dir hilft.":"We compare alternatives and keep what helps you.",
+  "Wir festigen deine wirksamsten Reaktionen für den Alltag.":"We reinforce your most effective responses for everyday life.",
+  "Dein Ziel bleibt: ganz aufhören. Smoke Lab steuert dorthin über konkrete Zwischenziele, ohne so zu tun, als würde die App jede Zigarette automatisch kennen.":"Your goal remains to quit completely. Smoke Lab works toward it through concrete milestones without pretending the app automatically knows every cigarette.",
+  "Dein Ziel bleibt: weniger automatisch rauchen. Smoke Lab steuert über konkrete Zwischenziele zu mehr bewussten Entscheidungen.":"Your goal remains to smoke less automatically. Smoke Lab uses concrete milestones to help you make more conscious decisions.",
+  "3 echte Rauchmomente begleiten":"Guide 3 real smoking moments",
+  "8 Rauchmomente für ein stabileres Muster":"Capture 8 smoking moments for a more stable pattern",
+  "3 automatische Momente bewusst unterbrechen":"Consciously interrupt 3 automatic moments",
+  "Eine Strategie finden, die bei dir zweimal funktioniert":"Find a strategy that works for you twice",
+  "Hilfreiche Reaktion in mehreren Alltagssituationen wiederholen":"Repeat a helpful response in several everyday situations",
+  "im Aufbau":"in progress",
+  "aktiv":"active",
+  "Noch keine Rauchmomente.":"No smoking moments yet.",
+  "Wir lernen deine Rauchmomente kennen.":"We’re learning your smoking moments.",
+  "Noch keine vorschnellen Schlüsse. Erst echte Situationen machen die Hilfe persönlicher.":"No rushed conclusions. Real situations are what make the guidance personal.",
+  "Beim nächsten Rauchdrang öffnen.":"Open at the next urge.",
+  "Smoke Lab führt dich dann durch genau einen kleinen Schritt.":"Smoke Lab will guide you through one small step.",
+  "Start":"Start",
+  "No clear effect yet":"No clear effect yet",
+  "kaum":"barely",
+  "leicht":"mild",
+  "mittel":"moderate",
+  "stark":"strong",
+  "sehr stark":"very strong",
+  "Pause":"Pause",
+  "Gewartet":"Waited",
+  "Anders":"Different",
+  "Rauchmoment":"Smoking moment",
+  "Deine Daten werden lokal in diesem Browser gespeichert. Smoke Lab überträgt sie nicht an einen eigenen Server und verschlüsselt LocalStorage nicht zusätzlich.":"Your data is stored locally in this browser. Smoke Lab does not send it to its own server and does not add extra encryption to LocalStorage.",
+  "Release":"Release"
+,
+  "Verlass die Situation für zwei Minuten. Kein Problemlösen, nur Abstand.":"Leave the situation for two minutes. Don’t solve anything — just create space.",
+  "Mach einen kurzen Ortswechsel und entscheide danach neu.":"Change location briefly, then decide again.",
+  "Trink zuerst in Ruhe aus. Die Zigarette wird erst danach neu entschieden.":"Finish your drink first. Decide about the cigarette only afterwards.",
+  "Ändere jetzt Ort oder Reihenfolge. Genau diese kleine Reibung unterbricht den Autopiloten.":"Change the location or order now. That small bit of friction interrupts autopilot.",
+  "Bleib zwei Minuten länger bei deiner aktuellen Tätigkeit, bevor du anderen folgst.":"Stay with what you’re doing for two more minutes before following others.",
+  "Wähle eine konkrete 3-Minuten-Aufgabe. Was später passiert prüfst du den Drang erneut.":"Choose one concrete 3-minute task. Then check the urge again.",
+  "Steh auf und beginne sofort eine andere Handlung, bevor du über die Zigarette entscheidest.":"Stand up and immediately start another action before deciding about the cigarette.",
+  "Wir schaffen nur kurz Abstand: drei Minuten nichts entscheiden und danach den Drang erneut bewerten.":"Create a little space: make no decision for three minutes, then reassess the urge.",
+  "Wechsle für zwei Minuten den Ort und beschäftige Hände oder Körper bewusst mit etwas anderem.":"Change location for two minutes and deliberately occupy your hands or body with something else.",
+  "Trink den Kaffee diesmal an einem anderen Ort oder ohne deine übliche Rauch-Routine.":"Have your coffee somewhere else this time or without your usual smoking routine.",
+  "Mach zuerst eine andere kurze Handlung und verschiebe die Zigarette danach um fünf Minuten.":"Do one short alternative action first, then delay the cigarette by five minutes.",
+  "Bleib kurz bei deiner Tätigkeit und entscheide erst später, ob du wirklich mitgehst.":"Stay with your current activity briefly and decide later whether you really want to join.",
+  "Starte eine konkrete kurze Tätigkeit, die Hände und Aufmerksamkeit bindet.":"Start a short, concrete activity that occupies your hands and attention.",
+  "Steh sofort auf, verlasse den Essbereich und beginne eine feste Folgehandlung.":"Stand up immediately, leave the eating area and start a fixed follow-up action.",
+  "Wechsle kurz Ort und Tätigkeit und bewerte den Drang danach erneut.":"Briefly change both place and activity, then reassess the urge.",
+  "Bei Stress hilft zuerst Abstand von der Situation – nicht noch mehr Nachdenken.":"With stress, first create distance from the situation — not more thinking.",
+  "Hier geht es darum, Kaffee und Zigarette für einen Moment voneinander zu trennen.":"The goal here is to separate coffee and the cigarette for a moment.",
+  "Eine kleine Änderung von Ort oder Reihenfolge kann den Autopiloten unterbrechen.":"A small change in location or sequence can interrupt autopilot.",
+  "Der soziale Impuls wird sichtbarer, wenn du nicht sofort mitgehst.":"The social impulse becomes clearer when you don’t immediately follow along.",
+  "Ein kurzer konkreter Wechsel gibt dir etwas anderes, worauf du reagieren kannst.":"A short concrete change gives you something else to respond to.",
+  "Die erste Handlung nach dem Essen ist oft leichter zu verändern als der ganze Ablauf.":"The first action after eating is often easier to change than the whole routine.",
+  "Wenn der Auslöser unklar ist, beobachten wir zuerst nur, ob etwas Abstand den Drang verändert.":"If the trigger is unclear, we first observe whether a little distance changes the urge."
+
 };
 var UI_TRANSLATIONS_REV={};
 Object.keys(UI_TRANSLATIONS).forEach(function(k){UI_TRANSLATIONS_REV[UI_TRANSLATIONS[k]]=k});
@@ -2558,6 +2690,21 @@ function translateDynamicText(txt,to){
     if((m=trimmed.match(/^Dein Plan für „(.+)“\.$/))) return lead+"Your plan for “"+translateDynamicText(m[1],"en").trim()+"”."+tail;
     if((m=trimmed.match(/^Heute arbeiten wir an „(.+)“\.$/))) return lead+"Today we’re working on “"+translateDynamicText(m[1],"en").trim()+"”."+tail;
     if((m=trimmed.match(/^Eine Strategie finden, die bei dir zweimal funktioniert · (.+)$/))) return lead+"Find a strategy that works for you twice · "+(m[1]==="im Aufbau"?"in progress":m[1])+tail;
+    if((m=trimmed.match(/^(\d+) Minuten Abstand\.$/))) return lead+m[1]+" minutes of space."+tail;
+    if((m=trimmed.match(/^(\d+) Minuten ausprobieren$/))) return lead+"Try "+m[1]+" minutes"+tail;
+    if((m=trimmed.match(/^(\d+) von (\d+) Momenten passen dazu\./))) return lead+trimmed.replace(/^(\d+) von (\d+) Momenten passen dazu\./,"$1 of $2 moments match this.")+tail;
+    if((m=trimmed.match(/^(.+) fällt bisher häufiger auf\.$/))) return lead+translateDynamicText(m[1],"en").trim()+" has appeared more often so far."+tail;
+    if((m=trimmed.match(/^(.+) ist bisher die stärkste Spur\.$/))) return lead+translateDynamicText(m[1],"en").trim()+" is the strongest signal so far."+tail;
+    if((m=trimmed.match(/^Am häufigsten (.+)\./))) return lead+trimmed.replace(/^Am häufigsten (.+)\./,"Most often in the $1.")+tail;
+    if((m=trimmed.match(/^Dein häufigster Auslöser ist (.+)\.$/))) return lead+"Your most frequent trigger is "+translateDynamicText(m[1],"en").trim()+"."+tail;
+    if((m=trimmed.match(/^Etwas fällt auf: (.+)\.$/))) return lead+"Something stands out: "+translateDynamicText(m[1],"en").trim()+"."+tail;
+    if((m=trimmed.match(/^Jetzt unterbrechen wir gezielt „(.+)“\.$/))) return lead+"Now we’re deliberately interrupting “"+translateDynamicText(m[1],"en").trim()+"”."+tail;
+    if((m=trimmed.match(/^Jetzt bauen wir eine Alternative für „(.+)“ auf\.$/))) return lead+"Now we’re building an alternative for “"+translateDynamicText(m[1],"en").trim()+"”."+tail;
+    if((m=trimmed.match(/^Der bisherige Plan greift bei „(.+)“ noch nicht genug\.$/))) return lead+"The current plan is not working well enough for “"+translateDynamicText(m[1],"en").trim()+"” yet."+tail;
+    if((m=trimmed.match(/^Beim nächsten „(.+)“-Moment/))) return lead+trimmed.replace(/^Beim nächsten „(.+)“-Moment/,"At the next “$1” moment")+tail;
+    if((m=trimmed.match(/^(.+) war direkt davor\.$/))) return lead+translateDynamicText(m[1],"en").trim()+" happened right before."+tail;
+    if((m=trimmed.match(/^(.+) ist ein wiederkehrender Auslöser\.$/))) return lead+translateDynamicText(m[1],"en").trim()+" is a recurring trigger."+tail;
+
   }else{
     var m2;
     if((m2=trimmed.match(/^Hi (.+)\. /))) return lead+trimmed.replace(/^Hi (.+)\. /,"Hallo $1. ")+tail;
@@ -2592,7 +2739,18 @@ function startLanguageObserver(){
   langObserver.observe(document.body,{subtree:true,childList:true,characterData:true});
 }
 
-function save(){localStorage.setItem(KEY,JSON.stringify(state))}
+function save(){
+  try{
+    var payload=JSON.stringify(sanitizeState(state));
+    localStorage.setItem(KEY+"_backup",localStorage.getItem(KEY)||payload);
+    localStorage.setItem(KEY,payload);
+    return true;
+  }catch(e){
+    console.error("Smoke Lab storage write failed",e);
+    showSystemNotice(uiLang()==="en"?"Your changes could not be saved locally. Please keep this tab open and try again.":"Deine Änderungen konnten lokal nicht gespeichert werden. Bitte lass die App geöffnet und versuche es erneut.","error");
+    return false;
+  }
+}
 function todayKey(){return new Date().toISOString().slice(0,10)}
 function createId(){return window.crypto&&typeof window.crypto.randomUUID==="function"?window.crypto.randomUUID():Date.now()+"-"+Math.random().toString(16).slice(2)}
 function avg(a){return a.length?a.reduce(function(x,y){return x+y},0)/a.length:null}
@@ -2806,7 +2964,7 @@ function runQaCheck(){
     "coachTitle","coachText","coachNext","focusTitle","focusText","focusBadge",
     "patternCoachBtn","patternCoachTitle","patternCoachText",
     "journeyStageLabel","journeyStageText","goalTitle","goalNext",
-    "progressSummary","progressStory","resetBtn"
+    "progressSummary","progressStory","langDe","langEn","resetBtn"
   ];
   var missing=required.filter(function(id){return !$(id)});
   if(missing.length){
@@ -2822,9 +2980,13 @@ function boot(){
   runQaCheck();
   if(!state.profile.name){$("setupView").classList.add("active");return}
   $("setupView").classList.remove("active");$("nav").classList.add("active");showView("today");
-  if(tick)clearInterval(tick);tick=setInterval(renderToday,60000);
+  if(tick)clearInterval(tick);tick=setInterval(function(){renderToday();applyLanguage(document.body)},60000);
+  requestAnimationFrame(function(){applyLanguage(document.body)});
 }
-function renderAll(){renderToday();renderPlan();renderPatterns();renderProgress();renderProfile()}
+function renderAll(){
+  renderToday();renderPlan();renderPatterns();renderProgress();renderProfile();
+  requestAnimationFrame(function(){applyLanguage(document.body)});
+}
 function renderToday(){
   var ev=eventsToday(),n=state.events.length,cm=coachModel(),stage=coachingStage(),top=n?topTrigger():null;
   $("helloLine").textContent="Hallo "+state.profile.name+". "+stage.step;
