@@ -1063,6 +1063,45 @@ html,body,.app{background:var(--bg)}
   .home-summary .coach{padding:12px}
 }
 
+
+/* --- v9 final polish: warmer identity, clearer coach, stronger hierarchy --- */
+.focus-card{position:relative;isolation:isolate}
+.focus-card>*:not(.focus-art){position:relative;z-index:2}
+.focus-art{
+  position:absolute;right:10px;top:12px;width:118px;height:88px;
+  color:#CBDACF;opacity:.62;z-index:1;pointer-events:none
+}
+.focus-art svg{width:100%;height:100%;fill:none;stroke:currentColor;stroke-width:1.15;stroke-linecap:round}
+.focus-art circle{fill:#EEF3EE;stroke:#C7D6CB}
+.focus-card h1{padding-right:34px}
+.focus-card p{padding-right:18px}
+.home-summary{backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px)}
+.coach-next strong{max-width:310px}
+.why-step{
+  margin-top:11px;padding-top:10px;border-top:1px solid rgba(255,255,255,.12);
+  color:#CCD5CF;font-size:10.5px;line-height:1.4
+}
+.why-step span{
+  display:block;margin-bottom:3px;color:#96B4A1;font-size:8px;
+  font-weight:700;text-transform:uppercase;letter-spacing:.75px
+}
+.action-main{transition:transform .12s ease,opacity .12s ease}
+.action-main:active{transform:scale(.985)}
+.choice,.scale button,.secondary,.cta{transition:transform .1s ease,background .15s ease,border-color .15s ease}
+.choice:active,.scale button:active,.secondary:active,.cta:active{transform:scale(.985)}
+.panel-body{padding-bottom:12px}
+#patternsView .card,#progressView .card,#patternsView .calibration{box-shadow:0 8px 26px rgba(50,54,50,.025)}
+#patternsView .answer{background:linear-gradient(145deg,#FFFDF9,#F9F5EF)}
+#progressView .progress-card{background:linear-gradient(145deg,#FFFDF9,#F7F3EC)}
+.result{padding-top:12px}
+.result b{font-size:34px;font-weight:720;letter-spacing:-1px}
+.result span{font-size:11px}
+@media(max-height:700px){
+  .focus-art{width:98px;height:72px;opacity:.48}
+  .focus-card h1{padding-right:20px}
+  .why-step{margin-top:8px;padding-top:7px}
+}
+
 </style>
 </head>
 <body>
@@ -1072,8 +1111,8 @@ html,body,.app{background:var(--bg)}
   <div style="display:flex;flex:1;flex-direction:column;justify-content:center;gap:14px">
     <div>
       <div class="eyebrow">Smoke Lab</div>
-      <h1 style="font-size:37px;line-height:1.02;letter-spacing:-1.5px;margin-top:5px">Verstehe deinen Rauchdrang.<br>Verändere ihn Schritt für Schritt.</h1>
-      <p class="muted" style="font-size:13.5px;margin-top:10px;max-width:340px">Wenn du gerade rauchen willst, öffnest du Smoke Lab. Die App sagt dir Schritt für Schritt, was du jetzt tun kannst – und merkt sich, was dir hilft.</p>
+      <h1 style="font-size:37px;line-height:1.02;letter-spacing:-1.5px;margin-top:5px">Verstehe, wann du automatisch rauchst.<br>Und was dir wirklich hilft.</h1>
+      <p class="muted" style="font-size:13.5px;margin-top:10px;max-width:340px">Öffne Smoke Lab genau dann, wenn der Rauchdrang kommt. Du bekommst eine kleine konkrete Hilfe für diesen Moment – und mit der Zeit erkennt die App deine persönlichen Auslöser.</p>
     </div>
     <div class="card">
       <div class="profile-sheet">
@@ -1094,9 +1133,9 @@ html,body,.app{background:var(--bg)}
   <div class="home-body">
     <div class="home-shell">
     <div class="focus-card">
-      <div class="kicker" id="focusKicker">Beim nächsten Rauchdrang</div>
+      <div class="focus-art" aria-hidden="true"><svg viewBox="0 0 120 90"><path d="M6 62c20-30 42-34 58-14 12 15 23 14 46-6"/><path d="M18 76c16-14 34-16 49-4"/><circle cx="84" cy="20" r="8"/></svg></div><div class="kicker" id="focusKicker">Beim nächsten Rauchdrang</div>
       <h1 id="focusTitle">Öffne Smoke Lab, bevor du rauchst.</h1>
-      <p id="focusText">Zwei kurze Fragen. Was später passiert bekommst du genau einen konkreten nächsten Schritt.</p>
+      <p id="focusText">Zwei kurze Fragen. Danach bekommst du genau einen konkreten nächsten Schritt.</p>
       <div class="focus-meta"><span class="badge" id="focusBadge">Heute offen</span><div class="mini-progress"><span id="journeyMini" style="width:3%"></span></div></div>
     </div>
 
@@ -1111,11 +1150,11 @@ html,body,.app{background:var(--bg)}
     <div class="home-summary">
       <div class="coach">
         <div class="coach-icon"></div>
-        <div><small>Was Smoke Lab gerade weiß</small><b id="coachTitle">Noch keine Daten über dein Muster.</b><p id="coachText">Beim nächsten Rauchdrang öffnest du die App vor der Zigarette. Was später passiert kann Smoke Lab gezielter helfen.</p></div>
+        <div><small>Was Smoke Lab gerade weiß</small><b id="coachTitle">Ich kenne dein Muster noch nicht.</b><p id="coachText">Beim nächsten Rauchdrang öffnest du die App vor der Zigarette. Was später passiert kann Smoke Lab gezielter helfen.</p></div>
       </div>
       <div class="stats">
         <div class="stat"><b id="awareMetric">0</b><span>Momente heute</span></div>
-        <div class="stat"><b id="delayMetric">—</b><span>Ø Abstand</span></div>
+        <div class="stat"><b id="delayMetric">—</b><span>Ø echte Pause</span></div>
         <div class="stat"><b id="urgeMetric">—</b><span>Drang danach</span></div>
       </div>
     </div>
@@ -1172,8 +1211,8 @@ html,body,.app{background:var(--bg)}
   <div class="panel-body">
     <div class="progress-grid">
       <div class="progress-card"><b id="progressDelay">—</b><span>Ø Abstand</span></div>
-      <div class="progress-card"><b id="progressChange">—</b><span>Drang Δ</span></div>
-      <div class="progress-card"><b id="progressExperiments">0</b><span>Schritte</span></div>
+      <div class="progress-card"><b id="progressChange">—</b><span>Drang verändert</span></div>
+      <div class="progress-card"><b id="progressExperiments">0</b><span>bewusste Schritte</span></div>
     </div>
     <div class="card">
     <div class="card-title">Was sich bei dir verändert</div>
@@ -1316,6 +1355,18 @@ function strategyFor(trigger,before){
   };
   return map[trigger]||map["Keine Ahnung"];
 }
+function rationaleFor(trigger){
+  var map={
+    "Stress":"Bei Stress hilft zuerst Abstand von der Situation – nicht noch mehr Nachdenken.",
+    "Kaffee / Pause":"Hier geht es darum, Kaffee und Zigarette für einen Moment voneinander zu trennen.",
+    "Routine":"Eine kleine Änderung von Ort oder Reihenfolge kann den Autopiloten unterbrechen.",
+    "Mit anderen":"Der soziale Impuls wird sichtbarer, wenn du nicht sofort mitgehst.",
+    "Langeweile":"Ein kurzer konkreter Wechsel gibt dir etwas anderes, worauf du reagieren kannst.",
+    "Nach dem Essen":"Die erste Handlung nach dem Essen ist oft leichter zu verändern als der ganze Ablauf.",
+    "Keine Ahnung":"Wenn der Auslöser unklar ist, beobachten wir zuerst nur, ob etwas Abstand den Drang verändert."
+  };
+  return map[trigger]||map["Keine Ahnung"];
+}
 function recommendedDelay(trigger,before){
   if(trigger==="Stress"&&before>=4)return 2;
   if(trigger==="Kaffee / Pause")return 5;
@@ -1367,7 +1418,7 @@ function renderToday(){
   $("coachTitle").textContent=cm.title;
   $("coachText").textContent=cm.meaning;
   $("coachNext").textContent=cm.next;
-  $("focusBadge").textContent=done?"Heute schon genutzt":"Bereit";
+  $("focusBadge").textContent=done?"Heute begleitet":"Bereit für den nächsten Moment";
   $("journeyMini").style.width=Math.min(100,n/CALIBRATION*100)+"%";
   $("missionBtn").textContent=done?"Abgeschlossen":"Mein Fokus";
 
@@ -1388,21 +1439,21 @@ function coachModel(){
   if(n===0){
     return {
       title:"Noch keine Daten über dein Muster.",
-      meaning:"Das ist absichtlich so. Erst schauen wir auf echte Rauchmomente, bevor Smoke Lab dir etwas als persönlich verkauft.",
+      meaning:"Das ist okay. Erst ein paar echte Rauchmomente zeigen, was bei dir wirklich wiederkehrt.",
       next:"Beim nächsten Rauchdrang vor der Zigarette öffnen."
     };
   }
   if(n<3){
     return {
-      title:"Wir lernen gerade deine Situationen kennen.",
-      meaning:"Mit "+n+" Moment"+(n===1?"":"en")+" wäre jede starke Aussage noch zu früh.",
+      title:"Ich lerne gerade deine typischen Situationen kennen.",
+      meaning:"Mit "+n+" Moment"+(n===1?"":"en")+" ist es noch zu früh für ein festes Muster.",
       next:"Beim nächsten Drang wieder kurz Auslöser und Stärke erfassen."
     };
   }
   var top=topTrigger();
   if(n<CALIBRATION){
     return {
-      title:"Eine erste Spur: "+top.name+".",
+      title:"Etwas fällt auf: "+top.name+".",
       meaning:top.count+" deiner "+n+" bisherigen Momente passen dazu. Noch kein stabiles Muster, aber etwas, das sich zu beobachten lohnt.",
       next:"Beim nächsten „"+top.name+"“-Moment die App vor der Zigarette öffnen."
     };
@@ -1531,12 +1582,12 @@ function openCrave(){
   renderTriggerButtons("triggerChoices","toUrge");$("toUrge").addEventListener("click",showUrgeBefore);showSheet();
 }
 function showUrgeBefore(){
-  $("flowContent").innerHTML='<div class="question">Wie stark ist der Drang?</div><div class="helper">Keine Wissenschaft. Nur dein Gefühl jetzt gerade.</div><div class="scale" id="beforeScale"></div><button id="toCoach" class="cta">Weiter</button>';
+  $("flowContent").innerHTML='<div class="question">Wie stark ist der Drang?</div><div class="helper">Nur dein Gefühl gerade – ohne richtig oder falsch.</div><div class="scale" id="beforeScale"></div><button id="toCoach" class="cta">Weiter</button>';
   renderScale("beforeScale",function(v){flow.before=v},3);$("toCoach").addEventListener("click",showCoachIntervention);
 }
 function showCoachIntervention(){
   var d=recommendedDelay(flow.trigger,flow.before);flow.delay=d;var action=strategyFor(flow.trigger,flow.before);
-  $("flowContent").innerHTML='<div class="intervention"><small>Ein konkreter Schritt für jetzt</small><h3>'+d+' Minuten Abstand.</h3><p>'+action+'</p></div><button id="startTimer" class="cta">'+d+' Minuten ausprobieren</button><button id="skipTimer" class="secondary">Ohne Wartezeit weitermachen</button>';
+  $("flowContent").innerHTML='<div class="intervention"><small>Ein konkreter Schritt für jetzt</small><h3>'+d+' Minuten Abstand.</h3><p>'+action+'</p><div class="why-step"><span>Warum dieser Schritt?</span>'+rationaleFor(flow.trigger)+'</div></div><button id="startTimer" class="cta">'+d+' Minuten ausprobieren</button><button id="skipTimer" class="secondary">Ohne Pause weiter</button>';
   $("startTimer").addEventListener("click",function(){startDelay(d)});$("skipTimer").addEventListener("click",showAfter);
 }
 function startDelay(mins){
@@ -1567,7 +1618,7 @@ function openJustSmoked(){
 function saveDirectSmoke(){
   var now=new Date(),e={id:createId(),date:now.toISOString(),time:now.toLocaleTimeString([], {hour:"2-digit",minute:"2-digit"}),trigger:flow.trigger||"Keine Ahnung",before:3,after:3,delay:0,outcome:"smoked"};
   state.events.unshift(e);state.lastSmoke=Date.now();save();renderAll();
-  $("flowContent").innerHTML='<div class="result"><b>Gespeichert.</b><span>Der Moment ist jetzt sichtbar.</span></div><div class="result-insight"><div class="label">Was Smoke Lab daraus lernt</div><h3>'+flow.trigger+' war direkt davor.</h3><p>Ein einzelner Moment ist noch kein Muster. Wenn sich derselbe Auslöser wiederholt, wird Smoke Lab ihn stärker gewichten.</p><div class="result-next"><b>Nächstes Mal:</b> Wenn möglich, öffne die App kurz bevor du rauchst. Dann können wir nicht nur den Auslöser, sondern auch den Verlauf des Drangs vergleichen.</div></div><button id="finishDirect" class="cta">Zurück zu Heute</button>';$("finishDirect").addEventListener("click",function(){closeFlow();showView("today")});
+  $("flowContent").innerHTML='<div class="result"><b>Gespeichert.</b><span>Der Moment ist jetzt sichtbar.</span></div><div class="result-insight"><div class="label">Was Smoke Lab daraus lernt</div><h3>'+flow.trigger+' war direkt davor.</h3><p>Ein einzelner Moment sagt noch wenig. Wenn derselbe Auslöser öfter auftaucht, wird daraus langsam ein persönliches Muster.</p><div class="result-next"><b>Nächstes Mal:</b> Wenn möglich, öffne die App kurz bevor du rauchst. Dann können wir nicht nur den Auslöser, sondern auch den Verlauf des Drangs vergleichen.</div></div><button id="finishDirect" class="cta">Zurück zu Heute</button>';$("finishDirect").addEventListener("click",function(){closeFlow();showView("today")});
 }
 function openMission(){
   var m=adaptiveMission();flow={mode:"mission",trigger:null,before:3,after:3,outcome:null,delay:0,seconds:0,timer:null,mission:true,startedAt:null,waitedSeconds:0};
@@ -1604,12 +1655,12 @@ function showResult(e){
       insight="Du hast "+wait+" Sekunden gewartet und danach geraucht. Auch kurze echte Pausen werden erfasst.";
     }else{
       title="Diesmal hast du direkt geraucht.";
-      insight="Kein erfundener Fortschritt: Es wird keine Wartezeit angerechnet. Der Auslöser hilft Smoke Lab trotzdem, dein Muster besser zu verstehen.";
+      insight="Du hast diesmal direkt geraucht. Deshalb wird keine Wartezeit angerechnet. Der Auslöser hilft trotzdem dabei, dein Muster besser zu erkennen.";
     }
     next="Beim nächsten ähnlichen Moment öffnest du Smoke Lab wieder vor der Zigarette.";
   }else if(change>0){
     title="Dein Drang ist tatsächlich gesunken.";
-    insight="Von "+e.before+"/5 auf "+e.after+"/5, ohne dass du sofort reagieren musstest. Das ist ein konkretes Signal aus diesem Moment – keine allgemeine Behauptung.";
+    insight="Von "+e.before+"/5 auf "+e.after+"/5, ohne dass du sofort reagieren musstest. Das ist ein konkretes Ergebnis aus genau diesem Moment.";
     next="Wenn dieser Auslöser wiederkommt, können wir dieselbe Reaktion erneut prüfen.";
   }else if(e.outcome==="delayed"){
     title="Du hast Zeit zwischen Drang und Entscheidung gebracht.";
@@ -1623,7 +1674,7 @@ function showResult(e){
 
   $("flowContent").innerHTML=
     '<div class="result"><b>'+headline+'</b><span>Drang '+e.before+'/5 → '+e.after+'/5</span></div>'+
-    '<div class="result-insight"><div class="label">Was wir aus diesem Moment mitnehmen</div><h3>'+title+'</h3><p>'+insight+'</p><div class="result-next"><b>Nächstes Mal:</b> '+next+'</div></div>'+
+    '<div class="result-insight"><div class="label">Was dieser Moment gezeigt hat</div><h3>'+title+'</h3><p>'+insight+'</p><div class="result-next"><b>Nächstes Mal:</b> '+next+'</div></div>'+
     '<button id="finishBtn" class="cta">Zurück zu Heute</button>';
   $("finishBtn").addEventListener("click",function(){closeFlow();showView("today")});
 }
