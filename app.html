@@ -2413,7 +2413,7 @@ function milestoneState(){
   if(n<3)return {label:"Start",next:"3 echte Rauchmomente begleiten",progress:n+"/3"};
   if(n<CALIBRATION)return {label:"Verstehen",next:"8 Rauchmomente für ein stabileres Muster",progress:n+"/8"};
   if(interrupted<3)return {label:"Unterbrechen",next:"3 automatische Momente bewusst unterbrechen",progress:interrupted+"/3"};
-  if(!repeatedHelpful)return {label:"Ersetzen",next:"Eine hilfreiche Reaktion zweimal bestätigen",progress:"im Aufbau"};
+  if(!repeatedHelpful)return {label:"Ersetzen",next:"Eine Strategie finden, die bei dir zweimal funktioniert",progress:"im Aufbau"};
   return {label:"Stabilisieren",next:"Hilfreiche Reaktion in mehreren Alltagssituationen wiederholen",progress:"aktiv"};
 }
 function goalTitle(){
@@ -2694,7 +2694,7 @@ function renderPatterns(){
     var when=Object.keys(times).sort(function(a,b){return times[b]-times[a]})[0]||"—";
     $("triggerAnswer").textContent=top.name;
     $("whenAnswer").textContent=when;
-    $("helpAnswer").textContent=best&&best.delta>0.5?"Kurzer Abstand":"Noch nicht klar";
+    $("helpAnswer").textContent=best&&best.delta>0.5?"Kurzer Abstand":"Noch keine klare Wirkung";
 
     if(n<CALIBRATION){
       $("patternHeroTitle").textContent=top.name+" ist bisher die stärkste Spur.";
