@@ -1,1 +1,31 @@
-{"name":"Smoke Lab","short_name":"Smoke Lab","start_url":"/","scope":"/","display":"standalone","background_color":"#F5F3EE","theme_color":"#F5F3EE","icons":[{"src":"/icon-192.png","sizes":"192x192","type":"image/png"},{"src":"/icon-512.png","sizes":"512x512","type":"image/png"}]}
+{
+  "name": "Smoke Lab by Morrow Tools",
+  "short_name": "Smoke Lab",
+  "description": "A behavior-change companion for smoking triggers and cravings.",
+  "start_url": "./app.html",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#F3F0E9",
+  "theme_color": "#F3F0E9",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "./icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "./icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "./icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    }
+  ]
+}
