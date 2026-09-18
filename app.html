@@ -1102,6 +1102,65 @@ html,body,.app{background:var(--bg)}
   .why-step{margin-top:8px;padding-top:7px}
 }
 
+
+/* --- v10 bugfix: stable focus layout + direct post-smoke capture --- */
+.focus-card{
+  display:flex !important;
+  flex-direction:column !important;
+  align-items:flex-start !important;
+  justify-content:flex-start !important;
+  min-height:196px !important;
+  padding:20px 20px 17px !important;
+}
+.focus-card h1{
+  padding-right:28px !important;
+  margin-bottom:0 !important;
+}
+.focus-card p{
+  display:block !important;
+  padding-right:16px !important;
+  margin-bottom:0 !important;
+}
+.focus-meta{
+  position:static !important;
+  width:100% !important;
+  margin-top:auto !important;
+  padding-top:13px !important;
+  display:grid !important;
+  grid-template-columns:auto minmax(70px,1fr) !important;
+  gap:12px !important;
+  align-items:center !important;
+  left:auto !important;right:auto !important;bottom:auto !important;
+}
+.focus-meta .badge{
+  position:static !important;
+  grid-column:1 !important;
+  justify-self:start !important;
+  white-space:nowrap !important;
+  padding:6px 9px !important;
+  font-size:9.5px !important;
+}
+.focus-meta .mini-progress{
+  grid-column:2 !important;
+  justify-self:stretch !important;
+  width:auto !important;
+  min-width:72px !important;
+}
+#smokeTriggers .choice.trg{cursor:pointer}
+#smokeTriggers .choice.trg:active{transform:scale(.985)}
+@media(max-height:760px){
+  .focus-card{min-height:174px !important;padding:16px 17px 14px !important}
+  .focus-card h1{font-size:22px !important;line-height:1.07 !important;padding-right:20px !important}
+  .focus-card p{display:block !important;font-size:10.8px !important;line-height:1.35 !important}
+  .focus-meta{padding-top:9px !important}
+  .focus-art{width:86px !important;height:64px !important}
+}
+@media(max-height:680px){
+  .focus-card{min-height:166px !important}
+  .focus-card p{display:block !important}
+  .home-summary .coach p{display:block !important}
+}
+
 </style>
 </head>
 <body>
@@ -1136,7 +1195,7 @@ html,body,.app{background:var(--bg)}
       <div class="focus-art" aria-hidden="true"><svg viewBox="0 0 120 90"><path d="M6 62c20-30 42-34 58-14 12 15 23 14 46-6"/><path d="M18 76c16-14 34-16 49-4"/><circle cx="84" cy="20" r="8"/></svg></div><div class="kicker" id="focusKicker">Beim nächsten Rauchdrang</div>
       <h1 id="focusTitle">Öffne Smoke Lab, bevor du rauchst.</h1>
       <p id="focusText">Zwei kurze Fragen. Danach bekommst du genau einen konkreten nächsten Schritt.</p>
-      <div class="focus-meta"><span class="badge" id="focusBadge">Heute offen</span><div class="mini-progress"><span id="journeyMini" style="width:3%"></span></div></div>
+      <div class="focus-meta"><span class="badge" id="focusBadge">Bereit für den nächsten Moment</span><div class="mini-progress"><span id="journeyMini" style="width:3%"></span></div></div>
     </div>
 
     <button id="craveBtn" class="action-main">Ich will gerade rauchen</button>
@@ -1150,7 +1209,7 @@ html,body,.app{background:var(--bg)}
     <div class="home-summary">
       <div class="coach">
         <div class="coach-icon"></div>
-        <div><small>Was Smoke Lab gerade weiß</small><b id="coachTitle">Ich kenne dein Muster noch nicht.</b><p id="coachText">Beim nächsten Rauchdrang öffnest du die App vor der Zigarette. Was später passiert kann Smoke Lab gezielter helfen.</p></div>
+        <div><small>Dein Coach</small><b id="coachTitle">Ich kenne dein Muster noch nicht.</b><p id="coachText">Beim nächsten Rauchdrang öffnest du die App vor der Zigarette. Danach kann Smoke Lab gezielter helfen.</p></div>
       </div>
       <div class="stats">
         <div class="stat"><b id="awareMetric">0</b><span>Momente heute</span></div>
@@ -1571,14 +1630,27 @@ function triggerIcon(name){
   if(name==="Nach dem Essen")return '<span '+common+'<svg viewBox="0 0 24 24"><path d="M7 3v8m-2-8v5a2 2 0 0 0 4 0V3m8 0v18m0-18c2 2 2 6 0 8"/></svg></span>';
   return '<span '+common+'<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8"/><path d="M9.8 9a2.4 2.4 0 0 1 4.6 1c0 1.8-2.4 2-2.4 3.6M12 17h.01"/></svg></span>';
 }
-function renderTriggerButtons(containerId,nextId){
+function renderTriggerButtons(containerId,nextId,onPick){
   var tc=$(containerId);tc.innerHTML="";
-  triggers.forEach(function(t){var b=document.createElement("button");b.className="choice trg";b.innerHTML=triggerIcon(t)+"<span>"+t+"</span>";b.addEventListener("click",function(){flow.trigger=t;tc.querySelectorAll("button").forEach(function(x){x.classList.remove("selected")});b.classList.add("selected");if(nextId)$(nextId).disabled=false});tc.append(b)});
+  triggers.forEach(function(t){
+    var b=document.createElement("button");
+    b.type="button";
+    b.className="choice trg";
+    b.innerHTML=triggerIcon(t)+"<span>"+t+"</span>";
+    b.addEventListener("click",function(){
+      flow.trigger=t;
+      tc.querySelectorAll("button").forEach(function(x){x.classList.remove("selected")});
+      b.classList.add("selected");
+      if(nextId&&$(nextId))$(nextId).disabled=false;
+      if(onPick)onPick(t,b);
+    });
+    tc.append(b);
+  });
 }
 function openCrave(){
   flow={mode:"crave",trigger:null,before:3,after:3,outcome:null,delay:0,seconds:0,timer:null,mission:state.missionDoneDate!==todayKey(),startedAt:null,waitedSeconds:0};
   $("flowTitle").textContent="Ich helfe dir jetzt";$("flowSubtitle").textContent="Eine Frage nach der anderen. Du musst nichts vorbereiten.";
-  $("flowContent").innerHTML='<div class="flow-intro"><div class="flow-watermark"><svg viewBox="0 0 64 64"><path d="M10 34c10-12 18-12 28-2 7 7 11 6 16 0"/><path d="M13 43c8-7 15-7 22-1"/><circle cx="17" cy="19" r="5"/></svg></div><div class="question">Was hat den Rauchdrang gerade ausgelöst?</div><div class="helper">Nimm das, was gerade am ehesten passt.</div></div><div class="choice-grid" id="triggerChoices"></div><button id="toUrge" class="cta" disabled>Weiter</button>';
+  $("flowContent").innerHTML='<div class="flow-intro"><div class="flow-watermark"><svg viewBox="0 0 64 64"><path d="M10 34c10-12 18-12 28-2 7 7 11 6 16 0"/><path d="M13 43c8-7 15-7 22-1"/><circle cx="17" cy="19" r="5"/></svg></div><div class="question">Was hat den Rauchdrang gerade ausgelöst?</div><div class="helper">Tippe auf das, was gerade am ehesten passt.</div></div><div class="choice-grid" id="triggerChoices"></div><button id="toUrge" class="cta" disabled>Weiter</button>';
   renderTriggerButtons("triggerChoices","toUrge");$("toUrge").addEventListener("click",showUrgeBefore);showSheet();
 }
 function showUrgeBefore(){
@@ -1610,12 +1682,14 @@ function showAfter(){
   $("saveMoment").addEventListener("click",saveMoment);
 }
 function openJustSmoked(){
-  flow={mode:"smoked",trigger:null,before:3,after:3,outcome:"smoked",delay:0,seconds:0,timer:null,mission:false,startedAt:null,waitedSeconds:0};
+  flow={mode:"smoked",trigger:null,before:3,after:3,outcome:"smoked",delay:0,seconds:0,timer:null,mission:false,startedAt:null,waitedSeconds:0,saved:false};
   $("flowTitle").textContent="Gerade geraucht";$("flowSubtitle").textContent="Kurz festhalten, damit Smoke Lab daraus lernen kann.";
-  $("flowContent").innerHTML='<div class="question">Was war direkt davor?</div><div class="helper">Ein Klick reicht. Mehr musst du jetzt nicht tun.</div><div class="choice-grid" id="smokeTriggers"></div><button id="saveSmoke" class="cta" disabled>Moment speichern</button>';
-  renderTriggerButtons("smokeTriggers","saveSmoke");$("saveSmoke").addEventListener("click",saveDirectSmoke);showSheet();
+  $("flowContent").innerHTML='<div class="question">Was war direkt davor?</div><div class="helper">Tippe auf den Auslöser – der Moment wird direkt gespeichert.</div><div class="choice-grid" id="smokeTriggers"></div>';
+  renderTriggerButtons("smokeTriggers",null,function(){setTimeout(saveDirectSmoke,120)});showSheet();
 }
 function saveDirectSmoke(){
+  if(flow.saved)return;
+  flow.saved=true;
   var now=new Date(),e={id:createId(),date:now.toISOString(),time:now.toLocaleTimeString([], {hour:"2-digit",minute:"2-digit"}),trigger:flow.trigger||"Keine Ahnung",before:3,after:3,delay:0,outcome:"smoked"};
   state.events.unshift(e);state.lastSmoke=Date.now();save();renderAll();
   $("flowContent").innerHTML='<div class="result"><b>Gespeichert.</b><span>Der Moment ist jetzt sichtbar.</span></div><div class="result-insight"><div class="label">Was Smoke Lab daraus lernt</div><h3>'+flow.trigger+' war direkt davor.</h3><p>Ein einzelner Moment sagt noch wenig. Wenn derselbe Auslöser öfter auftaucht, wird daraus langsam ein persönliches Muster.</p><div class="result-next"><b>Nächstes Mal:</b> Wenn möglich, öffne die App kurz bevor du rauchst. Dann können wir nicht nur den Auslöser, sondern auch den Verlauf des Drangs vergleichen.</div></div><button id="finishDirect" class="cta">Zurück zu Heute</button>';$("finishDirect").addEventListener("click",function(){closeFlow();showView("today")});
