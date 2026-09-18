@@ -230,6 +230,143 @@ html,body,.app{background:var(--bg)}
   .home-summary .stat{padding:9px 8px}
 }
 
+
+/* --- v4 visual system: centered, symmetrical, plain-language UI --- */
+.app{max-width:430px}
+.view{padding-left:18px;padding-right:18px}
+.top{
+  display:grid;
+  grid-template-columns:40px minmax(0,1fr) 40px;
+  align-items:center;
+  min-height:54px;
+  width:100%;
+}
+.top:before{content:"";width:40px;height:40px;grid-column:1}
+.top>div{grid-column:2;text-align:center;min-width:0}
+.top>.avatar{grid-column:3}
+.brand{font-size:27px;letter-spacing:-.9px;line-height:1.05}
+.sub{font-size:11px;line-height:1.25;margin-top:3px;white-space:normal}
+.home-body{gap:10px;padding-top:8px;width:100%}
+.home-shell{gap:10px;width:100%}
+.focus-card{
+  width:100%;
+  min-height:184px;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:flex-start;
+  text-align:center;
+  padding:20px 18px 18px;
+  border-radius:26px;
+}
+.kicker{width:100%;text-align:center}
+.focus-card h1{
+  width:100%;
+  max-width:330px;
+  margin:8px auto 0;
+  font-size:27px;
+  line-height:1.06;
+  text-align:center;
+}
+.focus-card p{
+  width:100%;
+  max-width:330px;
+  margin:8px auto 0;
+  font-size:12.5px;
+  line-height:1.4;
+  text-align:center;
+}
+.focus-meta{
+  position:absolute;
+  left:18px;right:18px;bottom:15px;
+  display:grid;
+  grid-template-columns:1fr 96px 1fr;
+  align-items:center;
+}
+.focus-meta .badge{grid-column:1;justify-self:start}
+.focus-meta .mini-progress{grid-column:2;justify-self:center}
+.action-main{width:100%;height:56px;border-radius:18px;font-size:15px}
+.action-row{grid-template-columns:1fr 1fr;gap:10px;width:100%}
+.action-lite{
+  width:100%;height:52px;
+  padding:0 10px;
+  border-radius:18px;
+  justify-content:center;
+}
+.action-lite .action-ico{margin-right:6px}
+.home-summary{width:100%;border-radius:24px}
+.home-summary .coach{
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  text-align:center;
+  gap:7px;
+  padding:14px 16px 13px;
+}
+.home-summary .coach-icon{width:34px;height:34px;border-radius:12px}
+.home-summary .coach small,.home-summary .coach b,.home-summary .coach p{text-align:center}
+.home-summary .coach p{max-width:330px}
+.home-summary .stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr))}
+.home-summary .stat{
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  text-align:center;
+  min-height:62px;
+  padding:10px 6px;
+}
+.home-summary .stat b{font-size:18px;line-height:1}
+.home-summary .stat span{font-size:8px;line-height:1.15;margin-top:5px}
+.panel-head{
+  min-height:64px;
+  align-items:center;
+  justify-content:center;
+  text-align:center;
+}
+.panel-head>div{width:100%;text-align:center}
+.panel-head h1{font-size:27px;text-align:center}
+.eyebrow{text-align:center}
+.panel-body{gap:10px;padding-top:4px}
+.plan-card,.next-card,.card,.calibration,.answer,.progress-card{width:100%}
+.plan-card{text-align:center;align-items:center}
+.next-card{grid-template-columns:40px 1fr 40px;align-items:center;text-align:center}
+.next-card .num{grid-column:1}
+.next-card>div:last-child{grid-column:2}
+.answer-grid{gap:10px}
+.answer{text-align:center}
+.progress-grid{gap:8px}
+.progress-card{text-align:center}
+.sheet-head{
+  display:grid;
+  grid-template-columns:36px 1fr 36px;
+  align-items:center;
+}
+.sheet-title{grid-column:2;justify-content:center;text-align:center}
+.sheet-head .close{grid-column:3}
+.sheet-head:before{content:"";grid-column:1;width:36px;height:36px}
+.sheet-head .sheet-title{grid-row:1}
+.sheet-head .close{grid-row:1}
+.flow{text-align:center}
+.question{text-align:center}
+.helper{text-align:center}
+.choice-grid{gap:8px}
+.choice{text-align:center}
+.intervention{text-align:center}
+.result{text-align:center}
+@media(max-height:760px){
+  .top{min-height:48px}
+  .focus-card{min-height:162px;padding:16px}
+  .focus-card h1{font-size:23px}
+  .focus-card p{font-size:11.5px}
+  .home-summary .coach{padding:10px 12px}
+}
+@media(max-height:680px){
+  .focus-card{min-height:146px}
+  .focus-card p{display:none}
+  .home-summary .coach p{display:none}
+}
+
 </style>
 </head>
 <body>
@@ -240,7 +377,7 @@ html,body,.app{background:var(--bg)}
     <div>
       <div class="eyebrow">Smoke Lab</div>
       <h1 style="font-size:37px;line-height:1.02;letter-spacing:-1.5px;margin-top:5px">Verstehe deinen Rauchdrang.<br>Verändere ihn Schritt für Schritt.</h1>
-      <p class="muted" style="font-size:13.5px;margin-top:10px;max-width:340px">Wenn du rauchen willst, öffnest du Smoke Lab. Die App führt dich durch den Moment und lernt daraus, was bei dir hilft.</p>
+      <p class="muted" style="font-size:13.5px;margin-top:10px;max-width:340px">Wenn du gerade rauchen willst, öffnest du Smoke Lab. Die App sagt dir Schritt für Schritt, was du jetzt tun kannst – und merkt sich, was dir hilft.</p>
     </div>
     <div class="card">
       <div class="profile-sheet">
@@ -263,22 +400,22 @@ html,body,.app{background:var(--bg)}
     <div class="focus-card">
       <div class="kicker" id="focusKicker">Heute im Fokus</div>
       <h1 id="focusTitle">Beobachte einen starken Rauchmoment.</h1>
-      <p id="focusText">Noch nichts verändern. Wir wollen zuerst verstehen, wann der Autopilot übernimmt.</p>
+      <p id="focusText">Beim nächsten Rauchdrang öffnest du Smoke Lab. Du beantwortest zwei kurze Fragen – den Rest führt die App.</p>
       <div class="focus-meta"><span class="badge" id="focusBadge">Heute offen</span><div class="mini-progress"><span id="journeyMini" style="width:3%"></span></div></div>
     </div>
 
     <button id="craveBtn" class="action-main">⚡ Ich will gerade rauchen</button>
 
     <div class="action-row">
-      <button id="smokedBtn" class="action-lite"><span class="action-ico">🚬</span><span>Gerade geraucht</span></button>
-      <button id="missionBtn" class="action-lite blue"><span class="action-ico">▶</span><span>Heutiger Test</span></button>
+      <button id="smokedBtn" class="action-lite"><span class="action-ico">🚬</span><span>Ich habe geraucht</span></button>
+      <button id="missionBtn" class="action-lite blue"><span class="action-ico">▶</span><span>Meine Aufgabe</span></button>
     </div>
     </div>
 
     <div class="home-summary">
       <div class="coach">
         <div class="coach-icon">↗</div>
-        <div><small>Dein Coach</small><b id="coachTitle">Heute nur beobachten.</b><p id="coachText">Ein bewusster Moment reicht. Danach weiß Smoke Lab ein bisschen mehr über dich.</p></div>
+        <div><small>Dein Coach</small><b id="coachTitle">Heute nur beobachten.</b><p id="coachText">Beim nächsten Rauchdrang einfach auf den grünen Button tippen. Smoke Lab führt dich dann durch.</p></div>
       </div>
       <div class="stats">
         <div class="stat"><b id="awareMetric">0</b><span>Momente heute</span></div>
@@ -291,7 +428,7 @@ html,body,.app{background:var(--bg)}
 </section>
 
 <section id="planView" class="view">
-  <div class="panel-head"><div><div class="eyebrow">Dein Plan</div><h1>Was jetzt wichtig ist</h1></div></div>
+  <div class="panel-head"><div><div class="eyebrow">Dein Plan</div><h1>Dein nächster Schritt</h1></div></div>
   <div class="panel-body">
     <div class="card plan-card">
       <div class="eyebrow">Heute</div>
@@ -300,15 +437,15 @@ html,body,.app{background:var(--bg)}
     </div>
     <div class="card next-card">
       <div class="num">→</div>
-      <div><div class="card-title">Morgen</div><p class="muted" id="tomorrowText">Wird anhand deiner heutigen Momente gewählt.</p></div>
+      <div><div class="card-title">Danach</div><p class="muted" id="tomorrowText">Smoke Lab wählt den nächsten Schritt aus deinen bisherigen Rauchmomenten.</p></div>
     </div>
     <div class="card">
-      <div class="card-title">So arbeitet Smoke Lab</div>
+      <div class="card-title">So hilft dir Smoke Lab</div>
       <div class="timeline" style="margin-top:8px">
         <div class="step"><div class="dot active"></div><div><b>1. Beobachten</b><small>Was löst den Moment aus?</small></div></div>
-        <div class="step"><div class="dot"></div><div><b>2. Einen kleinen Test machen</b><small>Nur eine Sache verändern.</small></div></div>
+        <div class="step"><div class="dot"></div><div><b>2. Einen kleinen Schritt machen</b><small>Nur eine Sache verändern.</small></div></div>
         <div class="step"><div class="dot"></div><div><b>3. Auswerten</b><small>Hat sich dein Drang oder dein Abstand verändert?</small></div></div>
-        <div class="step"><div class="dot"></div><div><b>4. Nächsten Test anpassen</b><small>Smoke Lab nutzt deine eigenen Daten.</small></div></div>
+        <div class="step"><div class="dot"></div><div><b>4. Nächsten Schritt anpassen</b><small>Smoke Lab merkt sich, was bei dir funktioniert.</small></div></div>
       </div>
     </div>
   </div>
@@ -340,10 +477,10 @@ html,body,.app{background:var(--bg)}
     <div class="progress-grid">
       <div class="progress-card"><b id="progressDelay">—</b><span>Ø Abstand</span></div>
       <div class="progress-card"><b id="progressChange">—</b><span>Drang Δ</span></div>
-      <div class="progress-card"><b id="progressExperiments">0</b><span>Tests</span></div>
+      <div class="progress-card"><b id="progressExperiments">0</b><span>Aufgaben</span></div>
     </div>
     <div class="card"><div class="card-title">Dein Fortschritt</div><p id="progressSummary" class="muted" style="margin-top:6px">Fortschritt heißt hier: mehr bewusste Entscheidungen, mehr Abstand und weniger automatische Situationen.</p></div>
-    <div class="card"><div style="display:flex;justify-content:space-between"><div class="card-title">Abgeschlossene Tests</div><span id="experimentCount" class="muted">0</span></div><div id="experimentHistory" class="recent" style="margin-top:6px"><span class="muted">Noch kein Test abgeschlossen.</span></div></div>
+    <div class="card"><div style="display:flex;justify-content:space-between"><div class="card-title">Erledigte Aufgaben</div><span id="experimentCount" class="muted">0</span></div><div id="experimentHistory" class="recent" style="margin-top:6px"><span class="muted">Noch kein Aufgabe erledigt.</span></div></div>
   </div>
 </section>
 
@@ -495,9 +632,9 @@ function adaptiveMission(){
     return ["Beobachte heute besonders: "+top.name+".","Das taucht bisher am häufigsten auf. Noch zu wenig Daten für eine feste Aussage — heute sammeln wir gezielt weiter."];
   }
   if(best&&best.delta>0.5){
-    return ["Teste erneut, was bei dir schon geholfen hat.","Bei "+best.name+" sank dein Drang bisher am stärksten. Wiederhole heute genau diese Art von Unterbrechung."];
+    return ["Wiederhole heute, was dir bereits geholfen hat.","Bei "+best.name+" sank dein Drang bisher am stärksten. Mach heute denselben kleinen Schritt noch einmal."];
   }
-  return ["Unterbrich heute deinen häufigsten Trigger: "+top.name+".",strategyFor(top.name,3)];
+  return ["Heute kümmern wir uns um deinen häufigsten Auslöser: "+top.name+".",strategyFor(top.name,3)];
 }
 function showView(name){
   ["today","plan","patterns","progress"].forEach(function(v){$(v+"View").classList.toggle("active",v===name)});
@@ -513,24 +650,24 @@ function renderAll(){renderToday();renderPlan();renderPatterns();renderProgress(
 function renderToday(){
   var m=adaptiveMission(),done=state.missionDoneDate===todayKey(),ev=eventsToday();
   $("helloLine").textContent="Hallo "+state.profile.name+". Heute nur ein sinnvoller nächster Schritt.";
-  $("focusKicker").textContent="Heute im Fokus · Test "+String(state.missionDay).padStart(2,"0");
+  $("focusKicker").textContent="Heute im Fokus · Schritt "+String(state.missionDay).padStart(2,"0");
   $("focusTitle").textContent=m[0];$("focusText").textContent=m[1];
   $("focusBadge").textContent=done?"Heute abgeschlossen":"Heute offen";
   $("journeyMini").style.width=Math.min(100,state.missionDay/30*100)+"%";
-  $("missionBtn").innerHTML=done?'<span class="action-ico">✓</span><span>Abgeschlossen</span>':'<span class="action-ico">▶</span><span>Heutiger Test</span>';
+  $("missionBtn").innerHTML=done?'<span class="action-ico">✓</span><span>Abgeschlossen</span>':'<span class="action-ico">▶</span><span>Heutige Aufgabe</span>';
   var delays=ev.map(function(e){return Number(e.delay)||0}).filter(function(n){return n>0});
   var afters=ev.map(function(e){return Number(e.after)}).filter(function(n){return n>0});
   $("awareMetric").textContent=ev.length;$("delayMetric").textContent=delays.length?Math.round(avg(delays))+"m":"—";$("urgeMetric").textContent=afters.length?avg(afters).toFixed(1)+"/5":"—";
   if(state.events.length===0){$("coachTitle").textContent="Heute nur beobachten.";$("coachText").textContent="Ein bewusster Moment reicht. Danach weiß Smoke Lab ein bisschen mehr über dich."}
   else if(state.events.length<3){$("coachTitle").textContent="Gut, wir haben erste echte Momente.";$("coachText").textContent="Noch keine Schlussfolgerung. Ich schaue zuerst, was sich wiederholt."}
   else if(state.events.length<CALIBRATION){var t=topTrigger();$("coachTitle").textContent="Eine erste Beobachtung: "+t.name;$("coachText").textContent=t.count+" deiner bisherigen Momente liegen dort. Noch nicht endgültig — aber morgen testen wir gezielter."}
-  else{var top=topTrigger(),best=bestStrategyTrigger();$("coachTitle").textContent="Jetzt sehen wir ein Muster.";$("coachText").textContent=top.name+" ist häufig. "+(best&&best.delta>0?"Am besten funktioniert bisher: kurz Abstand schaffen.":"Heute testen wir dort eine kleine Unterbrechung.")}
+  else{var top=topTrigger(),best=bestStrategyTrigger();$("coachTitle").textContent="Jetzt sehen wir ein Muster.";$("coachText").textContent=top.name+" ist häufig. "+(best&&best.delta>0?"Am besten funktioniert bisher: kurz Abstand schaffen.":"Heute machen wir dort eine kleine Unterbrechung.")}
 }
 function renderPlan(){
   var m=adaptiveMission();$("planTodayTitle").textContent=m[0];$("planTodayText").textContent=m[1];
   if(state.events.length<3)$("tomorrowText").textContent="Wird anhand deiner heutigen Momente gewählt.";
-  else if(state.events.length<CALIBRATION){var t=topTrigger();$("tomorrowText").textContent="Voraussichtlich testen wir gezielt deinen häufigen Kontext „"+t.name+"“."}
-  else{var best=bestStrategyTrigger();$("tomorrowText").textContent=best&&best.delta>0?"Wir wiederholen, was deinen Drang bisher am stärksten gesenkt hat.":"Wir testen deinen häufigsten Trigger mit einer neuen kleinen Unterbrechung."}
+  else if(state.events.length<CALIBRATION){var t=topTrigger();$("tomorrowText").textContent="Morgen kümmern wir uns voraussichtlich gezielt um deinen häufigen Auslöser „"+t.name+"“."}
+  else{var best=bestStrategyTrigger();$("tomorrowText").textContent=best&&best.delta>0?"Wir wiederholen, was deinen Drang bisher am stärksten gesenkt hat.":"Wir üben beim häufigsten Auslöser einen neuen kleinen Abstand."}
 }
 function timeBucket(dateStr){
   var d=new Date(dateStr),h=d.getHours();
@@ -546,7 +683,7 @@ function renderPatterns(){
     state.events.forEach(function(e){var k=timeBucket(e.date);times[k]=(times[k]||0)+1});
     var when=Object.keys(times).sort(function(a,b){return times[b]-times[a]})[0]||"—";
     $("whenAnswer").textContent=when;$("triggerAnswer").textContent=top.name;$("helpAnswer").textContent=best&&best.delta>0?"Abstand / Unterbrechung":"Noch unklar";$("urgeAnswer").textContent=before.length?avg(before).toFixed(1)+"/5":"—";
-    $("patternAdvice").textContent="Dein sinnvollster Test ist aktuell: "+strategyFor(top.name,4);
+    $("patternAdvice").textContent="Dein sinnvollster Schritt ist aktuell: "+strategyFor(top.name,4);
   }
   var hist=$("historyList");hist.innerHTML="";
   if(!n){hist.innerHTML='<span class="muted">Noch keine Momente erfasst.</span>';return}
@@ -571,7 +708,7 @@ function renderProgress(){
     $("progressSummary").textContent=text;
   }
   var list=$("experimentHistory");list.innerHTML="";
-  if(!state.experiments.length){list.innerHTML='<span class="muted">Noch kein Test abgeschlossen.</span>';return}
+  if(!state.experiments.length){list.innerHTML='<span class="muted">Noch kein Aufgabe erledigt.</span>';return}
   state.experiments.slice(0,4).forEach(function(x){var row=document.createElement("div");row.className="recent-row";var left=document.createElement("div"),b=document.createElement("b"),s=document.createElement("small");b.textContent=x.title;s.textContent=x.date;left.append(b,s);var tag=document.createElement("span");tag.className="tag";tag.textContent="Abgeschlossen";row.append(left,tag);list.append(row)});
 }
 function renderProfile(){$("profileName").textContent=state.profile.name;$("profileMode").textContent=state.profile.mode==="quit"?"Ganz aufhören":"Weniger automatisch rauchen";$("profileBaseline").textContent=state.profile.baseline+" Zigaretten/Tag"}
@@ -600,7 +737,7 @@ function showUrgeBefore(){
 }
 function showCoachIntervention(){
   var d=recommendedDelay(flow.trigger,flow.before);flow.delay=d;var action=strategyFor(flow.trigger,flow.before);
-  $("flowContent").innerHTML='<div class="intervention"><small>Okay. Mein Vorschlag für diesen Moment</small><h3>'+d+' Minuten Abstand.</h3><p>'+action+'</p></div><button id="startTimer" class="cta">'+d+' Minuten testen</button><button id="skipTimer" class="secondary">Ich entscheide sofort</button>';
+  $("flowContent").innerHTML='<div class="intervention"><small>Okay. Mein Vorschlag für diesen Moment</small><h3>'+d+' Minuten Abstand.</h3><p>'+action+'</p></div><button id="startTimer" class="cta">'+d+' Minuten ausprobieren</button><button id="skipTimer" class="secondary">Ich entscheide sofort</button>';
   $("startTimer").addEventListener("click",function(){startDelay(d)});$("skipTimer").addEventListener("click",showAfter);
 }
 function startDelay(mins){
@@ -625,17 +762,17 @@ function openJustSmoked(){
 function saveDirectSmoke(){
   var now=new Date(),e={id:createId(),date:now.toISOString(),time:now.toLocaleTimeString([], {hour:"2-digit",minute:"2-digit"}),trigger:flow.trigger||"Keine Ahnung",before:3,after:3,delay:0,outcome:"smoked"};
   state.events.unshift(e);state.lastSmoke=Date.now();save();renderAll();
-  $("flowContent").innerHTML='<div class="result"><b>Gespeichert.</b><span>Kein Versagen. Jetzt kennen wir den Kontext besser.</span></div><div class="card"><div class="card-title">Was Smoke Lab daraus macht</div><p class="muted" style="margin-top:5px">Wenn sich dieser Auslöser wiederholt, schlägt dir die App beim nächsten Mal genau dort einen kleinen Test vor.</p></div><button id="finishDirect" class="cta">Fertig</button>';$("finishDirect").addEventListener("click",closeFlow);
+  $("flowContent").innerHTML='<div class="result"><b>Gespeichert.</b><span>Kein Versagen. Jetzt kennen wir den Kontext besser.</span></div><div class="card"><div class="card-title">Was Smoke Lab daraus macht</div><p class="muted" style="margin-top:5px">Wenn sich dieser Auslöser wiederholt, schlägt dir die App beim nächsten Mal genau dort einen kleinen Schritt vor.</p></div><button id="finishDirect" class="cta">Fertig</button>';$("finishDirect").addEventListener("click",closeFlow);
 }
 function openMission(){
   var m=adaptiveMission();flow={mode:"mission",trigger:null,before:3,after:3,outcome:null,delay:0,seconds:0,timer:null,mission:true};
-  $("flowTitle").textContent="Heutiger Test";$("flowSubtitle").textContent="Nur eine Sache. Kein Kurs.";
-  $("flowContent").innerHTML='<div class="intervention"><small>Heute testen wir</small><h3>'+m[0]+'</h3><p>'+m[1]+'</p></div><button id="missionStartNow" class="cta">Jetzt starten</button><button id="missionLater" class="secondary">Später</button>';
+  $("flowTitle").textContent="Heutige Aufgabe";$("flowSubtitle").textContent="Eine kleine Aufgabe. Ich führe dich durch.";
+  $("flowContent").innerHTML='<div class="intervention"><small>Heute machen wir</small><h3>'+m[0]+'</h3><p>'+m[1]+'</p></div><button id="missionStartNow" class="cta">Jetzt starten</button><button id="missionLater" class="secondary">Später</button>';
   $("missionStartNow").addEventListener("click",openCraveFromMission);$("missionLater").addEventListener("click",closeFlow);showSheet();
 }
 function openCraveFromMission(){
   flow.mission=true;flow.mode="mission";flow.trigger=null;flow.before=3;flow.after=3;flow.outcome=null;flow.delay=0;flow.seconds=0;
-  $("flowTitle").textContent="Heutiger Test";$("flowSubtitle").textContent="Wir nehmen einen echten Moment.";
+  $("flowTitle").textContent="Heutige Aufgabe";$("flowSubtitle").textContent="Wir machen das direkt an einem echten Rauchmoment.";
   $("flowContent").innerHTML='<div class="question">Was zieht dich gerade zur Zigarette?</div><div class="choice-grid" id="triggerChoices"></div><button id="toUrge" class="cta" disabled>Weiter</button>';
   renderTriggerButtons("triggerChoices","toUrge");$("toUrge").addEventListener("click",showUrgeBefore);
 }
