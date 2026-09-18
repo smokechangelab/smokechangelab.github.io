@@ -843,6 +843,50 @@ button,input{font-family:inherit !important}
   .cta{height:45px}
 }
 
+
+/* --- v7 product workflow: coach-first, not dashboard-first --- */
+#missionBtn{display:none !important}
+.nav button{flex:1}
+.home-shell{gap:10px}
+.focus-card{
+  min-height:188px;
+  padding:20px;
+  justify-content:flex-start;
+}
+.focus-card h1{
+  font-size:26px;
+  line-height:1.08;
+  max-width:315px;
+}
+.focus-card p{
+  max-width:315px;
+  font-size:12.5px;
+}
+.focus-meta{
+  grid-template-columns:auto 1fr;
+}
+.action-row{
+  grid-template-columns:1fr;
+}
+#smokedBtn{
+  height:46px;
+  background:transparent;
+  border:1px solid var(--line);
+}
+.home-summary .coach{
+  grid-template-columns:28px 1fr;
+}
+.home-summary .coach b{
+  font-size:13px;
+}
+.home-summary .coach p{
+  font-size:11.5px;
+}
+@media(max-height:760px){
+  .focus-card{min-height:164px}
+  #smokedBtn{height:42px}
+}
+
 </style>
 </head>
 <body>
@@ -868,15 +912,15 @@ button,input{font-family:inherit !important}
 
 <section id="todayView" class="view">
   <div class="top">
-    <div><div class="brand">Smoke Lab</div><div class="sub" id="helloLine">Heute führt dich die App durch genau einen Schritt.</div></div>
+    <div><div class="brand">Smoke Lab</div><div class="sub" id="helloLine">Beim nächsten Rauchdrang bin ich da.</div></div>
     <button id="profileBtn" class="avatar" aria-label="Profil"><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="3.5"/><path d="M5 20c.5-4 3-6 7-6s6.5 2 7 6"/></svg></button>
   </div>
   <div class="home-body">
     <div class="home-shell">
     <div class="focus-card">
-      <div class="kicker" id="focusKicker">Heute im Fokus</div>
-      <h1 id="focusTitle">Beobachte einen starken Rauchmoment.</h1>
-      <p id="focusText">Beim nächsten Rauchdrang öffnest du Smoke Lab. Du beantwortest zwei kurze Fragen – den Rest führt die App.</p>
+      <div class="kicker" id="focusKicker">Beim nächsten Rauchdrang</div>
+      <h1 id="focusTitle">Öffne Smoke Lab, bevor du rauchst.</h1>
+      <p id="focusText">Zwei kurze Fragen. Was später passiert bekommst du genau einen konkreten nächsten Schritt.</p>
       <div class="focus-meta"><span class="badge" id="focusBadge">Heute offen</span><div class="mini-progress"><span id="journeyMini" style="width:3%"></span></div></div>
     </div>
 
@@ -884,14 +928,14 @@ button,input{font-family:inherit !important}
 
     <div class="action-row">
       <button id="smokedBtn" class="action-lite"><span>Ich habe geraucht</span></button>
-      <button id="missionBtn" class="action-lite blue"><span class="action-ico">▶</span><span>Mein Fokus</span></button>
+      <button id="missionBtn" class="action-lite blue" aria-hidden="true" tabindex="-1"><span>Mein Fokus</span></button>
     </div>
     </div>
 
     <div class="home-summary">
       <div class="coach">
         <div class="coach-icon"></div>
-        <div><small>Dein Coach</small><b id="coachTitle">Heute nur beobachten.</b><p id="coachText">Beim nächsten Rauchdrang einfach auf den grünen Button tippen. Smoke Lab führt dich dann durch.</p></div>
+        <div><small>Was Smoke Lab gerade weiß</small><b id="coachTitle">Noch keine Daten über dein Muster.</b><p id="coachText">Beim nächsten Rauchdrang öffnest du die App vor der Zigarette. Was später passiert kann Smoke Lab gezielter helfen.</p></div>
       </div>
       <div class="stats">
         <div class="stat"><b id="awareMetric">0</b><span>Momente heute</span></div>
@@ -904,7 +948,7 @@ button,input{font-family:inherit !important}
 </section>
 
 <section id="planView" class="view">
-  <div class="panel-head"><div><div class="eyebrow">Dein Plan</div><h1>Dein nächster Schritt</h1></div></div>
+  <div class="panel-head"><div><div class="eyebrow">So hilft dir Smoke Lab</div><h1>Was jetzt wichtig ist</h1></div></div>
   <div class="panel-body">
     <div class="card plan-card">
       <div class="eyebrow">Heute</div>
@@ -913,7 +957,7 @@ button,input{font-family:inherit !important}
     </div>
     <div class="card next-card">
       <div class="num">→</div>
-      <div><div class="card-title">Danach</div><p class="muted" id="tomorrowText">Smoke Lab wählt den nächsten Schritt aus deinen bisherigen Rauchmomenten.</p></div>
+      <div><div class="card-title">Was später passiert</div><p class="muted" id="tomorrowText">Smoke Lab passt seine Vorschläge an deine echten Rauchmomente an.</p></div>
     </div>
     <div class="card">
       <div class="card-title">So hilft dir Smoke Lab</div>
@@ -962,7 +1006,6 @@ button,input{font-family:inherit !important}
 
 <nav id="nav" class="nav">
   <button data-view="today" class="active"><svg viewBox="0 0 24 24"><path d="M12 3 3.5 10v10.5h6V14h5v6.5h6V10z"/></svg>Heute</button>
-  <button data-view="plan"><svg viewBox="0 0 24 24"><path d="M5 4h14v2H5zm0 6h14v2H5zm0 6h9v2H5z"/></svg>Plan</button>
   <button data-view="patterns"><svg viewBox="0 0 24 24"><path d="M4 18h3V9H4zm6 0h3V5h-3zm6 0h3v-6h-3z"/></svg>Muster</button>
   <button data-view="progress"><svg viewBox="0 0 24 24"><path d="m4 17 5-5 3 3 7-8 1.5 1.3-8.5 10-3-3-3.5 3.2z"/></svg>Fortschritt</button>
 </nav>
@@ -1087,7 +1130,7 @@ function strategyFor(trigger,before){
     "Kaffee / Pause":"Trink zuerst in Ruhe aus. Die Zigarette wird erst danach neu entschieden.",
     "Routine":"Ändere jetzt Ort oder Reihenfolge. Genau diese kleine Reibung unterbricht den Autopiloten.",
     "Mit anderen":"Bleib zwei Minuten länger bei deiner aktuellen Tätigkeit, bevor du anderen folgst.",
-    "Langeweile":"Wähle eine konkrete 3-Minuten-Aufgabe. Danach prüfst du den Drang erneut.",
+    "Langeweile":"Wähle eine konkrete 3-Minuten-Aufgabe. Was später passiert prüfst du den Drang erneut.",
     "Nach dem Essen":"Steh auf und beginne sofort eine andere Handlung, bevor du über die Zigarette entscheidest.",
     "Keine Ahnung":"Wir testen nur Abstand: drei Minuten nichts entscheiden und danach den Drang erneut bewerten."
   };
@@ -1124,20 +1167,40 @@ function boot(){
 }
 function renderAll(){renderToday();renderPlan();renderPatterns();renderProgress();renderProfile()}
 function renderToday(){
-  var m=adaptiveMission(),done=state.missionDoneDate===todayKey(),ev=eventsToday();
-  $("helloLine").textContent="Hallo "+state.profile.name+". Heute nur ein sinnvoller nächster Schritt.";
-  $("focusKicker").textContent="Heute im Fokus · Schritt "+String(state.missionDay).padStart(2,"0");
-  $("focusTitle").textContent=m[0];$("focusText").textContent=m[1];
-  $("focusBadge").textContent=done?"Heute abgeschlossen":"Heute offen";
-  $("journeyMini").style.width=Math.min(100,state.missionDay/30*100)+"%";
-  $("missionBtn").innerHTML=done?'<span>Abgeschlossen</span>':'<span>Heute im Fokus</span>';
-  var delays=ev.map(function(e){return Number(e.delay)||0}).filter(function(n){return n>0});
-  var afters=ev.map(function(e){return Number(e.after)}).filter(function(n){return n>0});
-  $("awareMetric").textContent=ev.length;$("delayMetric").textContent=delays.length?Math.round(avg(delays))+"m":"—";$("urgeMetric").textContent=afters.length?avg(afters).toFixed(1)+"/5":"—";
-  if(state.events.length===0){$("coachTitle").textContent="Beim nächsten Drang: App öffnen.";$("coachText").textContent="Du beantwortest kurz, was den Moment ausgelöst hat. Danach bekommst du einen konkreten nächsten Schritt."}
-  else if(state.events.length<3){$("coachTitle").textContent="Gut, wir haben erste echte Momente.";$("coachText").textContent="Noch keine Schlussfolgerung. Ich schaue zuerst, was sich wiederholt."}
-  else if(state.events.length<CALIBRATION){var t=topTrigger();$("coachTitle").textContent="Eine erste Beobachtung: "+t.name;$("coachText").textContent=t.count+" deiner bisherigen Momente liegen dort. Noch nicht endgültig — aber morgen testen wir gezielter."}
-  else{var top=topTrigger(),best=bestStrategyTrigger();$("coachTitle").textContent="Jetzt sehen wir ein Muster.";$("coachText").textContent=top.name+" ist häufig. "+(best&&best.delta>0?"Am besten funktioniert bisher: kurz Abstand schaffen.":"Heute machen wir dort eine kleine Unterbrechung.")}
+  var ev=eventsToday(),done=state.missionDoneDate===todayKey(),n=state.events.length;
+  $("helloLine").textContent="Hallo "+state.profile.name+". Beim nächsten Rauchdrang bin ich da.";
+  $("focusKicker").textContent="Beim nächsten Rauchdrang";
+
+  if(n<3){
+    $("focusTitle").textContent="Öffne Smoke Lab, bevor du rauchst.";
+    $("focusText").textContent="Sag kurz, was den Drang ausgelöst hat und wie stark er ist. Was später passiert bekommst du genau einen konkreten Vorschlag.";
+    $("coachTitle").textContent="Noch keine Daten über dein Muster.";
+    $("coachText").textContent="Das ist absichtlich so. Erst beobachten wir echte Rauchmomente, bevor Smoke Lab dir etwas als persönliches Muster verkauft.";
+  }else if(n<CALIBRATION){
+    var top=topTrigger();
+    $("focusTitle").textContent="Achte heute besonders auf „"+top.name+"“.";
+    $("focusText").textContent="Dieser Auslöser taucht bisher am häufigsten auf. Beim nächsten Mal öffnest du Smoke Lab vor der Zigarette.";
+    $("coachTitle").textContent="Erste Beobachtung: "+top.name;
+    $("coachText").textContent=top.count+" deiner "+n+" bisherigen Momente passen dazu. Noch kein festes Muster — aber genug, um gezielt hinzuschauen.";
+  }else{
+    var top2=topTrigger(),best=bestStrategyTrigger();
+    $("focusTitle").textContent="Heute kümmern wir uns um „"+top2.name+"“.";
+    $("focusText").textContent=strategyFor(top2.name,4);
+    $("coachTitle").textContent="Dein häufigster Auslöser: "+top2.name;
+    $("coachText").textContent=best&&best.delta>0.5
+      ?"Was bisher am ehesten hilft: kurz Abstand schaffen. Dein Drang sank dabei im Mittel um "+best.delta.toFixed(1)+" Punkte."
+      :"Wir sehen das Muster klarer. Welche Reaktion dir wirklich hilft, lernen wir noch aus weiteren echten Momenten.";
+  }
+
+  $("focusBadge").textContent=done?"Heute schon genutzt":"Bereit";
+  $("journeyMini").style.width=Math.min(100,n/CALIBRATION*100)+"%";
+  $("missionBtn").textContent=done?"Abgeschlossen":"Mein Fokus";
+
+  var delays=ev.map(function(e){return Number(e.delay)||0}).filter(function(x){return x>0});
+  var afters=ev.map(function(e){return Number(e.after)}).filter(function(x){return x>0});
+  $("awareMetric").textContent=ev.length;
+  $("delayMetric").textContent=delays.length?Math.round(avg(delays))+"m":"—";
+  $("urgeMetric").textContent=afters.length?avg(afters).toFixed(1)+"/5":"—";
 }
 function renderPlan(){
   var m=adaptiveMission();$("planTodayTitle").textContent=m[0];$("planTodayText").textContent=m[1];
@@ -1212,9 +1275,9 @@ function renderTriggerButtons(containerId,nextId){
   triggers.forEach(function(t){var b=document.createElement("button");b.className="choice trg";b.innerHTML=triggerIcon(t)+"<span>"+t+"</span>";b.addEventListener("click",function(){flow.trigger=t;tc.querySelectorAll("button").forEach(function(x){x.classList.remove("selected")});b.classList.add("selected");if(nextId)$(nextId).disabled=false});tc.append(b)});
 }
 function openCrave(){
-  flow={mode:"crave",trigger:null,before:3,after:3,outcome:null,delay:0,seconds:0,timer:null,mission:false,startedAt:null,waitedSeconds:0};
-  $("flowTitle").textContent="Akuter Moment";$("flowSubtitle").textContent="Ich führe dich durch. Eine Frage nach der anderen.";
-  $("flowContent").innerHTML='<div class="flow-intro"><div class="flow-watermark"><svg viewBox="0 0 64 64"><path d="M10 34c10-12 18-12 28-2 7 7 11 6 16 0"/><path d="M13 43c8-7 15-7 22-1"/><circle cx="17" cy="19" r="5"/></svg></div><div class="question">Was zieht dich gerade zur Zigarette?</div><div class="helper">Wähle einfach, was am ehesten passt.</div></div><div class="choice-grid" id="triggerChoices"></div><button id="toUrge" class="cta" disabled>Weiter</button>';
+  flow={mode:"crave",trigger:null,before:3,after:3,outcome:null,delay:0,seconds:0,timer:null,mission:state.missionDoneDate!==todayKey(),startedAt:null,waitedSeconds:0};
+  $("flowTitle").textContent="Ich helfe dir jetzt";$("flowSubtitle").textContent="Eine Frage nach der anderen. Du musst nichts vorbereiten.";
+  $("flowContent").innerHTML='<div class="flow-intro"><div class="flow-watermark"><svg viewBox="0 0 64 64"><path d="M10 34c10-12 18-12 28-2 7 7 11 6 16 0"/><path d="M13 43c8-7 15-7 22-1"/><circle cx="17" cy="19" r="5"/></svg></div><div class="question">Was hat den Rauchdrang gerade ausgelöst?</div><div class="helper">Nimm das, was gerade am ehesten passt.</div></div><div class="choice-grid" id="triggerChoices"></div><button id="toUrge" class="cta" disabled>Weiter</button>';
   renderTriggerButtons("triggerChoices","toUrge");$("toUrge").addEventListener("click",showUrgeBefore);showSheet();
 }
 function showUrgeBefore(){
@@ -1230,7 +1293,7 @@ function startDelay(mins){
   flow.seconds=mins*60;
   flow.startedAt=Date.now();
   flow.waitedSeconds=0;
-  $("flowContent").innerHTML='<div class="question">Nur kurz Abstand schaffen.</div><div class="helper">Du musst nichts beweisen. Danach entscheidest du neu.</div><div class="timer" id="timerVal">'+mins+':00</div><div class="card"><div class="card-title">Währenddessen</div><p class="muted" style="margin-top:4px">'+strategyFor(flow.trigger,flow.before)+'</p></div><button id="earlyBtn" class="secondary">Jetzt schon auswerten</button>';
+  $("flowContent").innerHTML='<div class="question">Nur kurz Abstand schaffen.</div><div class="helper">Du musst nichts beweisen. Was später passiert entscheidest du neu.</div><div class="timer" id="timerVal">'+mins+':00</div><div class="card"><div class="card-title">Währenddessen</div><p class="muted" style="margin-top:4px">'+strategyFor(flow.trigger,flow.before)+'</p></div><button id="earlyBtn" class="secondary">Jetzt schon auswerten</button>';
   $("earlyBtn").addEventListener("click",showAfter);
   flow.timer=setInterval(function(){flow.seconds--;var m=Math.floor(flow.seconds/60),s=flow.seconds%60,el=$("timerVal");if(el)el.textContent=m+":"+String(s).padStart(2,"0");if(flow.seconds<=0){clearInterval(flow.timer);flow.timer=null;showAfter()}},1000);
 }
@@ -1247,7 +1310,7 @@ function showAfter(){
 }
 function openJustSmoked(){
   flow={mode:"smoked",trigger:null,before:3,after:3,outcome:"smoked",delay:0,seconds:0,timer:null,mission:false,startedAt:null,waitedSeconds:0};
-  $("flowTitle").textContent="Gerade geraucht";$("flowSubtitle").textContent="Kein Nachtreten. Nur kurz verstehen.";
+  $("flowTitle").textContent="Gerade geraucht";$("flowSubtitle").textContent="Kurz festhalten, damit Smoke Lab daraus lernen kann.";
   $("flowContent").innerHTML='<div class="question">Was war direkt davor?</div><div class="helper">Ein Klick reicht. Mehr musst du jetzt nicht tun.</div><div class="choice-grid" id="smokeTriggers"></div><button id="saveSmoke" class="cta" disabled>Moment speichern</button>';
   renderTriggerButtons("smokeTriggers","saveSmoke");$("saveSmoke").addEventListener("click",saveDirectSmoke);showSheet();
 }
@@ -1265,7 +1328,7 @@ function openMission(){
 function openCraveFromMission(){
   flow.mission=true;flow.mode="mission";flow.trigger=null;flow.before=3;flow.after=3;flow.outcome=null;flow.delay=0;flow.seconds=0;flow.startedAt=null;flow.waitedSeconds=0;
   $("flowTitle").textContent="Heute im Fokus";$("flowSubtitle").textContent="Wir machen das direkt an einem echten Rauchmoment.";
-  $("flowContent").innerHTML='<div class="flow-intro"><div class="flow-watermark"><svg viewBox="0 0 64 64"><path d="M10 34c10-12 18-12 28-2 7 7 11 6 16 0"/><path d="M13 43c8-7 15-7 22-1"/><circle cx="17" cy="19" r="5"/></svg></div><div class="question">Was zieht dich gerade zur Zigarette?</div><div class="helper">Wähle einfach, was am ehesten passt.</div></div><div class="choice-grid" id="triggerChoices"></div><button id="toUrge" class="cta" disabled>Weiter</button>';
+  $("flowContent").innerHTML='<div class="flow-intro"><div class="flow-watermark"><svg viewBox="0 0 64 64"><path d="M10 34c10-12 18-12 28-2 7 7 11 6 16 0"/><path d="M13 43c8-7 15-7 22-1"/><circle cx="17" cy="19" r="5"/></svg></div><div class="question">Was hat den Rauchdrang gerade ausgelöst?</div><div class="helper">Nimm das, was gerade am ehesten passt.</div></div><div class="choice-grid" id="triggerChoices"></div><button id="toUrge" class="cta" disabled>Weiter</button>';
   renderTriggerButtons("triggerChoices","toUrge");$("toUrge").addEventListener("click",showUrgeBefore);
 }
 function saveMoment(){
