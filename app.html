@@ -18,7 +18,7 @@ body{display:flex;justify-content:center}
 button,input{font:inherit}
 button{cursor:pointer}
 .app{position:relative;width:100%;max-width:430px;height:100dvh;background:var(--bg);overflow:hidden}
-.view{display:none;height:100%;padding:calc(env(safe-area-inset-top) + 10px) 16px calc(72px + env(safe-area-inset-bottom));overflow:hidden}
+.view{display:none;height:100%;padding:calc(env(safe-area-inset-top) + 10px) 16px calc(72px + env(safe-area-inset-bottom));overflow:hidden}#planView,#patternsView,#progressView{overflow-y:auto;-webkit-overflow-scrolling:touch}
 .view.active{display:flex;flex-direction:column;animation:fade .22s ease both}
 @keyframes fade{from{opacity:0;transform:translateY(3px)}to{opacity:1;transform:none}}
 
@@ -774,6 +774,75 @@ button,input{font-family:inherit !important}
   .home-summary .coach{padding:11px 12px}
 }
 
+
+/* --- v6 flow polish: one-screen acute flow + subtle SVG language --- */
+#todayView{overflow:hidden}
+#planView,#patternsView,#progressView{overscroll-behavior:contain}
+.sheet-body{
+  max-height:min(92dvh,760px);
+  overflow:hidden;
+}
+.flow{
+  position:relative;
+  text-align:left;
+}
+.flow-intro{
+  position:relative;
+  padding-right:72px;
+  margin-bottom:2px;
+}
+.flow-watermark{
+  position:absolute;
+  right:2px;
+  top:-4px;
+  width:58px;
+  height:58px;
+  color:#DDE7E0;
+  opacity:.9;
+  pointer-events:none;
+}
+.flow-watermark svg{width:100%;height:100%;stroke:currentColor;fill:none;stroke-width:1.35}
+.question,.helper{text-align:left !important}
+.choice.trg{
+  min-height:54px;
+  display:flex;
+  align-items:center;
+  justify-content:flex-start;
+  gap:10px;
+  padding:9px 11px;
+  text-align:left;
+}
+.choice.trg .trg-icon{
+  width:28px;height:28px;
+  flex:0 0 28px;
+  display:grid;
+  place-items:center;
+  border-radius:9px;
+  background:#ECEEEA;
+  color:#5F6862;
+}
+.choice.trg.selected .trg-icon{
+  background:#DDEDE3;
+  color:var(--green);
+}
+.choice.trg svg{width:17px;height:17px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.choice.trg span{font-size:11.5px;font-weight:600;line-height:1.15}
+#flowContent .cta,#flowContent .secondary{flex:0 0 auto}
+@media(max-height:740px){
+  .sheet-body{max-height:94dvh;padding-top:7px;padding-bottom:calc(12px + env(safe-area-inset-bottom))}
+  .sheet-head{margin-bottom:2px}
+  .flow{gap:7px}
+  .flow-intro{padding-right:58px}
+  .flow-watermark{width:48px;height:48px}
+  .choice.trg{min-height:45px;padding:7px 9px}
+  .choice.trg .trg-icon{width:24px;height:24px;flex-basis:24px}
+  .choice.trg svg{width:15px;height:15px}
+  .choice-grid{gap:6px}
+  .question{font-size:16px}
+  .helper{font-size:9.5px}
+  .cta{height:45px}
+}
+
 </style>
 </head>
 <body>
@@ -815,7 +884,7 @@ button,input{font-family:inherit !important}
 
     <div class="action-row">
       <button id="smokedBtn" class="action-lite"><span>Ich habe geraucht</span></button>
-      <button id="missionBtn" class="action-lite blue"><span class="action-ico">▶</span><span>Meine Aufgabe</span></button>
+      <button id="missionBtn" class="action-lite blue"><span class="action-ico">▶</span><span>Mein Fokus</span></button>
     </div>
     </div>
 
@@ -884,10 +953,10 @@ button,input{font-family:inherit !important}
     <div class="progress-grid">
       <div class="progress-card"><b id="progressDelay">—</b><span>Ø Abstand</span></div>
       <div class="progress-card"><b id="progressChange">—</b><span>Drang Δ</span></div>
-      <div class="progress-card"><b id="progressExperiments">0</b><span>Aufgaben</span></div>
+      <div class="progress-card"><b id="progressExperiments">0</b><span>Schritte</span></div>
     </div>
     <div class="card"><div class="card-title">Dein Fortschritt</div><p id="progressSummary" class="muted" style="margin-top:6px">Fortschritt heißt hier: mehr bewusste Entscheidungen, mehr Abstand und weniger automatische Situationen.</p></div>
-    <div class="card"><div style="display:flex;justify-content:space-between"><div class="card-title">Erledigte Aufgaben</div><span id="experimentCount" class="muted">0</span></div><div id="experimentHistory" class="recent" style="margin-top:6px"><span class="muted">Noch kein Aufgabe erledigt.</span></div></div>
+    <div class="card"><div style="display:flex;justify-content:space-between"><div class="card-title">Erledigte Schritte</div><span id="experimentCount" class="muted">0</span></div><div id="experimentHistory" class="recent" style="margin-top:6px"><span class="muted">Noch kein Schritt erledigt.</span></div></div>
   </div>
 </section>
 
@@ -928,7 +997,7 @@ button,input{font-family:inherit !important}
 var KEY="smokelab_v3",PREV_KEYS=["smokelab_v2","smokelab_behavior_v1"],CALIBRATION=8;
 
 var missions=[
- ["Beobachte einen starken Rauchmoment.","Noch nichts verändern. Wir wollen zuerst verstehen, wann der Autopilot übernimmt."],
+ ["Beobachte deinen nächsten starken Rauchmoment.","Beim nächsten Drang öffnest du Smoke Lab. Wir schauen gemeinsam, was ihn ausgelöst hat."],
  ["Erkenne eine reine Gewohnheitszigarette.","Achte auf einen Moment, der mehr Routine als echter Drang ist."],
  ["Miss deinen Drang zweimal.","Bewerte denselben Drang am Anfang und wenige Minuten später."],
  ["Finde deinen häufigsten Kontext.","Achte heute besonders darauf, wo und womit der Rauchmoment beginnt."],
@@ -1061,11 +1130,11 @@ function renderToday(){
   $("focusTitle").textContent=m[0];$("focusText").textContent=m[1];
   $("focusBadge").textContent=done?"Heute abgeschlossen":"Heute offen";
   $("journeyMini").style.width=Math.min(100,state.missionDay/30*100)+"%";
-  $("missionBtn").innerHTML=done?'<span>Abgeschlossen</span>':'<span>Heutige Aufgabe</span>';
+  $("missionBtn").innerHTML=done?'<span>Abgeschlossen</span>':'<span>Heute im Fokus</span>';
   var delays=ev.map(function(e){return Number(e.delay)||0}).filter(function(n){return n>0});
   var afters=ev.map(function(e){return Number(e.after)}).filter(function(n){return n>0});
   $("awareMetric").textContent=ev.length;$("delayMetric").textContent=delays.length?Math.round(avg(delays))+"m":"—";$("urgeMetric").textContent=afters.length?avg(afters).toFixed(1)+"/5":"—";
-  if(state.events.length===0){$("coachTitle").textContent="Heute nur beobachten.";$("coachText").textContent="Ein bewusster Moment reicht. Danach weiß Smoke Lab ein bisschen mehr über dich."}
+  if(state.events.length===0){$("coachTitle").textContent="Beim nächsten Drang: App öffnen.";$("coachText").textContent="Du beantwortest kurz, was den Moment ausgelöst hat. Danach bekommst du einen konkreten nächsten Schritt."}
   else if(state.events.length<3){$("coachTitle").textContent="Gut, wir haben erste echte Momente.";$("coachText").textContent="Noch keine Schlussfolgerung. Ich schaue zuerst, was sich wiederholt."}
   else if(state.events.length<CALIBRATION){var t=topTrigger();$("coachTitle").textContent="Eine erste Beobachtung: "+t.name;$("coachText").textContent=t.count+" deiner bisherigen Momente liegen dort. Noch nicht endgültig — aber morgen testen wir gezielter."}
   else{var top=topTrigger(),best=bestStrategyTrigger();$("coachTitle").textContent="Jetzt sehen wir ein Muster.";$("coachText").textContent=top.name+" ist häufig. "+(best&&best.delta>0?"Am besten funktioniert bisher: kurz Abstand schaffen.":"Heute machen wir dort eine kleine Unterbrechung.")}
@@ -1115,7 +1184,7 @@ function renderProgress(){
     $("progressSummary").textContent=text;
   }
   var list=$("experimentHistory");list.innerHTML="";
-  if(!state.experiments.length){list.innerHTML='<span class="muted">Noch kein Aufgabe erledigt.</span>';return}
+  if(!state.experiments.length){list.innerHTML='<span class="muted">Noch kein Schritt erledigt.</span>';return}
   state.experiments.slice(0,4).forEach(function(x){var row=document.createElement("div");row.className="recent-row";var left=document.createElement("div"),b=document.createElement("b"),s=document.createElement("small");b.textContent=x.title;s.textContent=x.date;left.append(b,s);var tag=document.createElement("span");tag.className="tag";tag.textContent="Abgeschlossen";row.append(left,tag);list.append(row)});
 }
 function renderProfile(){$("profileName").textContent=state.profile.name;$("profileMode").textContent=state.profile.mode==="quit"?"Ganz aufhören":"Weniger automatisch rauchen";$("profileBaseline").textContent=state.profile.baseline+" Zigaretten/Tag"}
@@ -1128,14 +1197,24 @@ function renderScale(idName,onPick,selected){
   var labels=["kaum","leicht","mittel","stark","sehr stark"],el=$(idName);el.innerHTML="";
   [1,2,3,4,5].forEach(function(v){var b=document.createElement("button");b.innerHTML=String(v)+"<small>"+labels[v-1]+"</small>";b.classList.toggle("selected",v===selected);b.addEventListener("click",function(){onPick(v);el.querySelectorAll("button").forEach(function(x){x.classList.remove("selected")});b.classList.add("selected")});el.append(b)});
 }
+function triggerIcon(name){
+  var common='class="trg-icon" aria-hidden="true">';
+  if(name==="Stress")return '<span '+common+'<svg viewBox="0 0 24 24"><path d="M12 3v4m0 10v4M3 12h4m10 0h4M5.6 5.6l2.8 2.8m7.2 7.2 2.8 2.8m0-12.8-2.8 2.8m-7.2 7.2-2.8 2.8"/></svg></span>';
+  if(name==="Kaffee / Pause")return '<span '+common+'<svg viewBox="0 0 24 24"><path d="M5 8h11v7a4 4 0 0 1-4 4H9a4 4 0 0 1-4-4V8Zm11 2h2a2 2 0 1 1 0 4h-2M8 4v2m4-2v2"/></svg></span>';
+  if(name==="Routine")return '<span '+common+'<svg viewBox="0 0 24 24"><path d="M4 12a8 8 0 1 0 2.3-5.7L4 8.5M4 4v4.5h4.5"/></svg></span>';
+  if(name==="Mit anderen")return '<span '+common+'<svg viewBox="0 0 24 24"><circle cx="9" cy="8" r="3"/><circle cx="17" cy="9" r="2.5"/><path d="M3.5 19c.6-3.6 2.7-5.4 5.5-5.4s5 1.8 5.5 5.4m.2-4.2c.8-.8 1.7-1.2 2.8-1.2 2.1 0 3.6 1.4 4 4.2"/></svg></span>';
+  if(name==="Langeweile")return '<span '+common+'<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8"/><path d="M9 15h6M9 9h.01M15 9h.01"/></svg></span>';
+  if(name==="Nach dem Essen")return '<span '+common+'<svg viewBox="0 0 24 24"><path d="M7 3v8m-2-8v5a2 2 0 0 0 4 0V3m8 0v18m0-18c2 2 2 6 0 8"/></svg></span>';
+  return '<span '+common+'<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8"/><path d="M9.8 9a2.4 2.4 0 0 1 4.6 1c0 1.8-2.4 2-2.4 3.6M12 17h.01"/></svg></span>';
+}
 function renderTriggerButtons(containerId,nextId){
   var tc=$(containerId);tc.innerHTML="";
-  triggers.forEach(function(t){var b=document.createElement("button");b.className="choice";b.textContent=t;b.addEventListener("click",function(){flow.trigger=t;tc.querySelectorAll("button").forEach(function(x){x.classList.remove("selected")});b.classList.add("selected");if(nextId)$(nextId).disabled=false});tc.append(b)});
+  triggers.forEach(function(t){var b=document.createElement("button");b.className="choice trg";b.innerHTML=triggerIcon(t)+"<span>"+t+"</span>";b.addEventListener("click",function(){flow.trigger=t;tc.querySelectorAll("button").forEach(function(x){x.classList.remove("selected")});b.classList.add("selected");if(nextId)$(nextId).disabled=false});tc.append(b)});
 }
 function openCrave(){
   flow={mode:"crave",trigger:null,before:3,after:3,outcome:null,delay:0,seconds:0,timer:null,mission:false};
   $("flowTitle").textContent="Akuter Moment";$("flowSubtitle").textContent="Ich führe dich durch. Eine Frage nach der anderen.";
-  $("flowContent").innerHTML='<div class="question">Was zieht dich gerade zur Zigarette?</div><div class="helper">Wähle einfach, was am ehesten passt.</div><div class="choice-grid" id="triggerChoices"></div><button id="toUrge" class="cta" disabled>Weiter</button>';
+  $("flowContent").innerHTML='<div class="flow-intro"><div class="flow-watermark"><svg viewBox="0 0 64 64"><path d="M10 34c10-12 18-12 28-2 7 7 11 6 16 0"/><path d="M13 43c8-7 15-7 22-1"/><circle cx="17" cy="19" r="5"/></svg></div><div class="question">Was zieht dich gerade zur Zigarette?</div><div class="helper">Wähle einfach, was am ehesten passt.</div></div><div class="choice-grid" id="triggerChoices"></div><button id="toUrge" class="cta" disabled>Weiter</button>';
   renderTriggerButtons("triggerChoices","toUrge");$("toUrge").addEventListener("click",showUrgeBefore);showSheet();
 }
 function showUrgeBefore(){
@@ -1173,14 +1252,14 @@ function saveDirectSmoke(){
 }
 function openMission(){
   var m=adaptiveMission();flow={mode:"mission",trigger:null,before:3,after:3,outcome:null,delay:0,seconds:0,timer:null,mission:true};
-  $("flowTitle").textContent="Heutige Aufgabe";$("flowSubtitle").textContent="Eine kleine Aufgabe. Ich führe dich durch.";
+  $("flowTitle").textContent="Heute im Fokus";$("flowSubtitle").textContent="Das ist dein nächster konkreter Schritt.";
   $("flowContent").innerHTML='<div class="intervention"><small>Heute machen wir</small><h3>'+m[0]+'</h3><p>'+m[1]+'</p></div><button id="missionStartNow" class="cta">Jetzt starten</button><button id="missionLater" class="secondary">Später</button>';
   $("missionStartNow").addEventListener("click",openCraveFromMission);$("missionLater").addEventListener("click",closeFlow);showSheet();
 }
 function openCraveFromMission(){
   flow.mission=true;flow.mode="mission";flow.trigger=null;flow.before=3;flow.after=3;flow.outcome=null;flow.delay=0;flow.seconds=0;
-  $("flowTitle").textContent="Heutige Aufgabe";$("flowSubtitle").textContent="Wir machen das direkt an einem echten Rauchmoment.";
-  $("flowContent").innerHTML='<div class="question">Was zieht dich gerade zur Zigarette?</div><div class="choice-grid" id="triggerChoices"></div><button id="toUrge" class="cta" disabled>Weiter</button>';
+  $("flowTitle").textContent="Heute im Fokus";$("flowSubtitle").textContent="Wir machen das direkt an einem echten Rauchmoment.";
+  $("flowContent").innerHTML='<div class="flow-intro"><div class="flow-watermark"><svg viewBox="0 0 64 64"><path d="M10 34c10-12 18-12 28-2 7 7 11 6 16 0"/><path d="M13 43c8-7 15-7 22-1"/><circle cx="17" cy="19" r="5"/></svg></div><div class="question">Was zieht dich gerade zur Zigarette?</div><div class="helper">Wähle einfach, was am ehesten passt.</div></div><div class="choice-grid" id="triggerChoices"></div><button id="toUrge" class="cta" disabled>Weiter</button>';
   renderTriggerButtons("triggerChoices","toUrge");$("toUrge").addEventListener("click",showUrgeBefore);
 }
 function saveMoment(){
