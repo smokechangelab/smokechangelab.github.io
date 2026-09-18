@@ -1404,7 +1404,7 @@ html,body,.app{background:var(--bg)}
     <div class="home-summary">
       <div class="coach">
         <div class="coach-icon"></div>
-        <div><small>Dein Coach</small><b id="coachTitle">Ich kenne dein Muster noch nicht.</b><p id="coachText">Beim nächsten Rauchdrang öffnest du die App vor der Zigarette. Danach kann Smoke Lab gezielter helfen.</p></div>
+        <div class="coach-copy"><small>Dein Coach</small><b id="coachTitle">Ich kenne dein Muster noch nicht.</b><p id="coachText">Beim nächsten Rauchdrang öffnest du die App vor der Zigarette. Danach kann Smoke Lab gezielter helfen.</p><div class="coach-next"><span>Nächster Schritt</span><strong id="coachNext">Beim nächsten Drang vor der Zigarette öffnen.</strong></div></div>
       </div>
       <div class="stats">
         <div class="stat"><b id="awareMetric">0</b><span>Momente heute</span></div>
@@ -1680,7 +1680,7 @@ function renderToday(){
 
   $("coachTitle").textContent=cm.title;
   $("coachText").textContent=cm.meaning;
-  $("coachNext").textContent=cm.next;
+  if($("coachNext"))$("coachNext").textContent=cm.next;
   $("focusBadge").textContent=done?"Heute begleitet":"Bereit für den nächsten Moment";
   $("journeyMini").style.width=Math.min(100,n/CALIBRATION*100)+"%";
   $("missionBtn").textContent=done?"Abgeschlossen":"Mein Fokus";
@@ -1945,7 +1945,8 @@ function saveDirectSmoke(){
   if(flow.saved)return;
   flow.saved=true;
   var now=new Date(),e={id:createId(),date:now.toISOString(),time:now.toLocaleTimeString([], {hour:"2-digit",minute:"2-digit"}),trigger:flow.trigger||"Keine Ahnung",before:null,after:null,delay:0,delaySeconds:0,outcome:"smoked",quickCapture:true};
-  state.events.unshift(e);state.lastSmoke=Date.now();save();renderAll();
+  state.events.unshift(e);state.lastSmoke=Date.now();save();
+  try{renderAll()}catch(err){console.error("renderAll after quick save",err)}
   $("flowContent").innerHTML='<div class="result"><b>Gespeichert.</b><span>Der Moment ist jetzt sichtbar.</span></div><div class="result-insight"><div class="label">Was Smoke Lab daraus lernt</div><h3>'+flow.trigger+' war direkt davor.</h3><p>Ein einzelner Moment sagt noch wenig. Wenn derselbe Auslöser öfter auftaucht, wird daraus langsam ein persönliches Muster.</p><div class="result-next"><b>Nächstes Mal:</b> Wenn möglich, öffne die App kurz bevor du rauchst. Dann können wir nicht nur den Auslöser, sondern auch den Verlauf des Drangs vergleichen.</div></div><button id="finishDirect" class="cta">Zurück zu Heute</button>';$("finishDirect").addEventListener("click",function(){closeFlow();showView("today")});
 }
 function openMission(){
@@ -1967,7 +1968,9 @@ function saveMoment(){
   var e={id:createId(),date:now.toISOString(),time:now.toLocaleTimeString([], {hour:"2-digit",minute:"2-digit"}),trigger:flow.trigger||"Keine Ahnung",before:flow.before,after:flow.after,delay:elapsed,delaySeconds:waitedSeconds,outcome:flow.outcome};
   state.events.unshift(e);if(flow.outcome==="smoked")state.lastSmoke=Date.now();
   if(flow.mission&&state.missionDoneDate!==todayKey()){state.missionDoneDate=todayKey();state.experiments.unshift({id:createId(),date:todayKey(),day:state.missionDay,title:adaptiveMission()[0]});if(state.missionDay<30)state.missionDay++}
-  save();renderAll();showResult(e);
+  save();
+  try{renderAll()}catch(err){console.error("renderAll after moment save",err)}
+  showResult(e);
 }
 function showResult(e){
   var change=e.before-e.after;
